@@ -35,10 +35,10 @@ MY_COLORS = {
 """# Set axes, gridlines and image size"""
 
 # Axis limits
-xuserlower = st.number_input(label="Enter a lower bound for \( x \):", value=-2.0)
-xuserupper = st.number_input(label="Enter an upper bound for \( x \):", value=8)
-yuserlower = st.number_input(label="Enter a lower bound for \( y \):", value=-2.0)
-yuserupper = st.number_input(label="Enter an upper bound for \( y \):", value=8)
+xuserlower = st.number_input(label="Enter a lower bound for $x$:", value=-2.0)
+xuserupper = st.number_input(label="Enter an upper bound for $x$:", value=8)
+yuserlower = st.number_input(label="Enter a lower bound for $y$:", value=-2.0)
+yuserupper = st.number_input(label="Enter an upper bound for $y$:", value=8)
 
 # 2.5% padding so axis labels don't hit edge
 xdifference = xuserupper - xuserlower

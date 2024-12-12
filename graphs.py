@@ -15,10 +15,6 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import sympy as sp
 from sympy import nsimplify, pi, latex
-from google.colab import drive
-from IPython.display import HTML
-
-drive.mount('/content/drive')
 
 # Add NumPy-style inverse trig function names to SymPy so they work with both libraries
 sp.arcsin = sp.asin
@@ -39,10 +35,10 @@ MY_COLORS = {
 """# Set axes, gridlines and image size"""
 
 # Axis limits
-xuserlower = -2         # Enter lower limit of x-axis
-xuserupper = 10          # Enter upper limit of x-axis
-yuserlower = -2         # Enter lower limit of y-axis
-yuserupper = 10          # Enter upper limit of y-axis
+xuserlower = st.number_input(label="Enter a lower bound for \( x \):", value=-2.0)
+xuserupper = st.number_input(label="Enter an upper bound for \( x \):", value=8)
+yuserlower = st.number_input(label="Enter a lower bound for \( y \):", value=-2.0)
+yuserupper = st.number_input(label="Enter an upper bound for \( y \):", value=8)
 
 # 2.5% padding so axis labels don't hit edge
 xdifference = xuserupper - xuserlower

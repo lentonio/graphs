@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import sympy as sp
 from sympy import nsimplify, pi, latex
+import streamlit as st
 
 # Add NumPy-style inverse trig function names to SymPy so they work with both libraries
 sp.arcsin = sp.asin

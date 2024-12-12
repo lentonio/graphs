@@ -55,17 +55,8 @@ ylower = yuserlower - 0.025 * ydifference
 yupper = yuserupper + 0.025 * ydifference
 
 # Axis values and ticks
-showvalues = st.checkbox("Show values on axes")
-if showvalues:
-    st.write("Values displayed.")
-else:
-    st.write("Values not displayed.")
-
-showticks = st.checkbox("Show ticks on axes", value=False)
-if showticks:
-    st.write("Ticks displayed.")
-else:
-    st.write("Ticks not displayed.")
+showvalues = st.checkbox("Show values on axes", value=True)
+showticks = st.checkbox("Show ticks on axes")
 
 # Axis steps (displays fractions over decimals; for steps of pi use 'np.pi', e.g. 0.5*np.pi for steps of pi/2)
 xstep = 2           # x-axis steps

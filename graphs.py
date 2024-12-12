@@ -48,19 +48,27 @@ st.markdown(
 )
 
 col1, col2, col3 = st.columns(3)
-with col1:
+with col4:
+    st.markdown(r" ")
+with col5:
+    st.markdown(r"Lower bounds")
+with col6:
+    st.markdown(r"Lower bounds")
+
+col4, col5, col6 = st.columns(3)
+with col4:
+    st.markdown(r"x")
+with col5:
     x_lower = st.number_input("Lower bound for x:", value=-2.0, label_visibility="collapsed")
-with col2:
-    st.markdown(r"$<$ x $<$")
-with col3:
+with col6:
     x_upper = st.number_input("Upper bound for x:", value=8.0, label_visibility="collapsed")
 
 # Y inputs in one row
-col4, col5, col6 = st.columns(3)
+col7, col8, col9 = st.columns(3)
 with col4:
-    y_lower = st.number_input("Lower bound for y:", value=-2.0, label_visibility="collapsed")
+    st.markdown(r"y")
 with col5:
-    st.markdown(r"$<$ y $<$")
+    y_lower = st.number_input("Lower bound for y:", value=-2.0, label_visibility="collapsed")
 with col6:
     y_upper = st.number_input("Upper bound for y:", value=8.0, label_visibility="collapsed")
 

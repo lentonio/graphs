@@ -35,18 +35,6 @@ MY_COLORS = {
 
 """# Set axes, gridlines and image size"""
 
-st.markdown(
-    """
-    <style>
-    .stNumberInput > div > input {
-        width: 35px !important;  /* Adjust input box width */
-        text-align: center;      /* Center-align text in the box */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 col1, col2 = st.columns(2)
 with col1:
     xuserlower = st.number_input("Lower bound for x:", value=-2.0)
@@ -55,11 +43,10 @@ with col2:
 
 col3, col4 = st.columns(2)
 with col3:
-    xuserlower = st.number_input("Lower bound for y:", value=-2.0)
+    yuserlower = st.number_input("Lower bound for y:", value=-2.0)
 with col4:
-    xuserupper = st.number_input("Upper bound for y:", value=8.0)
+    yuserupper = st.number_input("Upper bound for y:", value=8.0)
 
-# 2.5% padding so axis labels don't hit edge
 xdifference = xuserupper - xuserlower
 ydifference = yuserupper - yuserlower
 xlower = xuserlower - 0.025 * xdifference
@@ -68,8 +55,17 @@ ylower = yuserlower - 0.025 * ydifference
 yupper = yuserupper + 0.025 * ydifference
 
 # Axis values and ticks
-showvalues = True     # Set to False to hide axis values
-showticks = False     # Set to False to hide axis ticks
+showvalues = st.checkbox("Show values on axes")
+if showvalues:
+    st.write("Values displayed.")
+else:
+    st.write("Values not displayed.")
+
+showticks = st.checkbox("Show ticks on axes", value=False)
+if showticks:
+    st.write("Ticks displayed.")
+else:
+    st.write("Ticks not displayed.")
 
 # Axis steps (displays fractions over decimals; for steps of pi use 'np.pi', e.g. 0.5*np.pi for steps of pi/2)
 xstep = 2           # x-axis steps

@@ -39,7 +39,7 @@ st.markdown(
     """
     <style>
     .stNumberInput > div > input {
-        width: 70px !important;  /* Adjust input box width */
+        width: 35px !important;  /* Adjust input box width */
         text-align: center;      /* Center-align text in the box */
     }
     </style>
@@ -49,15 +49,15 @@ st.markdown(
 
 col1, col2 = st.columns(2)
 with col1:
-    x_lower = st.number_input("Lower bound for x:", value=-2.0)
+    xuserlower = st.number_input("Lower bound for x:", value=-2.0)
 with col2:
-    x_upper = st.number_input("Upper bound for x:", value=8.0)
+    xuserupper = st.number_input("Upper bound for x:", value=8.0)
 
 col3, col4 = st.columns(2)
 with col3:
-    x_lower = st.number_input("Lower bound for y:", value=-2.0)
+    xuserlower = st.number_input("Lower bound for y:", value=-2.0)
 with col4:
-    x_upper = st.number_input("Upper bound for y:", value=8.0)
+    xuserupper = st.number_input("Upper bound for y:", value=8.0)
 
 # 2.5% padding so axis labels don't hit edge
 xdifference = xuserupper - xuserlower

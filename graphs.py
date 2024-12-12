@@ -35,11 +35,34 @@ MY_COLORS = {
 
 """# Set axes, gridlines and image size"""
 
-# Axis limits
-xuserlower = st.number_input(label="Enter a lower bound for x:", value=-2.0)
-xuserupper = st.number_input(label="Enter an upper bound for x:", value=8)
-yuserlower = st.number_input(label="Enter a lower bound for y:", value=-2.0)
-yuserupper = st.number_input(label="Enter an upper bound for y:", value=8)
+st.markdown(
+    """
+    <style>
+    .stNumberInput > div > input {
+        width: 70px !important;  /* Adjust input box width */
+        text-align: center;      /* Center-align text in the box */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    x_lower = st.number_input("Lower bound for x:", value=-2.0, label_visibility="collapsed")
+with col2:
+    st.markdown(r"$<$ x $<$")
+with col3:
+    x_upper = st.number_input("Upper bound for x:", value=8.0, label_visibility="collapsed")
+
+# Y inputs in one row
+col4, col5, col6 = st.columns(3)
+with col4:
+    y_lower = st.number_input("Lower bound for y:", value=-2.0, label_visibility="collapsed")
+with col5:
+    st.markdown(r"$<$ y $<$")
+with col6:
+    y_upper = st.number_input("Upper bound for y:", value=8.0, label_visibility="collapsed")
 
 # 2.5% padding so axis labels don't hit edge
 xdifference = xuserupper - xuserlower

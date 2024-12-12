@@ -65,11 +65,11 @@ with col6:
 
 # Y inputs in one row
 col7, col8, col9 = st.columns(3)
-with col4:
+with col7:
     st.markdown(r"y")
-with col5:
+with col8:
     y_lower = st.number_input("Lower bound for y:", value=-2.0, label_visibility="collapsed")
-with col6:
+with col9:
     y_upper = st.number_input("Upper bound for y:", value=8.0, label_visibility="collapsed")
 
 # 2.5% padding so axis labels don't hit edge

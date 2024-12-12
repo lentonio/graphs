@@ -48,11 +48,11 @@ st.markdown(
 )
 
 col1, col2, col3 = st.columns(3)
-with col4:
+with col1:
     st.markdown(r" ")
-with col5:
+with col2:
     st.markdown(r"Lower bounds")
-with col6:
+with col3:
     st.markdown(r"Lower bounds")
 
 col4, col5, col6 = st.columns(3)

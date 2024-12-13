@@ -190,5 +190,3 @@ ax.margins(x=0, y=0)  # Remove margins
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
 ax.set_xlim(xlower, xupper)  # Force exact limits
 ax.set_ylim(ylower, yupper)  # Force exact limits
-
-st.image(fig)

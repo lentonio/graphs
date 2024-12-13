@@ -206,7 +206,7 @@ plot_placeholder = st.empty()
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
-col13, col14 = st.columns([7, 1])
+col13, col14, col15 = st.columns([4, 3, 1])
 with col13:
     user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 
@@ -231,13 +231,20 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 plot_placeholder.pyplot(fig)
 
 with col14:
-    if st.button("Plot"):
-        x = np.linspace(xlower, xupper, 100000)
-        x_sym = sp.Symbol('x') 
-
-        def eval_function(user_func, x, lib):
+    x_sym = sp.Symbol('x')
+    
+    def eval_function(user_func, x, lib):
             """Evaluates the user-defined function with the given library (np or sp)."""
             return eval(user_func, {"x": x, "lib": lib})
+    
+    y1_sym = eval_function(user_input, x_sym, sp)
+
+    latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
+    st.latex(f"y = {latex_preview}")  # Display LaTeX preview
+
+with col15:
+    if st.button("Plot"):
+        x = np.linspace(xlower, xupper, 100000)
         
         y1 = eval_function(user_input, x, np)
 

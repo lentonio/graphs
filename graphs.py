@@ -206,6 +206,9 @@ plot_placeholder = st.empty()
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
+if st.session_state.plot_data["function"] != user_input:
+    st.session_state.plot_data = {"x": None, "y": None, "function": None}
+
 if st.session_state.plot_data["x"] is not None:
     ax.plot(
         st.session_state.plot_data["x"],

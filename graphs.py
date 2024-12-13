@@ -230,6 +230,4 @@ with col14:
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS['blue'])  # Add user-defined function
 
-
 plot_placeholder.pyplot(fig)
-st.pyplot(fig)

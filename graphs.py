@@ -213,7 +213,7 @@ fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
 st.divider()
 
-col13, col14, col15, col16 = st.columns([3, 3, 1, 1], vertical_alignment="bottom")
+col13, col14, col15, col16 = st.columns([3, 3, 2, 1], vertical_alignment="bottom")
 with col13:
     user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 

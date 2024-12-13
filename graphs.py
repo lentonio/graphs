@@ -59,16 +59,16 @@ showvalues = st.checkbox("Show values on axes", value=True)
 showticks = st.checkbox("Show ticks on axes")
 
 col5, col6 = st.columns(2)
-with col5
+with col5:
     x_base_step = st.number_input("x-axis step:", value=2)
-with col6
+with col6:
     x_is_pi = st.checkbox("Multiply by π")
 xstep = x_base_step * (np.pi if x_is_pi else 1)
 
 col7, col8 = st.columns(2)
-with col7
+with col7:
     y_base_step = st.number_input("y-axis step:", value=2)
-with col8
+with col8:
     y_is_pi = st.checkbox("Multiply by π")
 ystep = y_base_step * (np.pi if y_is_pi else 1)
 

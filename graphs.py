@@ -198,6 +198,8 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
 #-------------------------------------------------------------------
 
+plot_placeholder = st.empty()
+
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
@@ -209,7 +211,7 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 
 #-------------------------------------------------------------------
 
-st.pyplot(fig)
+plot_placeholder.pyplot(fig)
 
 col13, col14 = st.columns([7, 1])
 with col13:
@@ -231,3 +233,5 @@ with col14:
         fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
         ax.set_xlim(xlower, xupper)  # Force exact limits
         ax.set_ylim(ylower, yupper)  # Force exact limits
+
+        plot_placeholder.pyplot(fig)

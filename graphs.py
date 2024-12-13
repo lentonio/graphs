@@ -207,6 +207,10 @@ if "functions" not in st.session_state:
 if "plot_data" not in st.session_state:
     st.session_state.plot_data = {"x": None, "y": None, "function": None}
 
+if "selected_color" not in st.session_state:
+    st.session_state.selected_color = "blue"  # Default color
+
+
 plot_placeholder = st.empty()
 svg_placeholder = st.empty()
 
@@ -227,7 +231,7 @@ if st.session_state.plot_data["x"] is not None:
         st.session_state.plot_data["x"],
         st.session_state.plot_data["y"],
         label=f"y1 = {st.session_state.plot_data['function']}",
-        color=MY_COLORS['blue'],)
+        color=MY_COLORS[color_choice],)
 
 ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
 ax.margins(x=0, y=0)  # Remove margins
@@ -262,6 +266,7 @@ with col14:
 
 with col15:
     color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
+    st.session_state.selected_color = color_choice
 
 with col16:
     if st.button("Plot"):

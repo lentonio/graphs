@@ -30,9 +30,9 @@ with st.sidebar:
     with col2:
         xuserupperinput = st.number_input("Upper x:", value=8.0)
     with col3:
-        x_bounds_is_pi = st.segmented_control("x unit", options = ["1", "π"], default = '1', key="unit_control_1")
-    xuserlower = xuserlowerinput * (np.pi if x_bounds_is_pi == "π" else 1)
-    xuserupper = xuserupperinput * (np.pi if x_bounds_is_pi == "π" else 1)
+        x_is_pi = st.segmented_control("x unit", options = ["1", "π"], default = '1', key="unit_control_1")
+    xuserlower = xuserlowerinput * (np.pi if x_is_pi == "π" else 1)
+    xuserupper = xuserupperinput * (np.pi if x_is_pi == "π" else 1)
     
     col4, col5, col6 = st.columns(3)
     with col4:
@@ -40,9 +40,9 @@ with st.sidebar:
     with col5:
         yuserupperinput = st.number_input("Upper y:", value=8.0)
     with col6:
-        y_bounds_is_pi = st.segmented_control("y unit", options = ["1", "π"], default = '1', key="unit_control_2")
-    yuserlower = yuserlowerinput * (np.pi if y_bounds_is_pi == "π" else 1)
-    yuserupper = yuserupperinput * (np.pi if y_bounds_is_pi == "π" else 1)
+        y_is_pi = st.segmented_control("y unit", options = ["1", "π"], default = '1', key="unit_control_2")
+    yuserlower = yuserlowerinput * (np.pi if y_is_pi == "π" else 1)
+    yuserupper = yuserupperinput * (np.pi if y_is_pi == "π" else 1)
     
     xdifference = xuserupper - xuserlower
     ydifference = yuserupper - yuserlower
@@ -55,12 +55,13 @@ with st.sidebar:
     showticks = st.checkbox("Show ticks on axes")
     
     if showvalues or showticks:
-        x_base_step = st.number_input("x-axis step:", value=2)
-        x_is_pi = st.checkbox("Multiply x-step by π")
-        xstep = x_base_step * (np.pi if x_is_pi else 1)
-        y_base_step = st.number_input("y-axis step:", value=2)
-        y_is_pi = st.checkbox("Multiply y-step by π")
-        ystep = y_base_step * (np.pi if y_is_pi else 1)
+        col7, col8 = st.columns(2)
+        with col7:
+            x_base_step = st.number_input("x-axis step:", value=2)
+            xstep = x_base_step * (np.pi if x_is_pi else 1)
+        with col8:
+            y_base_step = st.number_input("y-axis step:", value=2)
+            ystep = y_base_step * (np.pi if y_is_pi else 1)
     else:
         xstep = 1
         ystep = 1
@@ -68,10 +69,10 @@ with st.sidebar:
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
     if gridstyle == 'Minor':
-        col7, col8 = st.columns(2)
-        with col7:
+        col9, col10 = st.columns(2)
+        with col9:
             xminordivisor = st.number_input("Minor divisor for x:", value=4)
-        with col8:
+        with col10:
             yminordivisor = st.number_input("Minor divisor for y:", value=4)
     else:
         xminordivisor = 1
@@ -82,10 +83,10 @@ with st.sidebar:
 
 
     """# Image size"""
-    col9, col10 = st.columns(2)
-    with col9:
+    col11, col12 = st.columns(2)
+    with col11:
         imageheight = st.number_input("Height", value=10)
-    with col10:
+    with col12:
         imagewidth = st.number_input("Width", value=10)
         
 

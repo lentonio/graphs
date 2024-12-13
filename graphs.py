@@ -211,10 +211,10 @@ if "selected_color" not in st.session_state:
 
 plot_placeholder = st.empty()
 st.write("")
-download_columns = st.columns([1, 1])
-with download_columns[0]:
-    svg_placeholder = st.empty()
+download_columns = st.columns([3, 1, 1, 3])
 with download_columns[1]:
+    svg_placeholder = st.empty()
+with download_columns[2]:
     png_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,

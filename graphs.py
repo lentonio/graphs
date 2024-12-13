@@ -231,7 +231,7 @@ if st.session_state.plot_data["x"] is not None:
         st.session_state.plot_data["x"],
         st.session_state.plot_data["y"],
         label=f"y1 = {st.session_state.plot_data['function']}",
-        color=MY_COLORS['blue'],)
+        color=MY_COLORS[st.session_state.plot_data["color"]])
 
 ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
 ax.margins(x=0, y=0)  # Remove margins
@@ -274,7 +274,7 @@ with col16:
         
         y1 = eval_function(user_input, x, np)
 
-        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input}
+        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color,}
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice])  # Add user-defined function
 

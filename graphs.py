@@ -53,9 +53,6 @@ with st.sidebar:
         y_base_step = st.number_input("y-axis step:", value=2)
         y_is_pi = st.checkbox("Multiply y-step by π")
         ystep = y_base_step * (np.pi if y_is_pi else 1)
-    else:
-        xstep = 1
-        ystep = 1
 
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
@@ -65,6 +62,9 @@ with st.sidebar:
             xminordivisor = st.number_input("Minor divisor for x:", value=4)
         with col6:
             yminordivisor = st.number_input("Minor divisor for y:", value=4)
+    else:
+        xminordivisor = 1
+        yminordivisor = 1
 
     """# Image size"""
     col7, col8 = st.columns(2)

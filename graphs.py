@@ -61,7 +61,7 @@ with st.sidebar:
     
     if showvalues or showticks:
         x_base_step = st.number_input("x-axis step:", value=2)
-        x_is_pi = st.checkbox("Multiply y-step by π")
+        x_is_pi = st.checkbox("Multiply x-step by π")
         xstep = x_base_step * (np.pi if x_is_pi else 1)
         y_base_step = st.number_input("y-axis step:", value=2)
         y_is_pi = st.checkbox("Multiply y-step by π")

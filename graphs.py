@@ -208,16 +208,10 @@ if "plot_data" not in st.session_state:
     st.session_state.plot_data = {"x": None, "y": None, "function": None}
 
 plot_placeholder = st.empty()
+svg_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
-
-svg_buffer = io.StringIO()
-fig.savefig(svg_buffer, format="svg")
-svg_data = svg_buffer.getvalue()
-svg_buffer.close()
-
-st.download_button(label="Download SVG", data=svg_data, file_name="figure1.svg", mime="image/svg+xml")
 
 st.divider()
 
@@ -280,3 +274,10 @@ with col16:
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice])  # Add user-defined function
 
 plot_placeholder.pyplot(fig)
+
+svg_buffer = io.StringIO()
+fig.savefig(svg_buffer, format="svg")
+svg_data = svg_buffer.getvalue()
+svg_buffer.close()
+
+svg_placeholder.st.download_button(label="Download SVG", data=svg_data, file_name="figure1.svg", mime="image/svg+xml")

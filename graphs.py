@@ -211,7 +211,11 @@ if "selected_color" not in st.session_state:
 
 plot_placeholder = st.empty()
 st.write("")
-svg_placeholder = st.empty()
+download_columns = st.columns([1, 1])
+with download_columns[0]:
+    svg_placeholder = st.empty()
+with download_columns[1]:
+    png_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
@@ -290,3 +294,16 @@ svg_placeholder.download_button(
     file_name="figure1.svg",
     mime="image/svg+xml",
 )
+
+
+png_buffer = io.BytesIO()
+fig.savefig(png_buffer, format="png", dpi=300, bbox_inches="tight", pad_inches=0)
+png_buffer.seek(0)
+png_data = png_buffer.getvalue()
+png_buffer.close()
+
+png_placeholder.download_button(
+    label = "Download PNG", 
+    data=png_data, 
+    file_name="figure1.png", 
+    mime="image/png")

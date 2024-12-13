@@ -30,7 +30,7 @@ with st.sidebar:
     with col2:
         xuserupperinput = st.number_input("Upper x:", value=8.0)
     with col3:
-        x_bounds_is_pi = st.segmented_control("x unit", options = ["1", "π"], default = '1')
+        x_bounds_is_pi = st.segmented_control("x unit", options = ["1", "π"], default = '1', key="unit_control_1")
     xuserlower = xuserlowerinput * (np.pi if x_bounds_is_pi == "π" else 1)
     xuserupper = xuserupperinput * (np.pi if x_bounds_is_pi == "π" else 1)
     
@@ -40,7 +40,7 @@ with st.sidebar:
     with col5:
         yuserupperinput = st.number_input("Upper y:", value=8.0)
     with col6:
-        y_bounds_is_pi = st.segmented_control("y unit", options = ["1", "π"], default = '1')
+        y_bounds_is_pi = st.segmented_control("y unit", options = ["1", "π"], default = '1', key="unit_control_2")
     yuserlower = yuserlowerinput * (np.pi if y_bounds_is_pi == "π" else 1)
     yuserupper = yuserupperinput * (np.pi if y_bounds_is_pi == "π" else 1)
     

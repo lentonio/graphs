@@ -58,9 +58,19 @@ yupper = yuserupper + 0.025 * ydifference
 showvalues = st.checkbox("Show values on axes", value=True)
 showticks = st.checkbox("Show ticks on axes")
 
-# Axis steps (displays fractions over decimals; for steps of pi use 'np.pi', e.g. 0.5*np.pi for steps of pi/2)
-xstep = 2           # x-axis steps
-ystep = 2           # y-axis steps
+col5, col6 = st.columns(2)
+with col5
+    x_base_step = st.number_input("x-axis step:", value=2)
+with col6
+    x_is_pi = st.checkbox("Multiply by π")
+xstep = x_base_step * (np.pi if x_is_pi else 1)
+
+col7, col8 = st.columns(2)
+with col7
+    y_base_step = st.number_input("y-axis step:", value=2)
+with col8
+    y_is_pi = st.checkbox("Multiply by π")
+ystep = y_base_step * (np.pi if y_is_pi else 1)
 
 # Grid style
 gridstyle = 'minor'  # Set as 'none', 'major', or 'minor'
@@ -431,45 +441,3 @@ output_path = '/content/drive/MyDrive/Colab Notebooks/Figures/animated_figure1.g
 fig_anim.tight_layout(pad=0)
 anim.save(output_path, writer='pillow')
 print(f"Animation saved to: {output_path}")
-
-"""# Function reference
-
-Here are examples of functions you can use:
-
-**Basic Operations**:
-
-*   x + 5          : addition
-*   x - 5          : subtraction
-*   x * 5          : multiplication (note: must be used for all coefficients, e.g. 2*x rather than 2x)
-*   x / 5          : division
-*   x**5           : exponentiation
-
-
-**Trigonometric Functions:**
-
-*   lib.sin(x)     : sine of x
-*   lib.cos(x)     : cosine of x
-*   lib.tan(x)     : tangent of x
-*   lib.cot(x)     : cotangent of x
-*   lib.sec(x)     : secant of x
-*   lib.csc(x)     : cosecant of x
-*   lib.arcsin(x)  : inverse sine
-*   lib.arccos(x)  : inverse cosine
-*   lib.arctan(x)  : inverse tangent
-
-
-**Exponential and Logarithmic Functions:**
-
-*   lib.exp(x)     : e^x
-*   2**x           : 2^x
-*   lib.log(x)     : natural logarithm (ln)
-*   lib.log(x, 10) : logarithm base 10
-*   lib.log(x, 2)  : logarithm base 2
-
-
-**Other Functions:**
-
-*   lib.root(x, 2) : square root
-*   lib.root(x, 3) : cube root
-*   lib.abs(x)     : modulus
-"""

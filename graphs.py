@@ -63,7 +63,7 @@ if showvalues or showticks:
     with col5:
         x_base_step = st.number_input("x-axis step:", value=2)
     with col6:
-        x_is_pi = st.checkbox("Multiply x-step by π")
+        x_is_pi = st.radio("Select an option:", options=["X 1", "X π"], label_visibility="collapsed")
     xstep = x_base_step * (np.pi if x_is_pi else 1)
     
     col7, col8 = st.columns(2)

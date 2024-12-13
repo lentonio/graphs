@@ -226,7 +226,6 @@ with col14:
             return eval(user_func, {"x": x, "lib": lib})
         
         y1 = eval_function(user_input, x, np)
-        st.write("Parsed Function:", y1)
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS['blue'])  # Add user-defined function
 

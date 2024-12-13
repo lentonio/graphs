@@ -280,4 +280,9 @@ fig.savefig(svg_buffer, format="svg")
 svg_data = svg_buffer.getvalue()
 svg_buffer.close()
 
-svg_placeholder.st.download_button(label="Download SVG", data=svg_data, file_name="figure1.svg", mime="image/svg+xml")
+svg_placeholder.download_button(
+    label="Download SVG",
+    data=svg_data,
+    file_name="figure1.svg",
+    mime="image/svg+xml",
+)

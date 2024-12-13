@@ -78,9 +78,9 @@ with st.sidebar:
     """# Image size"""
     col7, col8 = st.columns(2)
     with col7:
-        imageheight = st.number_input("Image height (in inches)", value=10)
+        imageheight = st.number_input("Height", value=10)
     with col8:
-        imagewidth = st.number_input("Image width (in inches)", value=10)
+        imagewidth = st.number_input("Width", value=10)
 
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values

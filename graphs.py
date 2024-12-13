@@ -302,6 +302,8 @@ fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Rem
 ax.set_xlim(xlower, xupper)  # Force exact limits
 ax.set_ylim(ylower, yupper)  # Force exact limits
 
+st.image(fig)
+
 """# Add points, lines and areas
 
 Example 1: plot (1, 4) and (0, 3) with a point and cross, respectively

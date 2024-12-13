@@ -34,7 +34,7 @@ MY_COLORS = {
 }
 
 with st.sidebar:
-    """# Axes, gridlines and image size"""
+    """# Axes and gridlines"""
     col1, col2 = st.columns(2)
     with col1:
         xuserlower = st.number_input("Lower bound for x:", value=-2.0)
@@ -66,14 +66,21 @@ with st.sidebar:
         y_is_pi = st.checkbox("Multiply y-step by π")
         ystep = y_base_step * (np.pi if y_is_pi else 1)
 
-# Grid style
-gridstyle = 'minor'  # Set as 'none', 'major', or 'minor'
-xminordivisor = 4    # Subdivisor for minor gridlines on x-axis (ignore if gridstyle is 'none' or 'major')
-yminordivisor = 4    # Subdivisor for minor gridlines on y-axis (ignore if gridstyle is 'none' or 'major')
+    gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"])
 
-# Image size
-imageheight = 10     # Height of image in inches
-imagewidth = 10      # Width of image in inches
+    if gridstyle = 'Minor':
+        col5, col6 = st.columns(2)
+        with col5:
+            xminordivisor = st.number_input("Minor divisor for x:", value=4)
+        with col6:
+            yminordivisor = st.number_input("Minor divisor for y:", value=4)
+
+    """# Image size"""
+    col7, col8 = st.columns(2)
+    with col7:
+        imageheight = st.number_input("Image height (in inches)", value=10)
+    with col8:
+        imagewidth = st.number_input("Image width (in inches)", value=10)
 
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
@@ -202,11 +209,11 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
         ax.set_xticks(np.arange(xuserlower, xuserupper + xstep, xstep))
         ax.set_yticks(np.arange(yuserlower, yuserupper + ystep, ystep))
 
-        if style == 'none':
+        if style == 'None':
             ax.grid(False)
-        elif style == 'major':
+        elif style == 'Major':
             ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)
-        elif style == 'minor':
+        elif style == 'Minor':
             ax.xaxis.set_minor_locator(plt.MultipleLocator(xstep/xminordivisor))
             ax.yaxis.set_minor_locator(plt.MultipleLocator(ystep/yminordivisor))
             ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)

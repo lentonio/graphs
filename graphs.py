@@ -53,6 +53,9 @@ with st.sidebar:
         y_base_step = st.number_input("y-axis step:", value=2)
         y_is_pi = st.checkbox("Multiply y-step by π")
         ystep = y_base_step * (np.pi if y_is_pi else 1)
+    else:
+        xstep = 1
+        ystep = 1
 
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 

@@ -195,8 +195,6 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     ax.set_xlim(xlower, xupper)
     ax.set_ylim(ylower, yupper)
 
-    fig.tight_layout(pad=0)
-
     return fig, ax  # Return the figure and axis objects for further modifications
 
 
@@ -212,6 +210,8 @@ plot_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
+
+fig.tight_layout(pad=0)
 
 st.divider()
 

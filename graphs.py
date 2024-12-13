@@ -61,7 +61,7 @@ with st.sidebar:
             xstep = x_base_step * (np.pi if x_is_pi == "π" else 1)
         with col8:
             y_base_step = st.number_input("y-axis step:", value=2)
-            ystep = y_base_step * (np.pi if x_is_pi == "π" else 1)
+            ystep = y_base_step * (np.pi if y_is_pi == "π" else 1)
     else:
         xstep = 1
         ystep = 1

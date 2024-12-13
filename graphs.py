@@ -93,7 +93,8 @@ with st.sidebar:
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
 
-#-------------------------------------------------------------------
+
+#------Define create a graph function---------
 
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                 xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False):
@@ -196,7 +197,11 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
     return fig, ax  # Return the figure and axis objects for further modifications
 
+
 #-------------------------------------------------------------------
+
+if "functions" not in st.session_state:
+    st.session_state.functions = []  # List of functions entered by the user
 
 if "plot_data" not in st.session_state:
     st.session_state.plot_data = {"x": None, "y": None, "function": None}
@@ -208,7 +213,7 @@ fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
 st.divider()
 
-col13, col14, col15 = st.columns([4, 3, 1], vertical_alignment="bottom")
+col13, col14, col15, col16 = st.columns([3, 3, 1, 1], vertical_alignment="bottom")
 with col13:
     user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 
@@ -247,6 +252,9 @@ with col14:
     st.latex(f"y = {latex_preview}")  # Display LaTeX preview
 
 with col15:
+    color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
+
+with col16:
     if st.button("Plot"):
         x = np.linspace(xlower, xupper, 100000)
         
@@ -254,6 +262,6 @@ with col15:
 
         st.session_state.plot_data = {"x": x, "y": y1, "function": user_input}
         
-        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS['blue'])  # Add user-defined function
+        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice])  # Add user-defined function
 
 plot_placeholder.pyplot(fig)

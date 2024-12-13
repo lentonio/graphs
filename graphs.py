@@ -206,7 +206,7 @@ plot_placeholder = st.empty()
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
-col13, col14, col15 = st.columns([4, 3, 1], vertical_alignment="center")
+col13, col14, col15 = st.columns([4, 3, 1], vertical_alignment="bottom")
 with col13:
     user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 

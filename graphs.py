@@ -243,7 +243,7 @@ with col14:
     def eval_function(user_func, x, lib):
             """Evaluates the user-defined function with the given library (np or sp)."""
             y = eval(user_func, {"x": x, "lib": lib})
-            if isinstance(user_func, x, np.ndarray):
+            if isinstance(x, np.ndarray):
                 threshold_change = 10000
                 dy = lib.abs(lib.diff(y))
                 y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes

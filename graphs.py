@@ -241,6 +241,16 @@ with col14:
     y1_sym = sp.nsimplify(y1_sym)
 
     latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
+
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center; height: 100%;">
+            <p style="margin: auto;">$$y = {sp.latex(y1_sym)}$$</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
     st.latex(f"y = {latex_preview}")  # Display LaTeX preview
 
 with col15:

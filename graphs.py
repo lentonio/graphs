@@ -231,7 +231,7 @@ if st.session_state.plot_data["x"] is not None:
         st.session_state.plot_data["x"],
         st.session_state.plot_data["y"],
         label=f"y1 = {st.session_state.plot_data['function']}",
-        color=MY_COLORS[color_choice],)
+        color=MY_COLORS['blue'],)
 
 ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
 ax.margins(x=0, y=0)  # Remove margins

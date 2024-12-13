@@ -77,6 +77,10 @@ with st.sidebar:
         xminordivisor = 1
         yminordivisor = 1
 
+    if not gridstyle:
+        gridstyle = "None"
+
+
     """# Image size"""
     col9, col10 = st.columns(2)
     with col9:

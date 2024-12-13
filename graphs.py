@@ -206,6 +206,10 @@ plot_placeholder = st.empty()
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
+col13, col14 = st.columns([7, 1])
+with col13:
+    user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
+
 if st.session_state.plot_data["function"] != user_input:
     st.session_state.plot_data = {"x": None, "y": None, "function": None}
 
@@ -226,9 +230,6 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 
 plot_placeholder.pyplot(fig)
 
-col13, col14 = st.columns([7, 1])
-with col13:
-    user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 with col14:
     if st.button("Plot"):
         x = np.linspace(xlower, xupper, 100000)

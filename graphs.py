@@ -66,7 +66,7 @@ with st.sidebar:
         y_is_pi = st.checkbox("Multiply y-step by π")
         ystep = y_base_step * (np.pi if y_is_pi else 1)
 
-    gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"])
+    gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
     if gridstyle == 'Minor':
         col5, col6 = st.columns(2)

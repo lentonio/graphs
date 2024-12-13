@@ -24,17 +24,25 @@ MY_COLORS = {
 
 with st.sidebar:
     """# Axes and gridlines"""
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
-        xuserlower = st.number_input("Lower bound for x:", value=-2.0)
+        xuserlowerinput = st.number_input("Lower x:", value=-2.0)
     with col2:
-        xuserupper = st.number_input("Upper bound for x:", value=8.0)
-    
-    col3, col4 = st.columns(2)
+        xuserupperinput = st.number_input("Upper x:", value=8.0)
     with col3:
-        yuserlower = st.number_input("Lower bound for y:", value=-2.0)
+        x_bounds_is_pi = st.segmented_control("Unit", options = ["1", "π"], default = '1')
+    xuserlower = xuserlowerinput * (np.pi if x_bounds_is_pi == "π" else 1)
+    xuserupper = xuserupperinput * (np.pi if x_bounds_is_pi == "π" else 1)
+    
+    col4, col5, col6 = st.columns(3)
     with col4:
-        yuserupper = st.number_input("Upper bound for y:", value=8.0)
+        yuserlowerinput = st.number_input("Lower y:", value=-2.0)
+    with col5:
+        yuserupperinput = st.number_input("Upper y:", value=8.0)
+    with col6:
+        y_bounds_is_pi = st.segmented_control("Unit", options = ["1", "π"], default = '1')
+    yuserlower = yuserlowerinput * (np.pi if y_bounds_is_pi == "π" else 1)
+    yuserupper = yuserupperinput * (np.pi if y_bounds_is_pi == "π" else 1)
     
     xdifference = xuserupper - xuserlower
     ydifference = yuserupper - yuserlower
@@ -60,23 +68,21 @@ with st.sidebar:
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
     if gridstyle == 'Minor':
-        col5, col6 = st.columns(2)
-        with col5:
+        col7, col8 = st.columns(2)
+        with col7:
             xminordivisor = st.number_input("Minor divisor for x:", value=4)
-        with col6:
+        with col8:
             yminordivisor = st.number_input("Minor divisor for y:", value=4)
     else:
         xminordivisor = 1
         yminordivisor = 1
 
     """# Image size"""
-    col7, col8, col9 = st.columns(3)
-    with col7:
-        imageheight = st.number_input("Height", value=10)
-    with col8:
-        imagewidth = st.number_input("Width", value=10)
+    col9, col10 = st.columns(3)
     with col9:
-        unused = st.segmented_control("Gridlines", options = ["1", "π"], default = '1')
+        imageheight = st.number_input("Height", value=10)
+    with col10:
+        imagewidth = st.number_input("Width", value=10)
         
 
 x_init = np.linspace(xlower, xupper, 100000)

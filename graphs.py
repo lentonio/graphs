@@ -35,43 +35,44 @@ MY_COLORS = {
 
 """# Set axes, gridlines and image size"""
 
-col1, col2 = st.columns(2)
-with col1:
-    xuserlower = st.number_input("Lower bound for x:", value=-2.0)
-with col2:
-    xuserupper = st.number_input("Upper bound for x:", value=8.0)
-
-col3, col4 = st.columns(2)
-with col3:
-    yuserlower = st.number_input("Lower bound for y:", value=-2.0)
-with col4:
-    yuserupper = st.number_input("Upper bound for y:", value=8.0)
-
-xdifference = xuserupper - xuserlower
-ydifference = yuserupper - yuserlower
-xlower = xuserlower - 0.025 * xdifference
-xupper = xuserupper + 0.025 * xdifference
-ylower = yuserlower - 0.025 * ydifference
-yupper = yuserupper + 0.025 * ydifference
-
-# Axis values and ticks
-showvalues = st.checkbox("Show values on axes", value=True)
-showticks = st.checkbox("Show ticks on axes")
-
-if showvalues or showticks:
-    col5, col6 = st.columns(2)
-    with col5:
-        x_base_step = st.number_input("x-axis step:", value=2)
-    with col6:
-        x_is_pi = st.radio("Select an option:", options=["X 1", "X π"], label_visibility="collapsed")
-    xstep = x_base_step * (np.pi if x_is_pi else 1)
+with st.sidebar:
+    col1, col2 = st.columns(2)
+    with col1:
+        xuserlower = st.number_input("Lower bound for x:", value=-2.0)
+    with col2:
+        xuserupper = st.number_input("Upper bound for x:", value=8.0)
     
-    col7, col8 = st.columns(2)
-    with col7:
-        y_base_step = st.number_input("y-axis step:", value=2)
-    with col8:
-        y_is_pi = st.checkbox("Multiply y-step by π")
-    ystep = y_base_step * (np.pi if y_is_pi else 1)
+    col3, col4 = st.columns(2)
+    with col3:
+        yuserlower = st.number_input("Lower bound for y:", value=-2.0)
+    with col4:
+        yuserupper = st.number_input("Upper bound for y:", value=8.0)
+    
+    xdifference = xuserupper - xuserlower
+    ydifference = yuserupper - yuserlower
+    xlower = xuserlower - 0.025 * xdifference
+    xupper = xuserupper + 0.025 * xdifference
+    ylower = yuserlower - 0.025 * ydifference
+    yupper = yuserupper + 0.025 * ydifference
+    
+    # Axis values and ticks
+    showvalues = st.checkbox("Show values on axes", value=True)
+    showticks = st.checkbox("Show ticks on axes")
+    
+    if showvalues or showticks:
+        col5, col6 = st.columns(2)
+        with col5:
+            x_base_step = st.number_input("x-axis step:", value=2)
+        with col6:
+            x_is_pi = st.radio("Select an option:", options=["X 1", "X π"], label_visibility="collapsed")
+        xstep = x_base_step * (np.pi if x_is_pi else 1)
+        
+        col7, col8 = st.columns(2)
+        with col7:
+            y_base_step = st.number_input("y-axis step:", value=2)
+        with col8:
+            y_is_pi = st.checkbox("Multiply y-step by π")
+        ystep = y_base_step * (np.pi if y_is_pi else 1)
 
 # Grid style
 gridstyle = 'minor'  # Set as 'none', 'major', or 'minor'

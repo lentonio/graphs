@@ -211,7 +211,7 @@ if "selected_color" not in st.session_state:
 
 plot_placeholder = st.empty()
 st.write("")
-download_columns = st.columns([3, 1, 1, 3])
+download_columns = st.columns([2, 1, 1, 2])
 with download_columns[1]:
     svg_placeholder = st.empty()
 with download_columns[2]:

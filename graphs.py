@@ -97,6 +97,7 @@ y_init = np.zeros_like(x_init)  # Create corresponding y values
 
 #------Define create a graph function---------
 
+@st.cache_data
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                 xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False):
     """Create and save a mathematical graph with the specified parameters."""

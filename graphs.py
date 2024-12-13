@@ -60,18 +60,11 @@ with st.sidebar:
     showticks = st.checkbox("Show ticks on axes")
     
     if showvalues or showticks:
-        col5, col6 = st.columns(2)
-        with col5:
-            x_base_step = st.number_input("x-axis step:", value=2)
-        with col6:
-            x_is_pi = st.radio("Select an option:", options=["X 1", "X π"], label_visibility="collapsed")
+        x_base_step = st.number_input("x-axis step:", value=2)
+        x_is_pi = st.checkbox("Multiply y-step by π")
         xstep = x_base_step * (np.pi if x_is_pi else 1)
-        
-        col7, col8 = st.columns(2)
-        with col7:
-            y_base_step = st.number_input("y-axis step:", value=2)
-        with col8:
-            y_is_pi = st.checkbox("Multiply y-step by π")
+        y_base_step = st.number_input("y-axis step:", value=2)
+        y_is_pi = st.checkbox("Multiply y-step by π")
         ystep = y_base_step * (np.pi if y_is_pi else 1)
 
 # Grid style

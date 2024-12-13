@@ -209,7 +209,7 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 
 #-------------------------------------------------------------------
 
-col13, col14 = st.columns([4, 1])
+col13, col14 = st.columns([7, 1])
 with col13:
     st.pyplot(fig)
 with col14:

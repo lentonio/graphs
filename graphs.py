@@ -5,6 +5,7 @@ from matplotlib.ticker import FuncFormatter
 import sympy as sp
 from sympy import nsimplify, pi, latex
 import streamlit as st
+import io
 
 sp.arcsin = sp.asin
 sp.arccos = sp.acos

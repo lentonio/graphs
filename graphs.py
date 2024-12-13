@@ -238,6 +238,7 @@ with col14:
             return eval(user_func, {"x": x, "lib": lib})
     
     y1_sym = eval_function(user_input, x_sym, sp)
+    y1_sym = sp.simplify(y1_sym)
 
     latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
     st.latex(f"y = {latex_preview}")  # Display LaTeX preview

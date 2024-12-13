@@ -196,16 +196,22 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
     return fig, ax  # Return the figure and axis objects for further modifications
 
-# Create the base graph
+#-------------------------------------------------------------------
+
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
 ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
-
-# Remove unnecessary white space
 ax.margins(x=0, y=0)  # Remove margins
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
 ax.set_xlim(xlower, xupper)  # Force exact limits
 ax.set_ylim(ylower, yupper)  # Force exact limits
 
-st.pyplot(fig)
+#-------------------------------------------------------------------
+
+col13, col14 = st.columns([1, 3])
+with col13:
+    st.pyplot(fig)
+with col14:
+    if st.button("Run Function"):
+    st.write("Hello")

@@ -243,11 +243,12 @@ with col14:
     def eval_function(user_func, x, lib):
             """Evaluates the user-defined function with the given library (np or sp)."""
             y = eval(user_func, {"x": x, "lib": lib})
-            threshold_change = 10000
-            dy = lib.abs(lib.diff(y))
-            y[1:][dy > threshold_change] = lib.nan  
-            y[:-1][dy > threshold_change] = lib.nan
-            y[(y < ylower*100000) | (y > yupper*100000)] = np.nan
+            if isinstance(user_func, x, np.ndarray):
+                threshold_change = 10000
+                dy = lib.abs(lib.diff(y))
+                y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
+                y[:-1][dy > threshold_change] = lib.nan
+                y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
             return y
     
     y1_sym = eval_function(user_input, x_sym, sp)

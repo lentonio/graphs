@@ -230,6 +230,8 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 
 plot_placeholder.pyplot(fig)
 
+st.divider()
+
 with col14:
     x_sym = sp.Symbol('x')
     

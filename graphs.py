@@ -276,7 +276,7 @@ with col16:
 
         st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color,}
         
-        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], zorder=2)  # Add user-defined function
+        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], zorder=3)  # Add user-defined function
 
 plot_placeholder.pyplot(fig)
 

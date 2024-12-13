@@ -70,7 +70,7 @@ with st.sidebar:
         yminordivisor = 1
 
     """# Image size"""
-    col7, col8, col9 = st.columns(2)
+    col7, col8, col9 = st.columns(3)
     with col7:
         imageheight = st.number_input("Height", value=10)
     with col8:

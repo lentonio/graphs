@@ -238,4 +238,4 @@ with col14:
         ax.set_ylim(ylower, yupper)  # Force exact limits
 
 plot_placeholder.pyplot(fig)
-pyplot(fig)
+st.pyplot(fig)

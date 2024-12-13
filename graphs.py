@@ -214,9 +214,11 @@ st.pyplot(fig)
 col13, col14 = st.columns([7, 1])
 with col13:
     user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)")
-    y1 = eval(user_input, {"x": x, "np": np})
 with col14:
     if st.button("Plot"):
+        x = np.linspace(xlower, xupper, 100000)
+        x_sym = sp.Symbol('x') 
+        y1 = eval(user_input, {"x": x, "np": np})
         fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
         ax.plot(x_init, y_init, alpha=0)  # Plot invisible points

@@ -33,9 +33,8 @@ MY_COLORS = {
     'grey': '#4C5B64'
 }
 
-"""# Set axes, gridlines and image size"""
-
 with st.sidebar:
+    """# Axes, gridlines and image size"""
     col1, col2 = st.columns(2)
     with col1:
         xuserlower = st.number_input("Lower bound for x:", value=-2.0)

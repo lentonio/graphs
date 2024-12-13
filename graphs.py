@@ -68,7 +68,7 @@ with st.sidebar:
 
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"])
 
-    if gridstyle = 'Minor':
+    if gridstyle == 'Minor':
         col5, col6 = st.columns(2)
         with col5:
             xminordivisor = st.number_input("Minor divisor for x:", value=4)

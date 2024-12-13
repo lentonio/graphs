@@ -213,7 +213,7 @@ st.pyplot(fig)
 
 col13, col14 = st.columns([7, 1])
 with col13:
-    user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)")
+    user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
 with col14:
     if st.button("Plot"):
         x = np.linspace(xlower, xupper, 100000)

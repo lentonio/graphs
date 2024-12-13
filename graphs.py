@@ -218,7 +218,12 @@ with col14:
     if st.button("Plot"):
         x = np.linspace(xlower, xupper, 100000)
         x_sym = sp.Symbol('x') 
-        y1 = eval(user_input, {"x": x, "np": np})
+
+        def eval_function(user_func, x, lib):
+            """Evaluates the user-defined function with the given library (np or sp)."""
+            return eval(user_func, {"x": x, "lib": lib})
+        
+        y1 = eval_function(user_input, x, np)
         fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
         ax.plot(x_init, y_init, alpha=0)  # Plot invisible points

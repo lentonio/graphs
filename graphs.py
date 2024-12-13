@@ -198,10 +198,20 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
 #-------------------------------------------------------------------
 
+if "plot_data" not in st.session_state:
+    st.session_state.plot_data = {"x": None, "y": None, "function": None}
+
 plot_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
+
+if st.session_state.plot_data["x"] is not None:
+    ax.plot(
+        st.session_state.plot_data["x"],
+        st.session_state.plot_data["y"],
+        label=f"y1 = {st.session_state.plot_data['function']}",
+        color=MY_COLORS['blue'],)
 
 ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
 ax.margins(x=0, y=0)  # Remove margins
@@ -226,6 +236,8 @@ with col14:
             return eval(user_func, {"x": x, "lib": lib})
         
         y1 = eval_function(user_input, x, np)
+
+        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input}
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS['blue'])  # Add user-defined function
 

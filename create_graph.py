@@ -1,3 +1,12 @@
+import numpy as np
+from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import sympy as sp
+from sympy import nsimplify, pi, latex
+import streamlit as st
+import io
+
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                 xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False):
     """Create and save a mathematical graph with the specified parameters."""

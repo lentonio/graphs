@@ -142,12 +142,12 @@ with st.sidebar:
     xuserlower = xuserlowerinput * (np.pi if x_is_pi == "π" else 1)
     xuserupper = xuserupperinput * (np.pi if x_is_pi == "π" else 1)
     
-    col4, col5, col6 = st.columns(3)
-    with col4:
+    ylowercol, yuppercol, yunitcol = st.columns(3)
+    with ylowercol:
         yuserlowerinput = st.number_input("Lower y:", value=-2.0)
-    with col5:
+    with yuppercol:
         yuserupperinput = st.number_input("Upper y:", value=8.0)
-    with col6:
+    with yunitcol:
         y_is_pi = st.segmented_control("y unit:", options = ["1", "π"], default = '1', key="unit_control_2")
     yuserlower = yuserlowerinput * (np.pi if y_is_pi == "π" else 1)
     yuserupper = yuserupperinput * (np.pi if y_is_pi == "π" else 1)
@@ -163,11 +163,11 @@ with st.sidebar:
     showticks = st.checkbox("Show ticks on axes")
     
     if showvalues or showticks:
-        col7, col8 = st.columns(2)
-        with col7:
+        xstepcol, ystepcol = st.columns(2)
+        with xstepcol:
             x_base_step = st.number_input("x-axis step:", value=2)
             xstep = x_base_step * (np.pi if x_is_pi == "π" else 1)
-        with col8:
+        with ystepcol:
             y_base_step = st.number_input("y-axis step:", value=2)
             ystep = y_base_step * (np.pi if y_is_pi == "π" else 1)
     else:
@@ -177,10 +177,10 @@ with st.sidebar:
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
     if gridstyle == 'Minor':
-        col9, col10 = st.columns(2)
-        with col9:
+        xdivcol, ydivcol = st.columns(2)
+        with xdivcol:
             xminordivisor = st.number_input("Minor divisor for x:", value=4)
-        with col10:
+        with ydivcol:
             yminordivisor = st.number_input("Minor divisor for y:", value=4)
     else:
         xminordivisor = 1
@@ -191,10 +191,10 @@ with st.sidebar:
 
 
     """# Image size"""
-    col11, col12 = st.columns(2)
-    with col11:
+    heightcol, widthcol = st.columns(2)
+    with heightcol:
         imageheight = st.number_input("Height", value=10)
-    with col12:
+    with widthcol:
         imagewidth = st.number_input("Width", value=10)
         
 
@@ -202,7 +202,7 @@ x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
 
 
-#-------------------------------------------------------------------
+#-------BODY-------------------------
 
 if "functions" not in st.session_state:
     st.session_state.functions = []  # List of functions entered by the user

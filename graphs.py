@@ -217,6 +217,9 @@ if "plot_data" not in st.session_state:
 if "selected_color" not in st.session_state:
     st.session_state.selected_color = "blue"  # Default color
 
+if "selected_line_style" not in st.session_state:
+    st.session_state.selected_line_style = "-"  # Default line style
+
 
 master_col1, master_col2 = st.columns([1, 1])
 
@@ -237,6 +240,19 @@ with master_col2:
     col13, col14, col15, col16 = st.columns([3, 3, 2, 1], vertical_alignment="bottom")
     with col13:
         user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
+        x_sym = sp.Symbol('x')
+        def eval_function(user_func, x, lib):
+                """Evaluates the user-defined function with the given library (np or sp)."""
+                y = eval(user_func, {"x": x, "lib": lib})
+                if isinstance(x, np.ndarray):
+                    threshold_change = 10000
+                    dy = lib.abs(lib.diff(y))
+                    y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
+                    y[:-1][dy > threshold_change] = lib.nan
+                    y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+                return y
+        y1_sym = eval_function(user_input, x_sym, sp)
+        y1_sym = sp.nsimplify(y1_sym)
     
     if st.session_state.plot_data["function"] != user_input:
         st.session_state.plot_data = {"x": None, "y": None, "function": None}
@@ -245,8 +261,8 @@ with master_col2:
         ax.plot(
             st.session_state.plot_data["x"],
             st.session_state.plot_data["y"],
-            label=f"y1 = {st.session_state.plot_data['function']}",
-            color=MY_COLORS[st.session_state.plot_data["color"]])
+            color=MY_COLORS[st.session_state.plot_data["color"]],
+            linestyle=st.session_state.plot_data["line_style"])
     
     ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
     ax.margins(x=0, y=0)  # Remove margins
@@ -259,29 +275,18 @@ with master_col2:
 plot_placeholder.pyplot(fig)
 
 with col14:
-    x_sym = sp.Symbol('x')
-    
-    def eval_function(user_func, x, lib):
-            """Evaluates the user-defined function with the given library (np or sp)."""
-            y = eval(user_func, {"x": x, "lib": lib})
-            if isinstance(x, np.ndarray):
-                threshold_change = 10000
-                dy = lib.abs(lib.diff(y))
-                y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
-                y[:-1][dy > threshold_change] = lib.nan
-                y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
-            return y
-    
-    y1_sym = eval_function(user_input, x_sym, sp)
-    y1_sym = sp.nsimplify(y1_sym)
-
-    latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
-    
-    st.latex(f"y = {latex_preview}")  # Display LaTeX preview
-
-with col15:
     color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
     st.session_state.selected_color = color_choice
+
+with col15:
+    line_style_choice = st.selectbox("Line style", ("Solid", "Dashed", "Dotted"))
+    if line_style_choice == "Solid"
+        line_style_choice == "-"
+    if line_style_choice == "Dashed"
+        line_style_choice == "--"
+    if line_style_choice == "Dotted"
+        line_style_choice == ":"
+    st.session_state.selected_line_style = line_style_choice
 
 with col16:
     if st.button("Plot"):
@@ -291,7 +296,7 @@ with col16:
 
         st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color,}
         
-        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], zorder=3)  # Add user-defined function
+        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
 
 plot_placeholder.pyplot(fig)
 
@@ -319,3 +324,12 @@ png_placeholder.download_button(
     data=png_data, 
     file_name="figure1.png", 
     mime="image/png")
+
+
+
+
+
+-------unused-------
+
+# latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
+# st.latex(f"y = {latex_preview}")  # Display LaTeX preview

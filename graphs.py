@@ -280,12 +280,12 @@ with col14:
 
 with col15:
     line_style_choice = st.selectbox("Line style", ("Solid", "Dashed", "Dotted"))
-    if line_style_choice == "Solid"
-        line_style_choice == "-"
-    if line_style_choice == "Dashed"
-        line_style_choice == "--"
-    if line_style_choice == "Dotted"
-        line_style_choice == ":"
+    if line_style_choice == "Solid":
+        line_style_choice = "-"
+    elif line_style_choice == "Dashed":
+        line_style_choice = "--"
+    elif line_style_choice == "Dotted":
+        line_style_choice = ":"
     st.session_state.selected_line_style = line_style_choice
 
 with col16:

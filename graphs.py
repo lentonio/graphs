@@ -329,7 +329,7 @@ png_placeholder.download_button(
 
 
 
--------unused-------
+#-------unused-------
 
 # latex_preview = sp.latex(y1_sym)  # Convert to LaTeX
 # st.latex(f"y = {latex_preview}")  # Display LaTeX preview

@@ -21,6 +21,15 @@ MY_COLORS = {
     'grey': '#4C5B64'
 }
 
+
+#-------PAGE CONFIG----------------
+
+st.set_page_config(
+    page_title="Graph App",  # This will appear on the browser tab
+    layout="wide"  # Enable wide layout
+)
+
+
 #-------SIDEBAR--------------------
 
 with st.sidebar:

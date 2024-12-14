@@ -34,12 +34,12 @@ st.set_page_config(
 
 with st.sidebar:
     """# Axes and gridlines"""
-    col1, col2, col3 = st.columns(3)
-    with col1:
+    xlowercol, xuppercol, xunitcol = st.columns(3)
+    with xlowercol:
         xuserlowerinput = st.number_input("Lower x:", value=-2.0)
-    with col2:
+    with xuppercol:
         xuserupperinput = st.number_input("Upper x:", value=8.0)
-    with col3:
+    with xunitcol:
         x_is_pi = st.segmented_control("x unit:", options = ["1", "π"], default = '1', key="unit_control_1")
     xuserlower = xuserlowerinput * (np.pi if x_is_pi == "π" else 1)
     xuserupper = xuserupperinput * (np.pi if x_is_pi == "π" else 1)

@@ -21,6 +21,104 @@ MY_COLORS = {
     'grey': '#4C5B64'
 }
 
+#------create_graph function definition---------
+
+def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
+                xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False):
+    """Create and save a mathematical graph with the specified parameters."""
+
+    #------define some nested functions---------
+                    
+    def plot_function(y, color, style, x_coords=None):
+        """Plot a function with specified parameters."""
+        if x_coords is None:
+            x_coords = x  # Use the default x values for explicit functions (y = f(x))
+        ax.plot(x_coords, y,
+            color=color,
+            linestyle=style,
+            linewidth=2) # Vary line width
+
+    def set_grid_style(style):
+        """Set the grid style."""
+        # Always set major locators
+        ax.set_xticks(np.arange(xuserlower, xuserupper + xstep, xstep))
+        ax.set_yticks(np.arange(yuserlower, yuserupper + ystep, ystep))
+
+        if style == 'None':
+            ax.grid(False)
+        elif style == 'Major':
+            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)
+        elif style == 'Minor':
+            ax.xaxis.set_minor_locator(plt.MultipleLocator(xstep/xminordivisor))
+            ax.yaxis.set_minor_locator(plt.MultipleLocator(ystep/yminordivisor))
+            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)
+            ax.grid(True, which='minor', color='#999999', linestyle='-', alpha=0.2)
+            ax.tick_params(which='minor', length=0)
+
+    def sympy_formatter(x, pos):
+        """Format a number as a LaTeX expression."""
+        sym_expr = nsimplify(x, [pi])
+        latex_str = latex(sym_expr)
+        latex_str = latex_str.replace(r'\frac', r'\dfrac')
+        return f'${latex_str}$'
+
+    #------create the graph---------
+                    
+    fig, ax = plt.subplots(figsize=(imagewidth, imageheight))
+
+    if not skip_static_plots:
+        i = 1
+        while True:
+            try:
+                y = eval(f'y{i}')
+                color = eval(f'y{i}color')
+                style = eval(f'y{i}style')
+                try:
+                    x_coords = eval(f'x{i}')
+                    plot_function(y, color, style, x_coords)
+                except NameError:
+                    plot_function(y, color, style)
+                i += 1
+            except NameError:
+                break
+
+    for spine in ['left', 'bottom']:
+        ax.spines[spine].set_position('zero')
+        ax.spines[spine].set_linewidth(1.5)
+        ax.spines[spine].set_color('#435159')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+                    
+    if showticks:
+        ax.yaxis.set_ticks_position('left')
+        ax.xaxis.set_ticks_position('bottom')
+    else:
+        ax.yaxis.set_ticks_position('none')
+        ax.xaxis.set_ticks_position('none')
+
+    set_grid_style(gridstyle)
+
+    if showvalues:
+        ax.xaxis.set_major_formatter(FuncFormatter(sympy_formatter))
+        ax.yaxis.set_major_formatter(FuncFormatter(sympy_formatter))
+        ax.tick_params(axis='both', labelsize=12, labelfontfamily='sans-serif', colors = '#435159')
+        for label in ax.get_xticklabels() + ax.get_yticklabels():
+          label.set_bbox(dict(facecolor='white',
+                          edgecolor='none',  # No edge color
+                          pad=1))            # Padding around the text
+        yticks = ax.get_yticks()
+        xticks = ax.get_xticks()
+        ax.set_yticks(yticks[yticks != 0])
+        ax.set_xticks(xticks[xticks != 0])
+    else:
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+
+    ax.set_xlim(xlower, xupper)
+    ax.set_ylim(ylower, yupper)
+
+    return fig, ax 
+
 
 #-------PAGE CONFIG----------------
 
@@ -102,108 +200,6 @@ with st.sidebar:
 
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
-
-
-#------Define create a graph function---------
-
-def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
-                xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False):
-    """Create and save a mathematical graph with the specified parameters."""
-
-    fig, ax = plt.subplots(figsize=(imagewidth, imageheight))
-
-    def plot_function(y, color, style, x_coords=None):
-        """Plot a function with specified parameters."""
-        if x_coords is None:
-            x_coords = x  # Use the default x values for explicit functions (y = f(x))
-        ax.plot(x_coords, y,
-            color=color,
-            linestyle=style,
-            linewidth=2) # Vary line width
-
-    def set_grid_style(style):
-        """Set the grid style."""
-        # Always set major locators
-        ax.set_xticks(np.arange(xuserlower, xuserupper + xstep, xstep))
-        ax.set_yticks(np.arange(yuserlower, yuserupper + ystep, ystep))
-
-        if style == 'None':
-            ax.grid(False)
-        elif style == 'Major':
-            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)
-        elif style == 'Minor':
-            ax.xaxis.set_minor_locator(plt.MultipleLocator(xstep/xminordivisor))
-            ax.yaxis.set_minor_locator(plt.MultipleLocator(ystep/yminordivisor))
-            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5)
-            ax.grid(True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-            ax.tick_params(which='minor', length=0)
-
-    def sympy_formatter(x, pos):
-        """Format a number as a LaTeX expression."""
-        sym_expr = nsimplify(x, [pi])
-        latex_str = latex(sym_expr)
-        latex_str = latex_str.replace(r'\frac', r'\dfrac')
-        return f'${latex_str}$'
-
-    # Plot all functions (unless using this function for animation)
-    if not skip_static_plots:
-        i = 1
-        while True:
-            try:
-                y = eval(f'y{i}')
-                color = eval(f'y{i}color')
-                style = eval(f'y{i}style')
-                try:
-                    x_coords = eval(f'x{i}')
-                    plot_function(y, color, style, x_coords)
-                except NameError:
-                    plot_function(y, color, style)
-                i += 1
-            except NameError:
-                break
-
-    # Set up axes
-    ax.spines['left'].set_position('zero')
-    ax.spines['bottom'].set_position('zero')
-    ax.spines['left'].set_linewidth(1.5)    # y-axis
-    ax.spines['bottom'].set_linewidth(1.5)  # x-axis
-    ax.spines['left'].set_color('#435159')
-    ax.spines['bottom'].set_color('#435159')
-
-    if showticks:
-        ax.yaxis.set_ticks_position('left')
-        ax.xaxis.set_ticks_position('bottom')
-    else:
-        ax.yaxis.set_ticks_position('none')
-        ax.xaxis.set_ticks_position('none')
-
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    # Apply grid and formatting
-    set_grid_style(gridstyle)
-
-    if showvalues:
-        ax.xaxis.set_major_formatter(FuncFormatter(sympy_formatter))
-        ax.yaxis.set_major_formatter(FuncFormatter(sympy_formatter))
-        ax.tick_params(axis='both', labelsize=12, labelfontfamily='sans-serif', colors = '#435159')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-          label.set_bbox(dict(facecolor='white',
-                          edgecolor='none',  # No edge color
-                          pad=1))            # Padding around the text
-        # Remove zero labels
-        yticks = ax.get_yticks()
-        xticks = ax.get_xticks()
-        ax.set_yticks(yticks[yticks != 0])
-        ax.set_xticks(xticks[xticks != 0])
-    else:
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-
-    ax.set_xlim(xlower, xupper)
-    ax.set_ylim(ylower, yupper)
-
-    return fig, ax  # Return the figure and axis objects for further modifications
 
 
 #-------------------------------------------------------------------

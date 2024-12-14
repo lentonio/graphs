@@ -218,38 +218,40 @@ if "selected_color" not in st.session_state:
     st.session_state.selected_color = "blue"  # Default color
 
 
-plot_placeholder = st.empty()
-st.write("")
-download_columns = st.columns([1.2, 1, 1, 1])
-with download_columns[1]:
-    svg_placeholder = st.empty()
-with download_columns[2]:
-    png_placeholder = st.empty()
+master_col1, master_col2 = st.columns([1, 1])
+
+with master_col1:
+    plot_placeholder = st.empty()
+    st.write("")
+    download_columns = st.columns([1.2, 1, 1, 1])
+    with download_columns[1]:
+        svg_placeholder = st.empty()
+    with download_columns[2]:
+        png_placeholder = st.empty()
 
 fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                  xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
 
-st.divider()
-
-col13, col14, col15, col16 = st.columns([3, 3, 2, 1], vertical_alignment="bottom")
-with col13:
-    user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
-
-if st.session_state.plot_data["function"] != user_input:
-    st.session_state.plot_data = {"x": None, "y": None, "function": None}
-
-if st.session_state.plot_data["x"] is not None:
-    ax.plot(
-        st.session_state.plot_data["x"],
-        st.session_state.plot_data["y"],
-        label=f"y1 = {st.session_state.plot_data['function']}",
-        color=MY_COLORS[st.session_state.plot_data["color"]])
-
-ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
-ax.margins(x=0, y=0)  # Remove margins
-fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
-ax.set_xlim(xlower, xupper)  # Force exact limits
-ax.set_ylim(ylower, yupper)  # Force exact limits
+with master_col2:
+    col13, col14, col15, col16 = st.columns([3, 3, 2, 1], vertical_alignment="bottom")
+    with col13:
+        user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
+    
+    if st.session_state.plot_data["function"] != user_input:
+        st.session_state.plot_data = {"x": None, "y": None, "function": None}
+    
+    if st.session_state.plot_data["x"] is not None:
+        ax.plot(
+            st.session_state.plot_data["x"],
+            st.session_state.plot_data["y"],
+            label=f"y1 = {st.session_state.plot_data['function']}",
+            color=MY_COLORS[st.session_state.plot_data["color"]])
+    
+    ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
+    ax.margins(x=0, y=0)  # Remove margins
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
+    ax.set_xlim(xlower, xupper)  # Force exact limits
+    ax.set_ylim(ylower, yupper)  # Force exact limits
 
 #-------------------------------------------------------------------
 

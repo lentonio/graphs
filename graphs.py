@@ -221,7 +221,7 @@ if "selected_line_style" not in st.session_state:
     st.session_state.selected_line_style = "-"  # Default line style
 
 
-master_col1, master_col2 = st.columns([2, 1])
+master_col1, master_col2 = st.columns([1.5, 1])
 
 with master_col1:
     plot_placeholder = st.empty()
@@ -294,7 +294,7 @@ with col16:
         
         y1 = eval_function(user_input, x, np)
 
-        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color,}
+        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
 

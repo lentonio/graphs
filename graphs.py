@@ -221,7 +221,7 @@ if "selected_line_style" not in st.session_state:
     st.session_state.selected_line_style = "-"  # Default line style
 
 
-master_col1, master_col2 = st.columns([1, 1])
+master_col1, master_col2 = st.columns([2, 1])
 
 with master_col1:
     plot_placeholder = st.empty()
@@ -237,7 +237,7 @@ fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
 with master_col2:
     st.subheader("Plot functions", divider="gray")
-    col13, col14, col15, col16 = st.columns([3, 3, 2, 1], vertical_alignment="bottom")
+    col13, col14, col15, col16 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
     with col13:
         user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
         x_sym = sp.Symbol('x')

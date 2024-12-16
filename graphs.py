@@ -213,26 +213,6 @@ with col16:
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
 
-fig, ax = create_graph(
-    xlower=xlower,
-    xupper=xupper,
-    ylower=ylower,
-    yupper=yupper,
-    xstep=xstep,
-    ystep=ystep,
-    gridstyle=gridstyle,
-    xminordivisor=xminordivisor,
-    yminordivisor=yminordivisor,
-    imagewidth=imagewidth,
-    imageheight=imageheight,
-    xuserlower=xuserlower,
-    xuserupper=xuserupper,
-    yuserlower=yuserlower,
-    yuserupper=yuserupper,
-    showticks=showticks,
-    showvalues=showvalues,
-    skip_static_plots=False  # or True if you want to skip plotting static data
-)
 
 plot_placeholder.pyplot(fig)
 

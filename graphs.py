@@ -105,6 +105,26 @@ with st.sidebar:
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
 
+fig, ax = create_graph(
+    xlower=xlower,
+    xupper=xupper,
+    ylower=ylower,
+    yupper=yupper,
+    xstep=xstep,
+    ystep=ystep,
+    gridstyle=gridstyle,
+    xminordivisor=xminordivisor,
+    yminordivisor=yminordivisor,
+    imagewidth=imagewidth,
+    imageheight=imageheight,
+    xuserlower=xuserlower,
+    xuserupper=xuserupper,
+    yuserlower=yuserlower,
+    yuserupper=yuserupper,
+    showticks=showticks,
+    showvalues=showvalues,
+    skip_static_plots=False  # or True if you want to skip plotting static data
+)
 
 #-------BODY-------------------------
 

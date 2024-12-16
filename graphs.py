@@ -27,7 +27,7 @@ MY_COLORS = {
 #-------PAGE CONFIG----------------
 
 st.set_page_config(
-    page_title="Graph App",  # This will appear on the browser tab
+    page_title="Graph App",
     layout="wide"  # Enable wide layout
 )
 
@@ -102,6 +102,8 @@ with st.sidebar:
         imagewidth = st.number_input("Width", value=10)
         
 
+#-------INITIAL PLOT-------------------------
+
 x_init = np.linspace(xlower, xupper, 100000)
 y_init = np.zeros_like(x_init)  # Create corresponding y values
 
@@ -126,7 +128,14 @@ fig, ax = create_graph(
     skip_static_plots=False  # or True if you want to skip plotting static data
 )
 
-#-------BODY-------------------------
+    ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
+    ax.margins(x=0, y=0)  # Remove margins
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
+    ax.set_xlim(xlower, xupper)  # Force exact limits
+    ax.set_ylim(ylower, yupper)  # Force exact limits
+
+
+#-------ADD FUNCTIONS-------------------------
 
 if "functions" not in st.session_state:
     st.session_state.functions = []  # List of functions entered by the user
@@ -180,41 +189,36 @@ with master_col2:
             st.session_state.plot_data["y"],
             color=MY_COLORS[st.session_state.plot_data["color"]],
             linestyle=st.session_state.plot_data["line_style"])
+
+    with col14:
+        color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
+        st.session_state.selected_color = color_choice
     
-    ax.plot(x_init, y_init, alpha=0)  # Plot invisible points
-    ax.margins(x=0, y=0)  # Remove margins
-    fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0, hspace=0)  # Remove all padding
-    ax.set_xlim(xlower, xupper)  # Force exact limits
-    ax.set_ylim(ylower, yupper)  # Force exact limits
-
-#-------------------------------------------------------------------
-
-with col14:
-    color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
-    st.session_state.selected_color = color_choice
-
-with col15:
-    line_style_choice = st.selectbox("Line style", ("solid", "dashed", "dotted"), label_visibility="collapsed")
-    if line_style_choice == "solid":
-        line_style_choice = "-"
-    elif line_style_choice == "dashed":
-        line_style_choice = "--"
-    elif line_style_choice == "dotted":
-        line_style_choice = ":"
-    st.session_state.selected_line_style = line_style_choice
-
-with col16:
-    if st.button("Plot"):
-        x = np.linspace(xlower, xupper, 100000)
-        
-        y1 = eval_function(user_input, x, np)
-
-        st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
-        
-        ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
+    with col15:
+        line_style_choice = st.selectbox("Line style", ("solid", "dashed", "dotted"), label_visibility="collapsed")
+        if line_style_choice == "solid":
+            line_style_choice = "-"
+        elif line_style_choice == "dashed":
+            line_style_choice = "--"
+        elif line_style_choice == "dotted":
+            line_style_choice = ":"
+        st.session_state.selected_line_style = line_style_choice
+    
+    with col16:
+        if st.button("Plot"):
+            x = np.linspace(xlower, xupper, 100000)
+            
+            y1 = eval_function(user_input, x, np)
+    
+            st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
+            
+            ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
 
 
 plot_placeholder.pyplot(fig)
+
+
+#-------SAVE IMAGES-------------------------
 
 svg_buffer = io.StringIO()
 fig.savefig(svg_buffer, format="svg")
@@ -228,7 +232,6 @@ svg_placeholder.download_button(
     mime="image/svg+xml",
 )
 
-
 png_buffer = io.BytesIO()
 fig.savefig(png_buffer, format="png", dpi=300, bbox_inches="tight", pad_inches=0)
 png_buffer.seek(0)
@@ -240,9 +243,6 @@ png_placeholder.download_button(
     data=png_data, 
     file_name="figure1.png", 
     mime="image/png")
-
-
-
 
 
 #-------unused-------

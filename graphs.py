@@ -132,27 +132,6 @@ with master_col1:
     with download_columns[2]:
         png_placeholder = st.empty()
 
-fig, ax = create_graph(
-    xlower=xlower,
-    xupper=xupper,
-    ylower=ylower,
-    yupper=yupper,
-    xstep=xstep,
-    ystep=ystep,
-    gridstyle=gridstyle,
-    xminordivisor=xminordivisor,
-    yminordivisor=yminordivisor,
-    imagewidth=imagewidth,
-    imageheight=imageheight,
-    xuserlower=xuserlower,
-    xuserupper=xuserupper,
-    yuserlower=yuserlower,
-    yuserupper=yuserupper,
-    showticks=showticks,
-    showvalues=showvalues,
-    skip_static_plots=False  # or True if you want to skip plotting static data
-)
-
 with master_col2:
     st.subheader("Plot functions", divider="gray")
     col13, col14, col15, col16 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
@@ -190,8 +169,6 @@ with master_col2:
 
 #-------------------------------------------------------------------
 
-plot_placeholder.pyplot(fig)
-
 with col14:
     color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
     st.session_state.selected_color = color_choice
@@ -215,6 +192,27 @@ with col16:
         st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
         
         ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
+
+fig, ax = create_graph(
+    xlower=xlower,
+    xupper=xupper,
+    ylower=ylower,
+    yupper=yupper,
+    xstep=xstep,
+    ystep=ystep,
+    gridstyle=gridstyle,
+    xminordivisor=xminordivisor,
+    yminordivisor=yminordivisor,
+    imagewidth=imagewidth,
+    imageheight=imageheight,
+    xuserlower=xuserlower,
+    xuserupper=xuserupper,
+    yuserlower=yuserlower,
+    yuserupper=yuserupper,
+    showticks=showticks,
+    showvalues=showvalues,
+    skip_static_plots=False  # or True if you want to skip plotting static data
+)
 
 plot_placeholder.pyplot(fig)
 

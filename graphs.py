@@ -132,8 +132,26 @@ with master_col1:
     with download_columns[2]:
         png_placeholder = st.empty()
 
-fig, ax = create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
-                 xminordivisor, yminordivisor, imagewidth, imageheight, skip_static_plots=False)
+fig, ax = create_graph(
+    xlower=xlower,
+    xupper=xupper,
+    ylower=ylower,
+    yupper=yupper,
+    xstep=xstep,
+    ystep=ystep,
+    gridstyle=gridstyle,
+    xminordivisor=xminordivisor,
+    yminordivisor=yminordivisor,
+    imagewidth=imagewidth,
+    imageheight=imageheight,
+    xuserlower=xuserlower,
+    xuserupper=xuserupper,
+    yuserlower=yuserlower,
+    yuserupper=yuserupper,
+    showticks=showticks,
+    showvalues=showvalues,
+    skip_static_plots=False  # or True if you want to skip plotting static data
+)
 
 with master_col2:
     st.subheader("Plot functions", divider="gray")

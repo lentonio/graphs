@@ -223,7 +223,7 @@ with master_col2:
                     label=f"y1 = {user_input}", 
                     color=MY_COLORS[color_choice], 
                     linestyle=line_style_choice, 
-                    linewidth = axis_weight * 1.3
+                    linewidth = axis_weight * 1.3,
                     zorder=3)  # Add user-defined function
 
 

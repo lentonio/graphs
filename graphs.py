@@ -64,9 +64,8 @@ with st.sidebar:
     yupper = yuserupper + 0.025 * ydifference
     
     showvalues = st.checkbox("Show values on axes", value=True)
-    showticks = st.checkbox("Show ticks on axes")
     
-    if showvalues or showticks:
+    if showvalues:
         xstepcol, ystepcol = st.columns(2)
         with xstepcol:
             x_base_step = st.number_input("x-axis step:", value=2)
@@ -127,7 +126,6 @@ fig, ax = create_graph(
     xuserupper=xuserupper,
     yuserlower=yuserlower,
     yuserupper=yuserupper,
-    showticks=showticks,
     showvalues=showvalues,
     axis_weight=axis_weight,
     label_size=label_size, 

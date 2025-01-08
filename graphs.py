@@ -195,7 +195,8 @@ with master_col2:
             st.session_state.plot_data["x"],
             st.session_state.plot_data["y"],
             color=MY_COLORS[st.session_state.plot_data["color"]],
-            linestyle=st.session_state.plot_data["line_style"])
+            linestyle=st.session_state.plot_data["line_style"],
+            linewidth=axis_weight * 1.3)
 
     with col14:
         color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")

@@ -95,7 +95,7 @@ with st.sidebar:
 
     """# Axis Appearance"""
     axis_weight = st.slider("Axis weight", min_value=1.5, max_value=4.0, value=2.0, step=0.5)
-    label_size = st.slider("Label size", min_value=12, max_value=22, value=16, step=1)
+    label_size = st.slider("Label size", min_value=12, max_value=26, value=16, step=1)
 
     """# Image size"""
     heightcol, widthcol = st.columns(2)

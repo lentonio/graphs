@@ -168,8 +168,8 @@ with master_col1:
 
 with master_col2:
     st.subheader("Plot functions", divider="gray")
-    col13, col14, col15, col16 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
-    with col13:
+    col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
+    with col1:
         user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
         x_sym = sp.Symbol('x')
         def eval_function(user_func, x, lib):
@@ -196,11 +196,11 @@ with master_col2:
             linestyle=st.session_state.plot_data["line_style"],
             linewidth=axis_weight * 1.3)
 
-    with col14:
+    with col2:
         color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
         st.session_state.selected_color = color_choice
     
-    with col15:
+    with col3:
         line_style_choice = st.selectbox("Line style", ("solid", "dashed", "dotted"), label_visibility="collapsed")
         if line_style_choice == "solid":
             line_style_choice = "-"
@@ -210,7 +210,7 @@ with master_col2:
             line_style_choice = ":"
         st.session_state.selected_line_style = line_style_choice
     
-    with col16:
+    with col4:
         if st.button("Plot"):
             x = np.linspace(xlower, xupper, 100000)
             

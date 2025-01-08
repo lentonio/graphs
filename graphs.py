@@ -94,10 +94,9 @@ with st.sidebar:
     if not gridstyle:
         gridstyle = "None"
 
-    """# Axis Appearance"""
+    """# Appearance"""
     axis_weight = st.slider("Axis weight", min_value=1.5, max_value=4.0, value=2.0, step=0.5)
 
-    """# Image size"""
     heightcol, widthcol = st.columns(2)
     with heightcol:
         imageheight = st.number_input("Height", value=10)

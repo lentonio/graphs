@@ -33,12 +33,12 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
         if style == 'None':
             ax.grid(False)
         elif style == 'Major':
-            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5, linewidth=axis_width*0.7)
+            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5, linewidth=axis_weight*0.7)
         elif style == 'Minor':
             ax.xaxis.set_minor_locator(plt.MultipleLocator(xstep/xminordivisor))
             ax.yaxis.set_minor_locator(plt.MultipleLocator(ystep/yminordivisor))
-            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5, linewidth=axis_width*0.7)
-            ax.grid(True, which='minor', color='#999999', linestyle='-', alpha=0.2, linewidth=axis_width*0.7)
+            ax.grid(True, which='major', color='#666666', linestyle='-', alpha=0.5, linewidth=axis_weight*0.7)
+            ax.grid(True, which='minor', color='#999999', linestyle='-', alpha=0.2, linewidth=axis_weight*0.7)
             ax.tick_params(which='minor', length=0)
 
     def sympy_formatter(x, pos):

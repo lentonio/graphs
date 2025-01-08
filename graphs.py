@@ -23,6 +23,8 @@ MY_COLORS = {
     'grey': '#4C5B64'
 }
 
+PI = 3.1415927
+
 
 #-------PAGE CONFIG----------------
 
@@ -43,8 +45,8 @@ with st.sidebar:
         xuserupperinput = st.number_input("Upper x:", value=8.0)
     with xunitcol:
         x_is_pi = st.segmented_control("x unit:", options = ["1", "π"], default = '1', key="unit_control_1")
-    xuserlower = xuserlowerinput * (np.pi if x_is_pi == "π" else 1)
-    xuserupper = xuserupperinput * (np.pi if x_is_pi == "π" else 1)
+    xuserlower = xuserlowerinput * (PI if x_is_pi == "π" else 1)
+    xuserupper = xuserupperinput * (PI if x_is_pi == "π" else 1)
     
     ylowercol, yuppercol, yunitcol = st.columns(3)
     with ylowercol:
@@ -53,8 +55,8 @@ with st.sidebar:
         yuserupperinput = st.number_input("Upper y:", value=8.0)
     with yunitcol:
         y_is_pi = st.segmented_control("y unit:", options = ["1", "π"], default = '1', key="unit_control_2")
-    yuserlower = yuserlowerinput * (np.pi if y_is_pi == "π" else 1)
-    yuserupper = yuserupperinput * (np.pi if y_is_pi == "π" else 1)
+    yuserlower = yuserlowerinput * (PI if y_is_pi == "π" else 1)
+    yuserupper = yuserupperinput * (PI if y_is_pi == "π" else 1)
     
     xdifference = xuserupper - xuserlower
     ydifference = yuserupper - yuserlower
@@ -69,10 +71,10 @@ with st.sidebar:
         xstepcol, ystepcol = st.columns(2)
         with xstepcol:
             x_base_step = st.number_input("x-axis step:", value=2)
-            xstep = x_base_step * (np.pi if x_is_pi == "π" else 1)
+            xstep = x_base_step * (PI if x_is_pi == "π" else 1)
         with ystepcol:
             y_base_step = st.number_input("y-axis step:", value=2)
-            ystep = y_base_step * (np.pi if y_is_pi == "π" else 1)
+            ystep = y_base_step * (PI if y_is_pi == "π" else 1)
         label_size = st.slider("Label size", min_value=12, max_value=26, value=16, step=1)
     else:
         xstep = 1

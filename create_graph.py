@@ -70,7 +70,7 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
 
     for spine in ['left', 'bottom']:
         ax.spines[spine].set_position('zero')
-        ax.spines[spine].set_linewidth(1.5)
+        ax.spines[spine].set_linewidth(axis_weight)
         ax.spines[spine].set_color('#435159')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -87,7 +87,10 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     if showvalues:
         ax.xaxis.set_major_formatter(FuncFormatter(sympy_formatter))
         ax.yaxis.set_major_formatter(FuncFormatter(sympy_formatter))
-        ax.tick_params(axis='both', labelsize=12, labelfontfamily='sans-serif', colors = '#435159')
+        ax.tick_params(axis='both', 
+                       labelsize=label_size, 
+                       labelfontfamily='sans-serif', 
+                       colors = '#435159')
         for label in ax.get_xticklabels() + ax.get_yticklabels():
           label.set_bbox(dict(facecolor='white',
                           edgecolor='none',  # No edge color

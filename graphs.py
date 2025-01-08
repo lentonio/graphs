@@ -100,6 +100,11 @@ with st.sidebar:
         imageheight = st.number_input("Height", value=10)
     with widthcol:
         imagewidth = st.number_input("Width", value=10)
+
+
+    """# Axis Appearance"""
+    axis_weight = st.slider("Axis weight", min_value=0.5, max_value=3.0, value=1.5, step=0.5)
+    label_size = st.slider("Label size", min_value=8, max_value=16, value=12, step=1)
         
 
 #-------INITIAL PLOT-------------------------
@@ -125,6 +130,8 @@ fig, ax = create_graph(
     yuserupper=yuserupper,
     showticks=showticks,
     showvalues=showvalues,
+    axis_weight=axis_weight,
+    label_size=label_size, 
     skip_static_plots=False  # or True if you want to skip plotting static data
 )
 

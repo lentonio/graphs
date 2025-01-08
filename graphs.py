@@ -93,6 +93,9 @@ with st.sidebar:
     if not gridstyle:
         gridstyle = "None"
 
+    """# Axis Appearance"""
+    axis_weight = st.slider("Axis weight", min_value=1.5, max_value=3.0, value=2, step=0.5)
+    label_size = st.slider("Label size", min_value=12, max_value=22, value=16, step=1)
 
     """# Image size"""
     heightcol, widthcol = st.columns(2)
@@ -101,11 +104,6 @@ with st.sidebar:
     with widthcol:
         imagewidth = st.number_input("Width", value=10)
 
-
-    """# Axis Appearance"""
-    axis_weight = st.slider("Axis weight", min_value=0.5, max_value=3.0, value=1.5, step=0.5)
-    label_size = st.slider("Label size", min_value=8, max_value=16, value=12, step=1)
-        
 
 #-------INITIAL PLOT-------------------------
 

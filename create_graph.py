@@ -10,7 +10,7 @@ import io
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     xminordivisor, yminordivisor, imagewidth, imageheight,
     xuserlower, xuserupper, yuserlower, yuserupper,
-    showticks, showvalues, x=None, skip_static_plots=False):
+    showticks, showvalues, axis_weight, label_size, x=None, skip_static_plots=False):
     """Create and save a mathematical graph with the specified parameters."""
 
     #------define some nested functions---------

@@ -219,7 +219,12 @@ with master_col2:
     
             st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
             
-            ax.plot(x, y1, label=f"y1 = {user_input}", color=MY_COLORS[color_choice], linestyle=line_style_choice, zorder=3)  # Add user-defined function
+            ax.plot(x, y1, 
+                    label=f"y1 = {user_input}", 
+                    color=MY_COLORS[color_choice], 
+                    linestyle=line_style_choice, 
+                    linewidth = axis_weight * 1.3
+                    zorder=3)  # Add user-defined function
 
 
 plot_placeholder.pyplot(fig)

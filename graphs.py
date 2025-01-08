@@ -74,9 +74,11 @@ with st.sidebar:
         with ystepcol:
             y_base_step = st.number_input("y-axis step:", value=2)
             ystep = y_base_step * (np.pi if y_is_pi == "π" else 1)
+        label_size = st.slider("Label size", min_value=12, max_value=26, value=16, step=1)
     else:
         xstep = 1
         ystep = 1
+        label_size = 16
 
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
@@ -95,7 +97,6 @@ with st.sidebar:
 
     """# Axis Appearance"""
     axis_weight = st.slider("Axis weight", min_value=1.5, max_value=4.0, value=2.0, step=0.5)
-    label_size = st.slider("Label size", min_value=12, max_value=26, value=16, step=1)
 
     """# Image size"""
     heightcol, widthcol = st.columns(2)

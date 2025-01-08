@@ -10,7 +10,7 @@ import io
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     xminordivisor, yminordivisor, imagewidth, imageheight,
     xuserlower, xuserupper, yuserlower, yuserupper,
-    showticks, showvalues, axis_weight, label_size, x=None, skip_static_plots=False):
+    showvalues, axis_weight, label_size, x=None, skip_static_plots=False):
     """Create and save a mathematical graph with the specified parameters."""
 
     #------define some nested functions---------
@@ -75,12 +75,8 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
                     
-    if showticks:
-        ax.yaxis.set_ticks_position('left')
-        ax.xaxis.set_ticks_position('bottom')
-    else:
-        ax.yaxis.set_ticks_position('none')
-        ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+    ax.xaxis.set_ticks_position('none')
 
     set_grid_style(gridstyle)
 

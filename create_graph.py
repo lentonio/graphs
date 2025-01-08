@@ -22,7 +22,7 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
         ax.plot(x_coords, y,
             color=color,
             linestyle=style,
-            linewidth=2) # Vary line width
+            linewidth=axis_weight*1.3) # Vary line width
 
     def set_grid_style(style):
         """Set the grid style."""

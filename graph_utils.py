@@ -105,7 +105,6 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                                   pad=1))            # Padding around the text
             else:
                 label.set_bbox(None)  # No background box
-                label.set_zorder(10)  # Above functions
         yticks = ax.get_yticks()
         xticks = ax.get_xticks()
         ax.set_yticks(yticks[yticks != 0])

@@ -215,37 +215,37 @@ with master_col2:
                 "dotted": ":"
             }[line_style_choice]
     
-    with col4:
-            if st.button("Plot", key=f"plot_{i}"):
-                # Only plot if there's a function entered
-                if user_input.strip():
-                    x = np.linspace(xlower, xupper, 100000)
-                    y = eval_function(user_input, x, np, ylower, yupper)
-                    
-                    # Create function data dictionary
-                    func_data = {
-                        "x": x,
-                        "y": y,
-                        "function": user_input,
-                        "color": st.session_state[f"selected_color_{i}"],
-                        "line_style": line_style
-                    }
-                    
-                    # Update or add the function data in our list
-                    if i < len(st.session_state.plotted_functions):
-                        st.session_state.plotted_functions[i] = func_data
-                    else:
-                        st.session_state.plotted_functions.append(func_data)
-            
-            for func_data in st.session_state.plotted_functions:
-                ax.plot(
-                    func_data["x"],
-                    func_data["y"],
-                    color=MY_COLORS[func_data["color"]],
-                    linestyle=func_data["line_style"],
-                    linewidth=axis_weight * 1.3,
-                    zorder=3
-                )
+        with col4:
+                if st.button("Plot", key=f"plot_{i}"):
+                    # Only plot if there's a function entered
+                    if user_input.strip():
+                        x = np.linspace(xlower, xupper, 100000)
+                        y = eval_function(user_input, x, np, ylower, yupper)
+                        
+                        # Create function data dictionary
+                        func_data = {
+                            "x": x,
+                            "y": y,
+                            "function": user_input,
+                            "color": st.session_state[f"selected_color_{i}"],
+                            "line_style": line_style
+                        }
+                        
+                        # Update or add the function data in our list
+                        if i < len(st.session_state.plotted_functions):
+                            st.session_state.plotted_functions[i] = func_data
+                        else:
+                            st.session_state.plotted_functions.append(func_data)
+                
+                for func_data in st.session_state.plotted_functions:
+                    ax.plot(
+                        func_data["x"],
+                        func_data["y"],
+                        color=MY_COLORS[func_data["color"]],
+                        linestyle=func_data["line_style"],
+                        linewidth=axis_weight * 1.3,
+                        zorder=3
+                    )
 
 
 plot_placeholder.pyplot(fig)

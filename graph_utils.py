@@ -21,7 +21,7 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None):
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     xminordivisor, yminordivisor, imagewidth, imageheight,
     xuserlower, xuserupper, yuserlower, yuserupper,
-    showvalues, axis_weight, label_size, x=None, skip_static_plots=False):
+    showvalues, axis_weight, label_size, white_background, x=None, skip_static_plots=False):
     """Create and save a mathematical graph with the specified parameters."""
 
     #------define some nested functions---------
@@ -99,9 +99,12 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
                        labelfontfamily='sans-serif', 
                        colors = '#435159')
         for label in ax.get_xticklabels() + ax.get_yticklabels():
-          label.set_bbox(dict(facecolor='white',
-                          edgecolor='none',  # No edge color
-                          pad=1))            # Padding around the text
+            if white_background:
+                label.set_bbox(dict(facecolor='white',
+                                  edgecolor='none',  # No edge color
+                                  pad=1))            # Padding around the text
+            else:
+                label.set_bbox(None)  # No background box
         yticks = ax.get_yticks()
         xticks = ax.get_xticks()
         ax.set_yticks(yticks[yticks != 0])

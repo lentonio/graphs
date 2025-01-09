@@ -302,7 +302,8 @@ for point_data in st.session_state.plotted_points:
            color=MY_COLORS[point_data["color"]], 
            markersize=12, 
            markeredgewidth=2,
-           linestyle='none')  # This ensures only the marker is plotted
+           linestyle='none',
+           zorder=3)
 
 plot_placeholder.pyplot(fig)
 

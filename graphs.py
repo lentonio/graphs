@@ -105,6 +105,8 @@ with st.sidebar:
     with widthcol:
         imagewidth = st.number_input("Width", value=10)
 
+    white_background = st.toggle("White background", value=True)
+
 
 #-------INITIAL PLOT-------------------------
 
@@ -311,6 +313,10 @@ for point_data in st.session_state.plotted_points:
            markeredgewidth=markeredgewidth,
            linestyle='none',
            zorder=3)
+
+if not white_background:
+    ax.set_facecolor('none')  # Transparent background
+    fig.patch.set_facecolor('none')  # Transparent figure background
 
 plot_placeholder.pyplot(fig)
 

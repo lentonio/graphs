@@ -7,6 +7,17 @@ from sympy import nsimplify, pi, latex
 import streamlit as st
 import io
 
+def eval_function(user_func, x, lib):
+                """Evaluates the user-defined function with the given library (np or sp)."""
+                y = eval(user_func, {"x": x, "lib": lib})
+                if isinstance(x, np.ndarray):
+                    threshold_change = 10000
+                    dy = lib.abs(lib.diff(y))
+                    y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
+                    y[:-1][dy > threshold_change] = lib.nan
+                    y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+                return y
+
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     xminordivisor, yminordivisor, imagewidth, imageheight,
     xuserlower, xuserupper, yuserlower, yuserupper,

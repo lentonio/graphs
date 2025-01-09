@@ -296,12 +296,19 @@ for func_data in st.session_state.plotted_functions:
         zorder=3)
 
 for point_data in st.session_state.plotted_points:
+    if point_data["marker"] == "x":
+        markersize = axis_weight * 6
+        markeredgewidth = axis_weight
+    else:  # circle
+        markersize = axis_weight * 3
+        markeredgewidth = axis_weight
+    
     ax.plot(point_data["x"], 
            point_data["y"], 
            marker=point_data["marker"],
            color=MY_COLORS[point_data["color"]], 
-           markersize=12, 
-           markeredgewidth=2,
+           markersize=markersize,
+           markeredgewidth=markeredgewidth,
            linestyle='none',
            zorder=3)
 

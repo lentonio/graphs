@@ -258,19 +258,19 @@ with master_col2:
         
         with col2:
             y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
-        
+            
         with col3:
+            point_color = st.selectbox("Color", 
+                                     options=list(MY_COLORS.keys()), 
+                                     key=f"point_color_{i}",
+                                     label_visibility="collapsed")
+        
+        with col4:
             marker_style = st.selectbox("Style", 
                                       ("×", "○"), 
                                       key=f"point_style_{i}",
                                       label_visibility="collapsed")
             marker = "x" if marker_style == "×" else "o"
-            
-        with col4:
-            point_color = st.selectbox("Color", 
-                                     options=list(MY_COLORS.keys()), 
-                                     key=f"point_color_{i}",
-                                     label_visibility="collapsed")
         
         with col5:
             if st.button("Plot", key=f"plot_point_{i}"):

@@ -243,48 +243,48 @@ with master_col2:
 
     st.subheader("Plot points", divider="gray")
         
-        # Create up to 5 point input rows
-        for i in range(5):
-            col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
+    # Create up to 5 point input rows
+    for i in range(5):
+        col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
+        
+        with col1:
+            x_coord = st.number_input(f"x{i+1}", key=f"point_x_{i}")
+        
+        with col2:
+            y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
+        
+        with col3:
+            marker_style = st.selectbox("Style", 
+                                      ("×", "○"), 
+                                      key=f"point_style_{i}",
+                                      label_visibility="collapsed")
+            # Convert to matplotlib marker style
+            marker = "x" if marker_style == "×" else "o"
             
-            with col1:
-                x_coord = st.number_input(f"x{i+1}", key=f"point_x_{i}")
+        with col4:
+            if f"point_color_{i}" not in st.session_state:
+                st.session_state[f"point_color_{i}"] = "blue"
             
-            with col2:
-                y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
-            
-            with col3:
-                marker_style = st.selectbox("Style", 
-                                          ("×", "○"), 
-                                          key=f"point_style_{i}",
-                                          label_visibility="collapsed")
-                # Convert to matplotlib marker style
-                marker = "x" if marker_style == "×" else "o"
+            point_color = st.selectbox("Color", 
+                                     options=list(MY_COLORS.keys()), 
+                                     key=f"point_color_{i}",
+                                     index=list(MY_COLORS.keys()).index(st.session_state[f"point_color_{i}"]),
+                                     label_visibility="collapsed")
+            st.session_state[f"point_color_{i}"] = point_color
+        
+        with col5:
+            if st.button("Plot", key=f"plot_point_{i}"):
+                point_data = {
+                    "x": x_coord,
+                    "y": y_coord,
+                    "marker": marker,
+                    "color": point_color
+                }
                 
-            with col4:
-                if f"point_color_{i}" not in st.session_state:
-                    st.session_state[f"point_color_{i}"] = "blue"
-                
-                point_color = st.selectbox("Color", 
-                                         options=list(MY_COLORS.keys()), 
-                                         key=f"point_color_{i}",
-                                         index=list(MY_COLORS.keys()).index(st.session_state[f"point_color_{i}"]),
-                                         label_visibility="collapsed")
-                st.session_state[f"point_color_{i}"] = point_color
-            
-            with col5:
-                if st.button("Plot", key=f"plot_point_{i}"):
-                    point_data = {
-                        "x": x_coord,
-                        "y": y_coord,
-                        "marker": marker,
-                        "color": point_color
-                    }
-                    
-                    if i < len(st.session_state.plotted_points):
-                        st.session_state.plotted_points[i] = point_data
-                    else:
-                        st.session_state.plotted_points.append(point_data)
+                if i < len(st.session_state.plotted_points):
+                    st.session_state.plotted_points[i] = point_data
+                else:
+                    st.session_state.plotted_points.append(point_data)
 
 for func_data in st.session_state.plotted_functions:
     ax.plot(

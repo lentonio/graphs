@@ -204,8 +204,8 @@ with master_col2:
         if st.button("Plot"):
             x = np.linspace(xlower, xupper, 100000)
             
-            y1 = eval_function(user_input, x, np)
-    
+            y1 = eval_function(user_input, x, np, ylower, yupper)
+
             st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
             
             ax.plot(x, y1, 

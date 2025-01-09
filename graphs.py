@@ -157,6 +157,12 @@ if "selected_color" not in st.session_state:
 if "selected_line_style" not in st.session_state:
     st.session_state.selected_line_style = "-"  # Default line style
 
+for i in range(5):
+    if f"point_color_{i}" not in st.session_state:
+        st.session_state[f"point_color_{i}"] = "blue"
+    if f"point_style_{i}" not in st.session_state:
+        st.session_state[f"point_style_{i}"] = "×"  # Default to cross marker
+
 
 master_col1, master_col2 = st.columns([1.5, 1])
 
@@ -258,19 +264,13 @@ with master_col2:
                                       ("×", "○"), 
                                       key=f"point_style_{i}",
                                       label_visibility="collapsed")
-            # Convert to matplotlib marker style
             marker = "x" if marker_style == "×" else "o"
             
         with col4:
-            if f"point_color_{i}" not in st.session_state:
-                st.session_state[f"point_color_{i}"] = "blue"
-            
             point_color = st.selectbox("Color", 
                                      options=list(MY_COLORS.keys()), 
                                      key=f"point_color_{i}",
-                                     index=list(MY_COLORS.keys()).index(st.session_state[f"point_color_{i}"]),
                                      label_visibility="collapsed")
-            st.session_state[f"point_color_{i}"] = point_color
         
         with col5:
             if st.button("Plot", key=f"plot_point_{i}"):

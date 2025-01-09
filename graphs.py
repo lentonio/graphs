@@ -131,7 +131,8 @@ fig, ax = create_graph(
     yuserupper=yuserupper,
     showvalues=showvalues,
     axis_weight=axis_weight,
-    label_size=label_size, 
+    label_size=label_size,
+    white_background=white_background,
     skip_static_plots=False  # or True if you want to skip plotting static data
 )
 

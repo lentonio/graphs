@@ -105,6 +105,7 @@ with st.sidebar:
     with widthcol:
         imagewidth = st.number_input("Width", value=10)
 
+    st.write("")  # Adds vertical space
     white_background = st.toggle("White background", value=True)
 
 

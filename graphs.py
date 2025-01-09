@@ -101,7 +101,7 @@ with st.sidebar:
 
     heightcol, widthcol = st.columns(2)
     with heightcol:
-        imageheight = st.number_input("Height", value=10)
+        imageheight = st.number_input("Height", value=8)
     with widthcol:
         imagewidth = st.number_input("Width", value=10)
 

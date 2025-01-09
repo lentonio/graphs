@@ -142,8 +142,8 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 
 #-------ADD FUNCTIONS-------------------------
 
-if "functions" not in st.session_state:
-    st.session_state.functions = []  # List of functions entered by the user
+if "plotted_functions" not in st.session_state:
+    st.session_state.plotted_functions = []  # List to store function data
 
 if "plot_data" not in st.session_state:
     st.session_state.plot_data = {"x": None, "y": None, "function": None}
@@ -168,52 +168,84 @@ with master_col1:
 
 with master_col2:
     st.subheader("Plot functions", divider="gray")
-    col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
-    with col1:
-        user_input = st.text_input("Enter function", value="0.1 * x**2 * lib.sin(3*x)", label_visibility="collapsed")
-        x_sym = sp.Symbol('x')
-        y1_sym = eval_function(user_input, x_sym, sp)
-        y1_sym = sp.nsimplify(y1_sym)
     
-    if st.session_state.plot_data["function"] != user_input:
-        st.session_state.plot_data = {"x": None, "y": None, "function": None}
-    
-    if st.session_state.plot_data["x"] is not None:
-        ax.plot(
-            st.session_state.plot_data["x"],
-            st.session_state.plot_data["y"],
-            color=MY_COLORS[st.session_state.plot_data["color"]],
-            linestyle=st.session_state.plot_data["line_style"],
-            linewidth=axis_weight * 1.3)
-
-    with col2:
-        color_choice = st.selectbox("Color", options=list(MY_COLORS.keys()), label_visibility="collapsed")
-        st.session_state.selected_color = color_choice
-    
-    with col3:
-        line_style_choice = st.selectbox("Line style", ("solid", "dashed", "dotted"), label_visibility="collapsed")
-        if line_style_choice == "solid":
-            line_style_choice = "-"
-        elif line_style_choice == "dashed":
-            line_style_choice = "--"
-        elif line_style_choice == "dotted":
-            line_style_choice = ":"
-        st.session_state.selected_line_style = line_style_choice
+    # Create up to 5 function input rows
+    for i in range(5):
+        col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
+        
+        with col1:
+            default_value = "0.1 * x**2 * lib.sin(3*x)" if i == 0 else ""
+            user_input = st.text_input(f"Function {i+1}", 
+                                     value=default_value,
+                                     key=f"function_{i}")
+            if user_input.strip():
+                x_sym = sp.Symbol('x')
+                y1_sym = eval_function(user_input, x_sym, sp)
+                y1_sym = sp.nsimplify(y1_sym)
+        
+        with col2:
+            # Initialize color in session state if not present
+            if f"selected_color_{i}" not in st.session_state:
+                st.session_state[f"selected_color_{i}"] = "blue"  # default color
+            
+            color_choice = st.selectbox("Color", 
+                                      options=list(MY_COLORS.keys()), 
+                                      key=f"color_{i}",
+                                      index=list(MY_COLORS.keys()).index(st.session_state[f"selected_color_{i}"]),
+                                      label_visibility="collapsed")
+            st.session_state[f"selected_color_{i}"] = color_choice
+        
+        with col3:
+            # Initialize line style in session state if not present
+            if f"selected_line_style_{i}" not in st.session_state:
+                st.session_state[f"selected_line_style_{i}"] = "solid"  # default style
+            
+            line_styles = ("solid", "dashed", "dotted")
+            line_style_choice = st.selectbox("Line style", 
+                                           line_styles,
+                                           key=f"style_{i}",
+                                           index=line_styles.index(st.session_state[f"selected_line_style_{i}"]),
+                                           label_visibility="collapsed")
+            st.session_state[f"selected_line_style_{i}"] = line_style_choice
+            
+            # Convert to matplotlib style
+            line_style = {
+                "solid": "-",
+                "dashed": "--",
+                "dotted": ":"
+            }[line_style_choice]
     
     with col4:
-        if st.button("Plot"):
-            x = np.linspace(xlower, xupper, 100000)
+            if st.button("Plot", key=f"plot_{i}"):
+                # Only plot if there's a function entered
+                if user_input.strip():
+                    x = np.linspace(xlower, xupper, 100000)
+                    y = eval_function(user_input, x, np, ylower, yupper)
+                    
+                    # Create function data dictionary
+                    func_data = {
+                        "x": x,
+                        "y": y,
+                        "function": user_input,
+                        "color": st.session_state[f"selected_color_{i}"],
+                        "line_style": line_style
+                    }
+                    
+                    # Update or add the function data in our list
+                    if i < len(st.session_state.plotted_functions):
+                        st.session_state.plotted_functions[i] = func_data
+                    else:
+                        st.session_state.plotted_functions.append(func_data)
             
-            y1 = eval_function(user_input, x, np, ylower, yupper)
-
-            st.session_state.plot_data = {"x": x, "y": y1, "function": user_input, "color": st.session_state.selected_color, "line_style": st.session_state.selected_line_style,}
-            
-            ax.plot(x, y1, 
-                    label=f"y1 = {user_input}", 
-                    color=MY_COLORS[color_choice], 
-                    linestyle=line_style_choice, 
-                    linewidth = axis_weight * 1.3,
-                    zorder=3)  # Add user-defined function
+            for func_data in st.session_state.plotted_functions:
+                ax.plot(
+                    func_data["x"],
+                    func_data["y"],
+                    color=MY_COLORS[func_data["color"]],
+                    linestyle=func_data["line_style"],
+                    linewidth=axis_weight * 1.3,
+                    zorder=3
+                )
 
 
 plot_placeholder.pyplot(fig)

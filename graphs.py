@@ -143,7 +143,10 @@ ax.set_ylim(ylower, yupper)  # Force exact limits
 #-------ADD FUNCTIONS-------------------------
 
 if "functions" not in st.session_state:
-    st.session_state.functions = []  # List to store multiple functions and their properties
+    st.session_state.functions = []  # List of functions entered by the user
+
+if "plot_data" not in st.session_state:
+    st.session_state.plot_data = {"x": None, "y": None, "function": None}
 
 if "selected_color" not in st.session_state:
     st.session_state.selected_color = "blue"  # Default color

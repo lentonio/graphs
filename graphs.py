@@ -191,6 +191,10 @@ with master_col2:
     with tab1:
         st.subheader("Plot explicit functions", divider="gray")
         
+        # Initialize conversion variables
+        python_str = None
+        preview_expr = None
+        
         # Input row
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
         
@@ -221,6 +225,10 @@ with master_col2:
                 "dotted": ":"
             }[line_style_choice]
         
+        # Do LaTeX conversion here so python_str is available for plot button
+        if latex_input.strip():
+            python_str, preview_expr = latex_to_python(latex_input)
+        
         with col4:
             if st.button("Plot", key=f"latex_plot_1"):
                 if latex_input.strip() and python_str:  # Only plot if we have valid input
@@ -245,10 +253,7 @@ with master_col2:
         with preview_col1:
             st.write("Preview:")
         with preview_col2:
-            python_str = None
-            preview_expr = None
             if latex_input.strip():
-                python_str, preview_expr = latex_to_python(latex_input)
                 if python_str:
                     st.latex(preview_expr)
                 else:

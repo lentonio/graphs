@@ -371,7 +371,7 @@ with master_col2:
         
         # Create up to 5 parametric function input rows
         for i in range(5):
-            st.write(f"Function {i+1}")  # Add subtitle for each function
+            st.caption(f"Function {i+1}")  # Changed from write to caption
             
             # All controls in one row with minimum widths
             col1, col2, col3, col4, col5, col6 = st.columns([3.5, 3.5, 2, 2, 2, 1.5], vertical_alignment="bottom")

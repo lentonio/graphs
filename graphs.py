@@ -408,21 +408,17 @@ with master_col2:
                                       help="Format: start:end",
                                       placeholder="start:end")
             with col4:
-                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 
                                           key=f"param_color_{i}",
-                                          index=0,
-                                          label_visibility="collapsed")
+                                          index=0)
             
             with col5:
-                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
                 line_styles = ("solid", "dashed", "dotted")
-                line_style_choice = st.selectbox("Line style", 
+                line_style_choice = st.selectbox("Style", 
                                                line_styles,
                                                key=f"param_style_{i}",
-                                               index=0,
-                                               label_visibility="collapsed")
+                                               index=0)
                 line_style = {
                     "solid": "-",
                     "dashed": "--",
@@ -437,8 +433,7 @@ with master_col2:
                 y_python, _ = latex_to_python(y_latex, param_var='t')
             
             with col6:
-                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
-                if st.button("Plot", key=f"plot_param_{i}"):
+                if st.button("Plot", key=f"plot_param_{i}", type="primary"):
                     if x_python and y_python and t_range:
                         try:
                             # Parse t range with better LaTeX handling

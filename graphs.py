@@ -369,26 +369,12 @@ with master_col2:
     with tab3:
         st.subheader("Plot parametric functions", divider="gray")
         
-        # Add CSS for horizontal scrolling
-        st.markdown("""
-            <style>
-                .stTabs [data-baseweb="tab-panel"] {
-                    overflow-x: auto;
-                }
-                
-                div[data-testid="column"] {
-                    min-width: min-content;
-                    white-space: nowrap;
-                }
-            </style>
-        """, unsafe_allow_html=True)
-        
         # Create up to 5 parametric function input rows
         for i in range(5):
             st.write(f"Function {i+1}")  # Add subtitle for each function
             
             # All controls in one row with minimum widths
-            col1, col2, col3, col4, col5, col6 = st.columns([3.5, 3.5, 2, 2, 2, 1.5])
+            col1, col2, col3, col4, col5, col6 = st.columns([3.5, 3.5, 2, 2, 2, 1.5], vertical_alignment="bottom")
             with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
                 x_latex = st.text_input("$x(t)$",
@@ -411,14 +397,16 @@ with master_col2:
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 
                                           key=f"param_color_{i}",
-                                          index=0)
+                                          index=0,
+                                          label_visibility="collapsed")
             
             with col5:
                 line_styles = ("solid", "dashed", "dotted")
-                line_style_choice = st.selectbox("Style", 
+                line_style_choice = st.selectbox("Line style", 
                                                line_styles,
                                                key=f"param_style_{i}",
-                                               index=0)
+                                               index=0,
+                                               label_visibility="collapsed")
                 line_style = {
                     "solid": "-",
                     "dashed": "--",
@@ -433,7 +421,7 @@ with master_col2:
                 y_python, _ = latex_to_python(y_latex, param_var='t')
             
             with col6:
-                if st.button("Plot", key=f"plot_param_{i}", type="primary"):
+                if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:
                             # Parse t range with better LaTeX handling

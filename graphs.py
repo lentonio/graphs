@@ -198,7 +198,7 @@ with master_col2:
             default_value = r"\sin(3x)" if i == 0 else ""
             latex_input = st.text_input(f"Function 1", 
                                       value=default_value,
-                                      key=f"function_1")
+                                      key=f"latex_function_1")
             if latex_input.strip():
                 python_str, preview_expr = latex_to_python(latex_input)
                 if python_str:  # Conversion successful
@@ -209,7 +209,7 @@ with master_col2:
         with col2:
             color_choice = st.selectbox("Color", 
                                       options=list(MY_COLORS.keys()), 
-                                      key=f"color_1",
+                                      key=f"latex_color_1",
                                       index=0,
                                       label_visibility="collapsed")
         
@@ -217,7 +217,7 @@ with master_col2:
             line_styles = ("solid", "dashed", "dotted")
             line_style_choice = st.selectbox("Line style", 
                                            line_styles,
-                                           key=f"style_1",
+                                           key=f"latex_style_1",
                                            index=0,
                                            label_visibility="collapsed")
             
@@ -229,7 +229,7 @@ with master_col2:
             }[line_style_choice]
         
         with col4:
-            if st.button("Plot", key=f"plot_1"):
+            if st.button("Plot", key=f"latex_plot_1"):
                 if latex_input.strip() and python_str:  # Only plot if we have valid input
                     x = np.linspace(xlower, xupper, 100000)
                     y = eval_function(python_str, x, np, ylower, yupper)

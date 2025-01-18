@@ -267,9 +267,16 @@ with master_col2:
                                          value=default_value,
                                          key=f"implicit_{i}")
                 if user_input.strip():
-                    x_sym = sp.Symbol('x')
-                    y_sym = sp.Symbol('y')
-                    expr = eval_function(user_input, (x_sym, y_sym), sp)
+                    # Directly evaluate the expression with sympy
+                    x_sym, y_sym = sp.symbols('x y')
+                    expr = eval(user_input, {
+                        "x": x_sym, 
+                        "y": y_sym, 
+                        "lib": sp,
+                        "sin": sp.sin,
+                        "cos": sp.cos,
+                        "tan": sp.tan
+                    })
             
             with col2:
                 color_choice = st.selectbox("Color", 

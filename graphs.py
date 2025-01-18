@@ -199,10 +199,15 @@ with master_col2:
             latex_input = st.text_input(f"Function 1", 
                                       value=default_value,
                                       key=f"latex_function_1")
+            
+            # Move conversion outside the if statement so python_str is available to plot button
+            python_str = None
+            preview_expr = None
             if latex_input.strip():
                 python_str, preview_expr = latex_to_python(latex_input)
                 if python_str:  # Conversion successful
                     st.latex(preview_expr)
+                    st.caption(f"Python code: {python_str}")  # Debug info
                 else:  # Conversion failed
                     st.error(preview_expr)
         
@@ -231,6 +236,7 @@ with master_col2:
         with col4:
             if st.button("Plot", key=f"latex_plot_1"):
                 if latex_input.strip() and python_str:  # Only plot if we have valid input
+                    st.caption(f"Attempting to plot: {python_str}")  # Debug info
                     x = np.linspace(xlower, xupper, 100000)
                     y = eval_function(python_str, x, np, ylower, yupper)
                     

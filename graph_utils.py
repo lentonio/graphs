@@ -8,15 +8,19 @@ import streamlit as st
 import io
 
 def eval_function(user_func, x, lib, ylower=None, yupper=None):
-    """Evaluates the user-defined function with the given library (np or sp)."""
-    y = eval(user_func, {"x": x, "lib": lib})
-    if isinstance(x, np.ndarray) and ylower is not None and yupper is not None:
-        threshold_change = 10000
-        dy = lib.abs(lib.diff(y))
-        y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
-        y[:-1][dy > threshold_change] = lib.nan
-        y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
-    return y
+    """Evaluates the user-defined function with the given library (np or sp).
+    For implicit functions, x should be a tuple of (x_sym, y_sym)."""
+    if isinstance(x, tuple):  # Handle implicit function case
+        return eval(user_func, {"x": x[0], "y": x[1], "lib": lib})
+    else:  # Handle explicit function case
+        y = eval(user_func, {"x": x, "lib": lib})
+        if isinstance(x, np.ndarray) and ylower is not None and yupper is not None:
+            threshold_change = 10000
+            dy = lib.abs(lib.diff(y))
+            y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
+            y[:-1][dy > threshold_change] = lib.nan
+            y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+        return y
 
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     xminordivisor, yminordivisor, imagewidth, imageheight,

@@ -75,11 +75,11 @@ with st.sidebar:
         with ystepcol:
             y_base_step = st.number_input("y-axis step:", value=2)
             ystep = y_base_step * (PI if y_is_pi == "π" else 1)
-        label_size = st.slider("Label size", min_value=12, max_value=26, value=16, step=1)
+        label_size = st.slider("Label size", min_value=12, max_value=26, value=20, step=1)
     else:
         xstep = 1
         ystep = 1
-        label_size = 16
+        label_size = 20
 
     gridstyle = st.segmented_control("Gridlines", options = ["None", "Major", "Minor"], default = 'None')
 
@@ -97,7 +97,7 @@ with st.sidebar:
         gridstyle = "None"
 
     """# Appearance"""
-    axis_weight = st.slider("Axis weight", min_value=1.5, max_value=4.0, value=2.0, step=0.5)
+    axis_weight = st.slider("Axis weight", min_value=1.5, max_value=4.0, value=3.0, step=0.5)
 
     heightcol, widthcol = st.columns(2)
     with heightcol:
@@ -310,10 +310,10 @@ with master_col2:
             col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
             
             with col1:
-                default_value = "x**2 + y**2 - 1" if i == 0 else ""
-                user_input = st.text_input(f"Function {i+1}", 
+                default_value = r"x^2 + y^2 - 1" if i == 0 else ""
+                latex_input = st.text_input(f"Function {i+1}", 
                                      value=default_value,
-                                     key=f"implicit_{i}")
+                                     key=f"implicit_latex_{i}")
             
             with col2:
                 color_choice = st.selectbox("Color", 
@@ -330,20 +330,25 @@ with master_col2:
                                                index=0,
                                                label_visibility="collapsed")
                 
-                # Convert to matplotlib style
                 line_style = {
                     "solid": "-",
                     "dashed": "--",
                     "dotted": ":"
                 }[line_style_choice]
             
+            # Do LaTeX conversion here so python_str is available for plot button
+            python_str = None
+            if latex_input.strip():
+                python_str, _ = latex_to_python(latex_input)
+            
             with col4:
                 if st.button("Plot", key=f"plot_implicit_{i}"):
-                    if user_input.strip():
+                    if latex_input.strip() and python_str:
                         implicit_data = {
-                            "function": user_input,
+                            "function": python_str,
                             "color": color_choice,
-                            "line_style": line_style
+                            "line_style": line_style,
+                            "zorder": 3  # Make sure plots above axes
                         }
                         
                         if i < len(st.session_state.plotted_implicit_functions):
@@ -351,7 +356,7 @@ with master_col2:
                         else:
                             st.session_state.plotted_implicit_functions.append(implicit_data)
 
-        st.caption("Entering $f(x,y)$ will plot the curve $f(x,y) = 0$.\n\nFor example, $x^2 + y^2 - 1$ plots the unit circle.")
+        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0.\n\nFor example, $x^2 + y^2 - 1$ plots the unit circle.")
 
     with tab3:
         st.subheader("Plot points", divider="gray")

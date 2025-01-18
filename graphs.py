@@ -241,7 +241,7 @@ with master_col2:
                         "function": python_str,
                         "color": color_choice,
                         "line_style": line_style,
-                        "zorder": st.session_state.plot_counter
+                        "zorder": 10 + st.session_state.plot_counter  # Base zorder of 10 for all functions
                     }
                     
                     if 0 < len(st.session_state.plotted_functions):
@@ -296,7 +296,7 @@ with master_col2:
                             "function": python_str_i,
                             "color": color_choice_i,
                             "line_style": line_style_i,
-                            "zorder": st.session_state.plot_counter
+                            "zorder": 10 + st.session_state.plot_counter  # Base zorder of 10 for all functions
                         }
                         
                         if i-1 < len(st.session_state.plotted_functions):
@@ -351,7 +351,7 @@ with master_col2:
                             "function": python_str,
                             "color": color_choice,
                             "line_style": line_style,
-                            "zorder": st.session_state.plot_counter
+                            "zorder": 10 + st.session_state.plot_counter  # Base zorder of 10 for all functions
                         }
                         
                         if i < len(st.session_state.plotted_implicit_functions):

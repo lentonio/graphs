@@ -199,7 +199,7 @@ with master_col2:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
         
         with col1:
-            default_value = r"\sin(3x)" if i == 0 else ""
+            default_value = r"\frac{x}{2}-\sin(x)" if i == 0 else ""
             latex_input = st.text_input(f"Function 1", 
                                       value=default_value,
                                       key=f"latex_function_1")
@@ -248,42 +248,58 @@ with master_col2:
                     else:
                         st.session_state.plotted_functions.append(func_data)
 
-        # Preview area with border and proper alignment
-        st.markdown("""
-            <style>
-            .preview-box {
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                padding: 10px;
-                margin: 10px 0;
-            }
-            .preview-box .katex-display {
-                text-align: left;
-                margin: 0;
-            }
-            .preview-box .katex {
-                text-align: left;
-                padding: 0;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-        
-        preview_container = st.container()
-        with preview_container:
-            st.markdown('<div class="preview-box">', unsafe_allow_html=True)
-            if latex_input.strip():
-                if python_str:
-                    st.latex(preview_expr)
-                else:
-                    st.error(preview_expr)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        st.caption("""Functions must use Python syntax with the 'lib.' prefix.\n\n
-Trigonometric: lib.sin(x), lib.cos(x), lib.tan(x)\n
-Reciprocal trig: lib.csc(x), lib.sec(x), lib.cot(x)\n
-Inverse trig: lib.arcsin(x), lib.arccos(x), lib.arctan(x)\n
-Logarithmic: lib.log(x) [natural], lib.log10(x), lib.log2(x)\n
-Roots & powers: lib.sqrt(x), lib.cbrt(x), x**n [for nth power]""")
+        # Add remaining 4 function inputs
+        for i in range(2, 6):  # Functions 2-5
+            col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
+            
+            with col1:
+                latex_input_i = st.text_input(f"Function {i}", 
+                                            value="",
+                                            key=f"latex_function_{i}")
+            
+            with col2:
+                color_choice_i = st.selectbox("Color", 
+                                            options=list(MY_COLORS.keys()), 
+                                            key=f"latex_color_{i}",
+                                            index=0,
+                                            label_visibility="collapsed")
+            
+            with col3:
+                line_style_choice_i = st.selectbox("Line style", 
+                                                 line_styles,
+                                                 key=f"latex_style_{i}",
+                                                 index=0,
+                                                 label_visibility="collapsed")
+                
+                line_style_i = {
+                    "solid": "-",
+                    "dashed": "--",
+                    "dotted": ":"
+                }[line_style_choice_i]
+            
+            # Do LaTeX conversion
+            python_str_i = None
+            if latex_input_i.strip():
+                python_str_i, _ = latex_to_python(latex_input_i)
+            
+            with col4:
+                if st.button("Plot", key=f"latex_plot_{i}"):
+                    if latex_input_i.strip() and python_str_i:
+                        x = np.linspace(xlower, xupper, 100000)
+                        y = eval_function(python_str_i, x, np, ylower, yupper)
+                        
+                        func_data = {
+                            "x": x,
+                            "y": y,
+                            "function": python_str_i,
+                            "color": color_choice_i,
+                            "line_style": line_style_i
+                        }
+                        
+                        if i-1 < len(st.session_state.plotted_functions):
+                            st.session_state.plotted_functions[i-1] = func_data
+                        else:
+                            st.session_state.plotted_functions.append(func_data)
 
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")

@@ -263,7 +263,7 @@ with master_col2:
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")
         
-        # Create up to 5 implicit function input rows (increased from 3)
+        # Create up to 5 implicit function input rows
         for i in range(5):
             col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
             
@@ -309,7 +309,7 @@ with master_col2:
                         else:
                             st.session_state.plotted_implicit_functions.append(implicit_data)
 
-        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0. For example, x**2 + y**2 - 1 plots the unit circle.")
+        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0. For example, $x^2 + y^2 - 1$ plots the unit circle.")
 
     with tab3:
         st.subheader("Plot points", divider="gray")

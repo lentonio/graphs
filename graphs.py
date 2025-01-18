@@ -388,27 +388,24 @@ with master_col2:
             st.write(f"Function {i+1}")  # Add subtitle for each function
             
             # All controls in one row with minimum widths
-            col1, col2, col3, col4, col5, col6 = st.columns([4, 4, 2, 2, 2, 1.5])
+            col1, col2, col3, col4, col5, col6 = st.columns([3.5, 3.5, 2, 2, 2, 1.5])
             with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
                 x_latex = st.text_input("$x(t)$",
                                       value=default_x,
                                       key=f"param_x_latex_{i}",
-                                      # Set minimum width
                                       placeholder="Enter x(t)")
             with col2:
                 default_y = r"\sin(t)" if i == 0 else ""
                 y_latex = st.text_input("$y(t)$",
                                       value=default_y,
                                       key=f"param_y_latex_{i}",
-                                      # Set minimum width
                                       placeholder="Enter y(t)")
             with col3:
                 t_range = st.text_input("$t$ range", 
                                       value="0:2π" if i == 0 else "",
                                       key=f"param_range_{i}",
                                       help="Format: start:end",
-                                      # Set minimum width
                                       placeholder="start:end")
             with col4:
                 color_choice = st.selectbox("Color", 

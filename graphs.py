@@ -369,7 +369,7 @@ with master_col2:
     with tab3:
         st.subheader("Plot parametric functions", divider="gray")
         
-        # Add CSS to create horizontal scrolling
+        # Add CSS for horizontal scrolling
         st.markdown("""
             <style>
                 .stTabs [data-baseweb="tab-panel"] {
@@ -408,6 +408,7 @@ with master_col2:
                                       help="Format: start:end",
                                       placeholder="start:end")
             with col4:
+                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 
                                           key=f"param_color_{i}",
@@ -415,6 +416,7 @@ with master_col2:
                                           label_visibility="collapsed")
             
             with col5:
+                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
                 line_styles = ("solid", "dashed", "dotted")
                 line_style_choice = st.selectbox("Line style", 
                                                line_styles,
@@ -435,6 +437,7 @@ with master_col2:
                 y_python, _ = latex_to_python(y_latex, param_var='t')
             
             with col6:
+                st.markdown("$\\phantom{x(t)}$")  # Invisible label to match height
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:

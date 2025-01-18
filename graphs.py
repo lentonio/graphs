@@ -180,7 +180,7 @@ with master_col1:
         png_placeholder = st.empty()
 
 with master_col2:
-    tab1, tab2 = st.tabs(["Functions", "Points"])
+    tab1, tab2, tab3 = st.tabs(["Explicit functions", "Implicit functions", "Points"])
     
     with tab1:
         st.subheader("Plot functions", divider="gray")
@@ -255,6 +255,54 @@ with master_col2:
 
 
     with tab2:
+        st.subheader("Plot implicit functions", divider="gray")
+        
+        # Create up to 3 implicit function input rows
+        for i in range(3):
+            col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
+            
+            with col1:
+                default_value = "x**2 + y**2 - 1" if i == 0 else ""
+                user_input = st.text_input(f"F(x,y) = 0, enter F(x,y):", 
+                                         value=default_value,
+                                         key=f"implicit_{i}")
+                if user_input.strip():
+                    x_sym = sp.Symbol('x')
+                    y_sym = sp.Symbol('y')
+                    expr = eval_function(user_input, (x_sym, y_sym), sp)
+            
+            with col2:
+                color_choice = st.selectbox("Color", 
+                                          options=list(MY_COLORS.keys()), 
+                                          key=f"implicit_color_{i}",
+                                          index=0,
+                                          label_visibility="collapsed")
+            
+            with col3:
+                resolution = st.selectbox("Resolution",
+                                        options=[100, 200, 500],
+                                        key=f"implicit_res_{i}",
+                                        index=0,
+                                        label_visibility="collapsed")
+            
+            with col4:
+                if st.button("Plot", key=f"plot_implicit_{i}"):
+                    if user_input.strip():
+                        x = np.linspace(xlower, xupper, resolution)
+                        y = np.linspace(ylower, yupper, resolution)
+                        X, Y = np.meshgrid(x, y)
+                        
+                        # Convert symbolic expression to numpy function
+                        f = sp.lambdify((x_sym, y_sym), expr)
+                        Z = f(X, Y)
+                        
+                        # Plot the zero contour
+                        ax.contour(X, Y, Z, levels=[0], 
+                                 colors=[MY_COLORS[color_choice]],
+                                 linewidths=axis_weight * 1.3,
+                                 zorder=3)
+
+    with tab3:
         st.subheader("Plot points", divider="gray")
         
         # Create up to 5 point input rows

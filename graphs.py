@@ -248,16 +248,29 @@ with master_col2:
                     else:
                         st.session_state.plotted_functions.append(func_data)
 
-        # Preview row
-        preview_col1, preview_col2 = st.columns([1, 3])
-        with preview_col1:
-            st.write("Preview:")
-        with preview_col2:
+        # Preview area with border
+        st.markdown("""
+            <style>
+            .preview-box {
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            .preview-box .katex {
+                text-align: left;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+        
+        with st.container():
+            st.markdown('<div class="preview-box">', unsafe_allow_html=True)
             if latex_input.strip():
                 if python_str:
                     st.latex(preview_expr)
                 else:
                     st.error(preview_expr)
+            st.markdown('</div>', unsafe_allow_html=True)
 
         st.caption("""Functions must use Python syntax with the 'lib.' prefix.\n\n
 Trigonometric: lib.sin(x), lib.cos(x), lib.tan(x)\n

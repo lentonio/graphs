@@ -369,27 +369,47 @@ with master_col2:
     with tab3:
         st.subheader("Plot parametric functions", divider="gray")
         
+        # Add CSS to create horizontal scrolling
+        st.markdown("""
+            <style>
+                .stTabs [data-baseweb="tab-panel"] {
+                    overflow-x: auto;
+                }
+                
+                div[data-testid="column"] {
+                    min-width: min-content;
+                    white-space: nowrap;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+        
         # Create up to 5 parametric function input rows
         for i in range(5):
             st.write(f"Function {i+1}")  # Add subtitle for each function
             
-            # All controls in one row
-            col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2, 2, 2, 1])
+            # All controls in one row with minimum widths
+            col1, col2, col3, col4, col5, col6 = st.columns([4, 4, 2, 2, 2, 1.5])
             with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
-                x_latex = st.text_input("$x$(t)", # Removed LaTeX formatting from label
+                x_latex = st.text_input("$x(t)$",
                                       value=default_x,
-                                      key=f"param_x_latex_{i}")
+                                      key=f"param_x_latex_{i}",
+                                      # Set minimum width
+                                      placeholder="Enter x(t)")
             with col2:
                 default_y = r"\sin(t)" if i == 0 else ""
-                y_latex = st.text_input("$y$(t)", # Removed LaTeX formatting from label
+                y_latex = st.text_input("$y(t)$",
                                       value=default_y,
-                                      key=f"param_y_latex_{i}")
+                                      key=f"param_y_latex_{i}",
+                                      # Set minimum width
+                                      placeholder="Enter y(t)")
             with col3:
                 t_range = st.text_input("$t$ range", 
                                       value="0:2π" if i == 0 else "",
                                       key=f"param_range_{i}",
-                                      help="Format: start:end")
+                                      help="Format: start:end",
+                                      # Set minimum width
+                                      placeholder="start:end")
             with col4:
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 

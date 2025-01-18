@@ -191,7 +191,7 @@ with master_col2:
     with tab1:
         st.subheader("Plot explicit functions", divider="gray")
         
-        # Try LaTeX input for first function
+        # Input row
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
         
         with col1:
@@ -199,17 +199,6 @@ with master_col2:
             latex_input = st.text_input(f"Function 1", 
                                       value=default_value,
                                       key=f"latex_function_1")
-            
-            # Move conversion outside the if statement so python_str is available to plot button
-            python_str = None
-            preview_expr = None
-            if latex_input.strip():
-                python_str, preview_expr = latex_to_python(latex_input)
-                if python_str:  # Conversion successful
-                    st.latex(preview_expr)
-                    st.caption(f"Python code: {python_str}")  # Debug info
-                else:  # Conversion failed
-                    st.error(preview_expr)
         
         with col2:
             color_choice = st.selectbox("Color", 
@@ -226,7 +215,6 @@ with master_col2:
                                            index=0,
                                            label_visibility="collapsed")
             
-            # Convert to matplotlib style
             line_style = {
                 "solid": "-",
                 "dashed": "--",
@@ -236,11 +224,9 @@ with master_col2:
         with col4:
             if st.button("Plot", key=f"latex_plot_1"):
                 if latex_input.strip() and python_str:  # Only plot if we have valid input
-                    st.caption(f"Attempting to plot: {python_str}")  # Debug info
                     x = np.linspace(xlower, xupper, 100000)
                     y = eval_function(python_str, x, np, ylower, yupper)
                     
-                    # Create function data dictionary
                     func_data = {
                         "x": x,
                         "y": y,
@@ -249,11 +235,24 @@ with master_col2:
                         "line_style": line_style
                     }
                     
-                    # Update or add the function data in our list
                     if 0 < len(st.session_state.plotted_functions):
                         st.session_state.plotted_functions[0] = func_data
                     else:
                         st.session_state.plotted_functions.append(func_data)
+
+        # Preview row
+        preview_col1, preview_col2 = st.columns([1, 3])
+        with preview_col1:
+            st.write("Preview:")
+        with preview_col2:
+            python_str = None
+            preview_expr = None
+            if latex_input.strip():
+                python_str, preview_expr = latex_to_python(latex_input)
+                if python_str:
+                    st.latex(preview_expr)
+                else:
+                    st.error(preview_expr)
 
         st.caption("""Functions must use Python syntax with the 'lib.' prefix.\n\n
 Trigonometric: lib.sin(x), lib.cos(x), lib.tan(x)\n

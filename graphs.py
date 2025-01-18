@@ -180,115 +180,119 @@ with master_col1:
         png_placeholder = st.empty()
 
 with master_col2:
-    st.subheader("Plot functions", divider="gray")
+    tab1, tab2 = st.tabs(["Functions", "Points"])
     
-    # Create up to 5 function input rows
-    for i in range(5):
-        col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
+    with tab1:
+        st.subheader("Plot functions", divider="gray")
         
-        with col1:
-            default_value = "0.1 * x**2 * lib.sin(3*x)" if i == 0 else ""
-            user_input = st.text_input(f"Function {i+1}", 
-                                     value=default_value,
-                                     key=f"function_{i}")
-            if user_input.strip():
-                x_sym = sp.Symbol('x')
-                y1_sym = eval_function(user_input, x_sym, sp)
-                y1_sym = sp.nsimplify(y1_sym)
-        
-        with col2:
-            # Initialize color in session state if not present
-            if f"selected_color_{i}" not in st.session_state:
-                st.session_state[f"selected_color_{i}"] = "blue"  # default color
+        # Create up to 5 function input rows
+        for i in range(5):
+            col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
             
-            color_choice = st.selectbox("Color", 
-                                      options=list(MY_COLORS.keys()), 
-                                      key=f"color_{i}",
-                                      index=list(MY_COLORS.keys()).index(st.session_state[f"selected_color_{i}"]),
-                                      label_visibility="collapsed")
-            st.session_state[f"selected_color_{i}"] = color_choice
-        
-        with col3:
-            # Initialize line style in session state if not present
-            if f"selected_line_style_{i}" not in st.session_state:
-                st.session_state[f"selected_line_style_{i}"] = "solid"  # default style
+            with col1:
+                default_value = "0.1 * x**2 * lib.sin(3*x)" if i == 0 else ""
+                user_input = st.text_input(f"Function {i+1}", 
+                                         value=default_value,
+                                         key=f"function_{i}")
+                if user_input.strip():
+                    x_sym = sp.Symbol('x')
+                    y1_sym = eval_function(user_input, x_sym, sp)
+                    y1_sym = sp.nsimplify(y1_sym)
             
-            line_styles = ("solid", "dashed", "dotted")
-            line_style_choice = st.selectbox("Line style", 
-                                           line_styles,
-                                           key=f"style_{i}",
-                                           index=line_styles.index(st.session_state[f"selected_line_style_{i}"]),
-                                           label_visibility="collapsed")
-            st.session_state[f"selected_line_style_{i}"] = line_style_choice
-            
-            # Convert to matplotlib style
-            line_style = {
-                "solid": "-",
-                "dashed": "--",
-                "dotted": ":"
-            }[line_style_choice]
-    
-        with col4:
-                if st.button("Plot", key=f"plot_{i}"):
-                    # Only plot if there's a function entered
-                    if user_input.strip():
-                        x = np.linspace(xlower, xupper, 100000)
-                        y = eval_function(user_input, x, np, ylower, yupper)
-                        
-                        # Create function data dictionary
-                        func_data = {
-                            "x": x,
-                            "y": y,
-                            "function": user_input,
-                            "color": st.session_state[f"selected_color_{i}"],
-                            "line_style": line_style
-                        }
-                        
-                        # Update or add the function data in our list
-                        if i < len(st.session_state.plotted_functions):
-                            st.session_state.plotted_functions[i] = func_data
-                        else:
-                            st.session_state.plotted_functions.append(func_data)
-
-
-    st.subheader("Plot points", divider="gray")
-        
-    # Create up to 5 point input rows
-    for i in range(5):
-        col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
-        
-        with col1:
-            x_coord = st.number_input(f"x{i+1}", key=f"point_x_{i}")
-        
-        with col2:
-            y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
-            
-        with col3:
-            point_color = st.selectbox("Color", 
-                                     options=list(MY_COLORS.keys()), 
-                                     key=f"point_color_{i}",
-                                     label_visibility="collapsed")
-        
-        with col4:
-            marker_style = st.selectbox("Style", 
-                                      ("×", "○"), 
-                                      key=f"point_style_{i}",
-                                      label_visibility="collapsed")
-            marker = "x" if marker_style == "×" else "o"
-        
-        with col5:
-            if st.button("Plot", key=f"plot_point_{i}"):
-                point_data = {
-                    "x": x_coord,
-                    "y": y_coord,
-                    "marker": marker,
-                    "color": point_color
-                }
+            with col2:
+                # Initialize color in session state if not present
+                if f"selected_color_{i}" not in st.session_state:
+                    st.session_state[f"selected_color_{i}"] = "blue"  # default color
                 
-                if i < len(st.session_state.plotted_points):
-                    st.session_state.plotted_points[i] = point_data
-                else:
-                    st.session_state.plotted_points.append(point_data)
+                color_choice = st.selectbox("Color", 
+                                          options=list(MY_COLORS.keys()), 
+                                          key=f"color_{i}",
+                                          index=list(MY_COLORS.keys()).index(st.session_state[f"selected_color_{i}"]),
+                                          label_visibility="collapsed")
+                st.session_state[f"selected_color_{i}"] = color_choice
+            
+            with col3:
+                # Initialize line style in session state if not present
+                if f"selected_line_style_{i}" not in st.session_state:
+                    st.session_state[f"selected_line_style_{i}"] = "solid"  # default style
+                
+                line_styles = ("solid", "dashed", "dotted")
+                line_style_choice = st.selectbox("Line style", 
+                                               line_styles,
+                                               key=f"style_{i}",
+                                               index=line_styles.index(st.session_state[f"selected_line_style_{i}"]),
+                                               label_visibility="collapsed")
+                st.session_state[f"selected_line_style_{i}"] = line_style_choice
+                
+                # Convert to matplotlib style
+                line_style = {
+                    "solid": "-",
+                    "dashed": "--",
+                    "dotted": ":"
+                }[line_style_choice]
+            
+            with col4:
+                    if st.button("Plot", key=f"plot_{i}"):
+                        # Only plot if there's a function entered
+                        if user_input.strip():
+                            x = np.linspace(xlower, xupper, 100000)
+                            y = eval_function(user_input, x, np, ylower, yupper)
+                            
+                            # Create function data dictionary
+                            func_data = {
+                                "x": x,
+                                "y": y,
+                                "function": user_input,
+                                "color": st.session_state[f"selected_color_{i}"],
+                                "line_style": line_style
+                            }
+                            
+                            # Update or add the function data in our list
+                            if i < len(st.session_state.plotted_functions):
+                                st.session_state.plotted_functions[i] = func_data
+                            else:
+                                st.session_state.plotted_functions.append(func_data)
+
+
+    with tab2:
+        st.subheader("Plot points", divider="gray")
+        
+        # Create up to 5 point input rows
+        for i in range(5):
+            col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
+            
+            with col1:
+                x_coord = st.number_input(f"x{i+1}", key=f"point_x_{i}")
+            
+            with col2:
+                y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
+                
+            with col3:
+                point_color = st.selectbox("Color", 
+                                         options=list(MY_COLORS.keys()), 
+                                         key=f"point_color_{i}",
+                                         label_visibility="collapsed")
+            
+            with col4:
+                marker_style = st.selectbox("Style", 
+                                          ("×", "○"), 
+                                          key=f"point_style_{i}",
+                                          label_visibility="collapsed")
+                marker = "x" if marker_style == "×" else "o"
+            
+            with col5:
+                if st.button("Plot", key=f"plot_point_{i}"):
+                    point_data = {
+                        "x": x_coord,
+                        "y": y_coord,
+                        "marker": marker,
+                        "color": point_color
+                    }
+                    
+                    if i < len(st.session_state.plotted_points):
+                        st.session_state.plotted_points[i] = point_data
+                    else:
+                        st.session_state.plotted_points.append(point_data)
 
 for func_data in st.session_state.plotted_functions:
     ax.plot(

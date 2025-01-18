@@ -371,30 +371,25 @@ with master_col2:
         
         # Create up to 5 parametric function input rows
         for i in range(5):
-            st.markdown(f'<p style="font-size: 14px; margin: 0 0 10px 0; padding: 0;">Function {i+1}</p>', unsafe_allow_html=True)
-            
             # All controls in one row with minimum widths
             col1, col2, col3, col4, col5, col6 = st.columns([3.5, 3.5, 2, 2, 2, 1.5], vertical_alignment="bottom")
             with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
-                x_latex = st.text_input("$x(t)$",
+                x_latex = st.text_input(f"Function {i+1}",
                                       value=default_x,
-                                      key=f"param_x_latex_{i}",
-                                      placeholder="Enter x(t)")
+                                      key=f"param_x_latex_{i}")
             with col2:
                 default_y = r"\sin(t)" if i == 0 else ""
-                y_latex = st.text_input("$y(t)$",
+                y_latex = st.text_input(" ",  # Invisible label
                                       value=default_y,
-                                      key=f"param_y_latex_{i}",
-                                      placeholder="Enter y(t)")
+                                      key=f"param_y_latex_{i}")
             with col3:
-                t_range = st.text_input("t range", 
-                                      value=r"0:\frac{2\pi}{1}" if i == 0 else "",  # LaTeX format
+                t_range = st.text_input(" ",  # Invisible label
+                                      value=r"-\pi:\pi" if i == 0 else "",
                                       key=f"param_range_{i}",
-                                      help="Format: start:end",
-                                      placeholder="start:end")
+                                      help="Format: start:end")
             with col4:
-                color_choice = st.selectbox("Color", 
+                color_choice = st.selectbox(" ",  # Invisible label
                                           options=list(MY_COLORS.keys()), 
                                           key=f"param_color_{i}",
                                           index=0,
@@ -402,7 +397,7 @@ with master_col2:
             
             with col5:
                 line_styles = ("solid", "dashed", "dotted")
-                line_style_choice = st.selectbox("Line style", 
+                line_style_choice = st.selectbox(" ",  # Invisible label
                                                line_styles,
                                                key=f"param_style_{i}",
                                                index=0,

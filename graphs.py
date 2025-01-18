@@ -386,7 +386,7 @@ with master_col2:
                                       value=default_y,
                                       key=f"param_y_latex_{i}")
             with input_col3:
-                t_range = st.text_input("t range", 
+                t_range = st.text_input("$t$ range", 
                                       value="0:2π" if i == 0 else "",
                                       key=f"param_range_{i}",
                                       help="Format: start:end")
@@ -424,14 +424,16 @@ with master_col2:
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:
-                            # Parse t range with better π handling
+                            # Parse t range with better LaTeX handling
                             t_start, t_end = t_range.split(":")
-                            # Replace π with PI constant
-                            t_start = t_start.replace("π", str(PI))
-                            t_end = t_end.replace("π", str(PI))
-                            # Evaluate the expressions
-                            t_start = float(eval(t_start))
-                            t_end = float(eval(t_end))
+                            
+                            # Convert start and end values from LaTeX if needed
+                            t_start_python, _ = latex_to_python(t_start)
+                            t_end_python, _ = latex_to_python(t_end)
+                            
+                            # Replace π with PI constant and evaluate
+                            t_start = float(eval(t_start_python.replace("π", str(PI))))
+                            t_end = float(eval(t_end_python.replace("π", str(PI))))
                             
                             # Create t values
                             t = np.linspace(t_start, t_end, 1000)

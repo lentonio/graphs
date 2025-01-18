@@ -4,8 +4,26 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import sympy as sp
 from sympy import nsimplify, pi, latex
+from sympy.parsing.latex import parse_latex
 import streamlit as st
 import io
+
+def latex_to_python(latex_str):
+    """Converts LaTeX math expression to Python code.
+    Returns (python_str, preview_expr) on success or (None, error_msg) on failure."""
+    try:
+        # Parse LaTeX to SymPy expression
+        expr = parse_latex(latex_str)
+        
+        # Convert to string and replace function names with lib. prefix
+        python_str = str(expr)
+        for func in ['sin', 'cos', 'tan', 'csc', 'sec', 'cot', 
+                    'asin', 'acos', 'atan', 'log', 'sqrt', 'exp']:
+            python_str = python_str.replace(func, f'lib.{func}')
+        
+        return python_str, expr
+    except Exception as e:
+        return None, f"Invalid LaTeX: {str(e)}"
 
 def eval_function(user_func, x, lib, ylower=None, yupper=None):
     """Evaluates the user-defined function with the given library (np or sp).

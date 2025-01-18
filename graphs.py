@@ -415,8 +415,8 @@ with master_col2:
             x_python = None
             y_python = None
             if x_latex.strip() and y_latex.strip():
-                x_python, _ = latex_to_python(x_latex)
-                y_python, _ = latex_to_python(y_latex)
+                x_python, _ = latex_to_python(x_latex, param_var='t')  # Specify 't' as the variable
+                y_python, _ = latex_to_python(y_latex, param_var='t')  # Specify 't' as the variable
             
             with control_col4:
                 if st.button("Plot", key=f"plot_param_{i}"):
@@ -435,8 +435,8 @@ with master_col2:
                             t = np.linspace(t_start, t_end, 1000)
                             
                             # Evaluate x(t) and y(t)
-                            x = eval_function(x_python, t, np)
-                            y = eval_function(y_python, t, np)
+                            x = eval_function(x_python, t, np, param_var='t')  # Specify 't' as the variable
+                            y = eval_function(y_python, t, np, param_var='t')  # Specify 't' as the variable
                             
                             st.session_state.plot_counter += 1
                             param_data = {

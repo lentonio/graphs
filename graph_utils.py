@@ -8,9 +8,10 @@ from sympy.parsing.latex import parse_latex
 import streamlit as st
 import io
 
-def latex_to_python(latex_str):
+def latex_to_python(latex_str, param_var='x'):
     """Converts LaTeX math expression to Python code.
-    Returns (python_str, preview_expr) on success or (None, error_msg) on failure."""
+    Returns (python_str, preview_expr) on success or (None, error_msg) on failure.
+    param_var: the variable to use in the expression (default 'x' for regular functions, 't' for parametric)"""
     try:
         # Parse LaTeX to SymPy expression
         expr = parse_latex(latex_str)
@@ -25,13 +26,15 @@ def latex_to_python(latex_str):
     except Exception as e:
         return None, f"Invalid LaTeX: {str(e)}"
 
-def eval_function(user_func, x, lib, ylower=None, yupper=None):
+def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
     """Evaluates the user-defined function with the given library (np or sp).
-    For implicit functions, x should be a tuple of (x_sym, y_sym)."""
+    For implicit functions, x should be a tuple of (x_sym, y_sym).
+    For parametric functions, param_var should be 't'."""
     if isinstance(x, tuple):  # Handle implicit function case
         return eval(user_func, {"x": x[0], "y": x[1], "lib": lib})
-    else:  # Handle explicit function case
-        y = eval(user_func, {"x": x, "lib": lib})
+    else:  # Handle explicit and parametric function cases
+        eval_dict = {param_var: x, "lib": lib}
+        y = eval(user_func, eval_dict)
         if isinstance(x, np.ndarray) and ylower is not None and yupper is not None:
             threshold_change = 10000
             dy = lib.abs(lib.diff(y))

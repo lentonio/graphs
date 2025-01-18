@@ -373,34 +373,31 @@ with master_col2:
         for i in range(5):
             st.write(f"Function {i+1}")  # Add subtitle for each function
             
-            # First row: x(t), y(t), and t range
-            input_col1, input_col2, input_col3 = st.columns([2, 2, 1])
-            with input_col1:
+            # All controls in one row
+            col1, col2, col3, col4, col5, col6 = st.columns([4, 4, 2, 2, 2, 1])
+            with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
                 x_latex = st.text_input("$x(t)$", 
                                       value=default_x,
                                       key=f"param_x_latex_{i}")
-            with input_col2:
+            with col2:
                 default_y = r"\sin(t)" if i == 0 else ""
                 y_latex = st.text_input("$y(t)$", 
                                       value=default_y,
                                       key=f"param_y_latex_{i}")
-            with input_col3:
-                t_range = st.text_input("$t$ range", 
+            with col3:
+                t_range = st.text_input("t range", 
                                       value="0:2π" if i == 0 else "",
                                       key=f"param_range_{i}",
                                       help="Format: start:end")
-            
-            # Second row: controls
-            control_col1, control_col2, control_col3 = st.columns([1, 1, 1])
-            with control_col1:
+            with col4:
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 
                                           key=f"param_color_{i}",
                                           index=0,
                                           label_visibility="collapsed")
             
-            with control_col2:
+            with col5:
                 line_styles = ("solid", "dashed", "dotted")
                 line_style_choice = st.selectbox("Line style", 
                                                line_styles,
@@ -420,7 +417,7 @@ with master_col2:
                 x_python, _ = latex_to_python(x_latex, param_var='t')
                 y_python, _ = latex_to_python(y_latex, param_var='t')
             
-            with control_col3:
+            with col6:
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:

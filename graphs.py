@@ -189,7 +189,7 @@ with master_col1:
         png_placeholder = st.empty()
 
 with master_col2:
-    tab1, tab2, tab3, tab4 = st.tabs(["Explicit functions", "Implicit functions", "Parametric functions", "Points"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Explicit functions", "Implicit functions", "Parametric functions", "Points", "Areas"])
     
     with tab1:
         st.subheader("Plot explicit functions", divider="gray")
@@ -386,8 +386,7 @@ with master_col2:
             with col3:
                 t_range = st.text_input(" ",  # Invisible label
                                       value=r"-\pi:\pi" if i == 0 else "",
-                                      key=f"param_range_{i}",
-                                      help="Format: start:end")
+                                      key=f"param_range_{i}")
             with col4:
                 color_choice = st.selectbox(" ",  # Invisible label
                                           options=list(MY_COLORS.keys()), 
@@ -457,7 +456,7 @@ with master_col2:
             # Add some space between functions
             st.write("")
 
-        st.caption("Enter a function $x(t)$ and a function $y(t)$ along with a domain.")
+        st.caption("Enter latex functions $x(t)$ and $y(t)$ along with a latex domain in the format start:end.")
 
     with tab4:
         st.subheader("Plot points", divider="gray")
@@ -498,6 +497,24 @@ with master_col2:
                         st.session_state.plotted_points[i] = point_data
                     else:
                         st.session_state.plotted_points.append(point_data)
+
+    with tab5:  # New "Areas" tab
+        st.subheader("Plot areas", divider="gray")
+        
+        # Get list of plotted explicit functions for selection
+        explicit_functions = [f"Function {i+1}: {func['function']}" 
+                             for i, func in enumerate(st.session_state.plotted_functions)
+                             if func is not None]
+        
+        col1, col2, col3, col4 = st.columns([4, 4, 2, 2])
+        with col1:
+            upper_func_idx = st.selectbox("Upper function", 
+                                        options=explicit_functions,
+                                        index=0 if explicit_functions else None)
+        with col2:
+            lower_func_idx = st.selectbox("Lower function", 
+                                        options=["x-axis"] + explicit_functions,
+                                        index=0)
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

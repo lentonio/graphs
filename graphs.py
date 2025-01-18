@@ -413,6 +413,13 @@ with master_col2:
                     "dotted": ":"
                 }[line_style_choice]
             
+            # Convert LaTeX before plot button
+            x_python = None
+            y_python = None
+            if x_latex.strip() and y_latex.strip():
+                x_python, _ = latex_to_python(x_latex, param_var='t')
+                y_python, _ = latex_to_python(y_latex, param_var='t')
+            
             with control_col3:
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
@@ -449,13 +456,6 @@ with master_col2:
                                 st.session_state.plotted_parametric_functions.append(param_data)
                         except Exception as e:
                             st.error(f"Error plotting parametric function: {str(e)}")
-            
-            # Convert LaTeX before plot button
-            x_python = None
-            y_python = None
-            if x_latex.strip() and y_latex.strip():
-                x_python, _ = latex_to_python(x_latex, param_var='t')
-                y_python, _ = latex_to_python(y_latex, param_var='t')
             
             # Add some space between functions
             st.write("")

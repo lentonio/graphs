@@ -374,19 +374,19 @@ with master_col2:
             st.write(f"Function {i+1}")  # Add subtitle for each function
             
             # All controls in one row
-            col1, col2, col3, col4, col5, col6 = st.columns([4, 4, 2, 2, 2, 1])
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2, 2, 2, 1])
             with col1:
                 default_x = r"\cos(t)" if i == 0 else ""
-                x_latex = st.text_input("$x(t)$", 
+                x_latex = st.text_input("$x$(t)", # Removed LaTeX formatting from label
                                       value=default_x,
                                       key=f"param_x_latex_{i}")
             with col2:
                 default_y = r"\sin(t)" if i == 0 else ""
-                y_latex = st.text_input("$y(t)$", 
+                y_latex = st.text_input("$y$(t)", # Removed LaTeX formatting from label
                                       value=default_y,
                                       key=f"param_y_latex_{i}")
             with col3:
-                t_range = st.text_input("t range", 
+                t_range = st.text_input("$t$ range", 
                                       value="0:2π" if i == 0 else "",
                                       key=f"param_range_{i}",
                                       help="Format: start:end")

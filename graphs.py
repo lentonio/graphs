@@ -369,6 +369,24 @@ with master_col2:
     with tab3:
         st.subheader("Plot parametric functions", divider="gray")
         
+        # Add CSS for horizontal scrolling and black captions
+        st.markdown("""
+            <style>
+                .stTabs [data-baseweb="tab-panel"] {
+                    overflow-x: auto;
+                }
+                
+                div[data-testid="column"] {
+                    min-width: min-content;
+                    white-space: nowrap;
+                }
+
+                .st-emotion-cache-1oyc9ls {  /* Caption class */
+                    color: rgb(0, 0, 0);
+                }
+            </style>
+        """, unsafe_allow_html=True)
+        
         # Create up to 5 parametric function input rows
         for i in range(5):
             st.caption(f"Function {i+1}")  # Changed from write to caption

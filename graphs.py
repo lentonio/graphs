@@ -161,6 +161,9 @@ if "selected_color" not in st.session_state:
 if "selected_line_style" not in st.session_state:
     st.session_state.selected_line_style = "-"  # Default line style
 
+if "plotted_implicit_functions" not in st.session_state:
+    st.session_state.plotted_implicit_functions = []
+
 for i in range(5):
     if f"point_color_{i}" not in st.session_state:
         st.session_state[f"point_color_{i}"] = "blue"
@@ -266,17 +269,6 @@ with master_col2:
                 user_input = st.text_input(f"F(x,y) = 0, enter F(x,y):", 
                                          value=default_value,
                                          key=f"implicit_{i}")
-                if user_input.strip():
-                    # Directly evaluate the expression with sympy
-                    x_sym, y_sym = sp.symbols('x y')
-                    expr = eval(user_input, {
-                        "x": x_sym, 
-                        "y": y_sym, 
-                        "lib": sp,
-                        "sin": sp.sin,
-                        "cos": sp.cos,
-                        "tan": sp.tan
-                    })
             
             with col2:
                 color_choice = st.selectbox("Color", 
@@ -295,19 +287,18 @@ with master_col2:
             with col4:
                 if st.button("Plot", key=f"plot_implicit_{i}"):
                     if user_input.strip():
-                        x = np.linspace(xlower, xupper, resolution)
-                        y = np.linspace(ylower, yupper, resolution)
-                        X, Y = np.meshgrid(x, y)
+                        # Store function data
+                        implicit_data = {
+                            "function": user_input,
+                            "color": color_choice,
+                            "resolution": resolution
+                        }
                         
-                        # Convert symbolic expression to numpy function
-                        f = sp.lambdify((x_sym, y_sym), expr)
-                        Z = f(X, Y)
-                        
-                        # Plot the zero contour
-                        ax.contour(X, Y, Z, levels=[0], 
-                                 colors=[MY_COLORS[color_choice]],
-                                 linewidths=axis_weight * 1.3,
-                                 zorder=3)
+                        # Update or add the function data in our list
+                        if i < len(st.session_state.plotted_implicit_functions):
+                            st.session_state.plotted_implicit_functions[i] = implicit_data
+                        else:
+                            st.session_state.plotted_implicit_functions.append(implicit_data)
 
     with tab3:
         st.subheader("Plot points", divider="gray")
@@ -374,6 +365,33 @@ for point_data in st.session_state.plotted_points:
            markeredgewidth=markeredgewidth,
            linestyle='none',
            zorder=3)
+
+# Plot all stored implicit functions
+for implicit_data in st.session_state.plotted_implicit_functions:
+    if implicit_data and implicit_data["function"].strip():
+        x = np.linspace(xlower, xupper, implicit_data["resolution"])
+        y = np.linspace(ylower, yupper, implicit_data["resolution"])
+        X, Y = np.meshgrid(x, y)
+        
+        # Evaluate the expression
+        x_sym, y_sym = sp.symbols('x y')
+        expr = eval(implicit_data["function"], {
+            "x": x_sym, 
+            "y": y_sym, 
+            "lib": sp,
+            "sin": sp.sin,
+            "cos": sp.cos,
+            "tan": sp.tan
+        })
+        
+        # Convert to numpy function and plot
+        f = sp.lambdify((x_sym, y_sym), expr)
+        Z = f(X, Y)
+        
+        ax.contour(X, Y, Z, levels=[0], 
+                  colors=[MY_COLORS[implicit_data["color"]]],
+                  linewidths=axis_weight * 1.3,
+                  zorder=3)
 
 if not white_background:
     ax.set_facecolor('none')  # Transparent background

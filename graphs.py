@@ -267,22 +267,30 @@ with master_col2:
             with col1:
                 default_value = "x**2 + y**2 - 1" if i == 0 else ""
                 user_input = st.text_input(f"F(x,y) = 0, enter F(x,y):", 
-                                         value=default_value,
-                                         key=f"implicit_{i}")
+                                     value=default_value,
+                                     key=f"implicit_{i}")
             
             with col2:
                 color_choice = st.selectbox("Color", 
-                                          options=list(MY_COLORS.keys()), 
-                                          key=f"implicit_color_{i}",
-                                          index=0,
-                                          label_visibility="collapsed")
+                                      options=list(MY_COLORS.keys()), 
+                                      key=f"implicit_color_{i}",
+                                      index=0,
+                                      label_visibility="collapsed")
             
             with col3:
-                resolution = st.selectbox("Resolution",
-                                        options=[100, 200, 500],
-                                        key=f"implicit_res_{i}",
-                                        index=0,
-                                        label_visibility="collapsed")
+                line_styles = ("solid", "dashed", "dotted")
+                line_style_choice = st.selectbox("Line style", 
+                                               line_styles,
+                                               key=f"implicit_style_{i}",
+                                               index=0,
+                                               label_visibility="collapsed")
+                
+                # Convert to matplotlib style
+                line_style = {
+                    "solid": "-",
+                    "dashed": "--",
+                    "dotted": ":"
+                }[line_style_choice]
             
             with col4:
                 if st.button("Plot", key=f"plot_implicit_{i}"):
@@ -291,7 +299,7 @@ with master_col2:
                         implicit_data = {
                             "function": user_input,
                             "color": color_choice,
-                            "resolution": resolution
+                            "line_style": line_style
                         }
                         
                         # Update or add the function data in our list
@@ -369,8 +377,8 @@ for point_data in st.session_state.plotted_points:
 # Plot all stored implicit functions
 for implicit_data in st.session_state.plotted_implicit_functions:
     if implicit_data and implicit_data["function"].strip():
-        x = np.linspace(xlower, xupper, implicit_data["resolution"])
-        y = np.linspace(ylower, yupper, implicit_data["resolution"])
+        x = np.linspace(xlower, xupper, 1000)
+        y = np.linspace(ylower, yupper, 1000)
         X, Y = np.meshgrid(x, y)
         
         # Evaluate the expression
@@ -378,10 +386,7 @@ for implicit_data in st.session_state.plotted_implicit_functions:
         expr = eval(implicit_data["function"], {
             "x": x_sym, 
             "y": y_sym, 
-            "lib": sp,
-            "sin": sp.sin,
-            "cos": sp.cos,
-            "tan": sp.tan
+            "lib": sp  # This is what users expect to use
         })
         
         # Convert to numpy function and plot
@@ -390,6 +395,7 @@ for implicit_data in st.session_state.plotted_implicit_functions:
         
         ax.contour(X, Y, Z, levels=[0], 
                   colors=[MY_COLORS[implicit_data["color"]]],
+                  linestyles=[implicit_data["line_style"]],
                   linewidths=axis_weight * 1.3,
                   zorder=3)
 

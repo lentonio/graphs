@@ -422,10 +422,14 @@ with master_col2:
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:
-                            # Parse t range
+                            # Parse t range with better π handling
                             t_start, t_end = t_range.split(":")
-                            t_start = float(eval(t_start.replace("π", "np.pi")))
-                            t_end = float(eval(t_end.replace("π", "np.pi")))
+                            # Replace π with PI constant
+                            t_start = t_start.replace("π", str(PI))
+                            t_end = t_end.replace("π", str(PI))
+                            # Evaluate the expressions
+                            t_start = float(eval(t_start))
+                            t_end = float(eval(t_end))
                             
                             # Create t values
                             t = np.linspace(t_start, t_end, 1000)

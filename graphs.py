@@ -7,7 +7,7 @@ from sympy import nsimplify, pi, latex
 import streamlit as st
 import io
 
-from graph_utils import create_graph, eval_function
+from graph_utils import create_graph, eval_function, latex_to_python
 
 sp.arcsin = sp.asin
 sp.arccos = sp.acos

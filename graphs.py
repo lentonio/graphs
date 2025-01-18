@@ -189,7 +189,7 @@ with master_col2:
     tab1, tab2, tab3 = st.tabs(["Explicit functions", "Implicit functions", "Points"])
     
     with tab1:
-        st.subheader("Plot functions", divider="gray")
+        st.subheader("Plot explicit functions", divider="gray")
         
         # Create up to 5 function input rows
         for i in range(5):
@@ -259,6 +259,12 @@ with master_col2:
                             else:
                                 st.session_state.plotted_functions.append(func_data)
 
+        st.caption("""Functions must use Python syntax with the 'lib.' prefix.\n\n
+Trigonometric: lib.sin(x), lib.cos(x), lib.tan(x)\n
+Reciprocal trig: lib.csc(x), lib.sec(x), lib.cot(x)\n
+Inverse trig: lib.arcsin(x), lib.arccos(x), lib.arctan(x)\n
+Logarithmic: lib.log(x) [natural], lib.log10(x), lib.log2(x)\n
+Roots & powers: lib.sqrt(x), lib.cbrt(x), x**n [for nth power]""")
 
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")
@@ -309,7 +315,7 @@ with master_col2:
                         else:
                             st.session_state.plotted_implicit_functions.append(implicit_data)
 
-        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0. For example, $x^2 + y^2 - 1$ plots the unit circle.")
+        st.caption("Entering $f(x,y)$ will plot the curve $f(x,y) = 0$.\n\nFor example, $x^2 + y^2 - 1$ plots the unit circle.")
 
     with tab3:
         st.subheader("Plot points", divider="gray")

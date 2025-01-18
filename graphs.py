@@ -371,8 +371,8 @@ with master_col2:
         
         # Create up to 5 parametric function input rows
         for i in range(5):
-            # Two rows per function: inputs and controls
-            input_col1, input_col2 = st.columns([1, 1])
+            # First row: x(t), y(t), and t range
+            input_col1, input_col2, input_col3 = st.columns([1, 1, 1])
             with input_col1:
                 default_x = r"\cos(t)" if i == 0 else ""
                 x_latex = st.text_input(f"x(t) for function {i+1}", 
@@ -383,8 +383,14 @@ with master_col2:
                 y_latex = st.text_input(f"y(t) for function {i+1}", 
                                       value=default_y,
                                       key=f"param_y_latex_{i}")
+            with input_col3:
+                t_range = st.text_input("t range", 
+                                      value="0:2π" if i == 0 else "",
+                                      key=f"param_range_{i}",
+                                      help="Format: start:end")
             
-            control_col1, control_col2, control_col3, control_col4 = st.columns([1, 1, 1, 1])
+            # Second row: controls
+            control_col1, control_col2, control_col3 = st.columns([1, 1, 1])
             with control_col1:
                 color_choice = st.selectbox("Color", 
                                           options=list(MY_COLORS.keys()), 
@@ -406,19 +412,6 @@ with master_col2:
                 }[line_style_choice]
             
             with control_col3:
-                t_range = st.text_input("t range", 
-                                      value="0:2π" if i == 0 else "",
-                                      key=f"param_range_{i}",
-                                      help="Format: start:end")
-            
-            # Convert LaTeX before plot button
-            x_python = None
-            y_python = None
-            if x_latex.strip() and y_latex.strip():
-                x_python, _ = latex_to_python(x_latex, param_var='t')  # Specify 't' as the variable
-                y_python, _ = latex_to_python(y_latex, param_var='t')  # Specify 't' as the variable
-            
-            with control_col4:
                 if st.button("Plot", key=f"plot_param_{i}"):
                     if x_python and y_python and t_range:
                         try:
@@ -438,13 +431,6 @@ with master_col2:
                             x = eval_function(x_python, t, np, param_var='t')
                             y = eval_function(y_python, t, np, param_var='t')
                             
-                            # Debug info
-                            st.write(f"t range: {t_start} to {t_end}")
-                            st.write(f"x_python: {x_python}")
-                            st.write(f"y_python: {y_python}")
-                            st.write(f"x range: {min(x)} to {max(x)}")
-                            st.write(f"y range: {min(y)} to {max(y)}")
-                            
                             st.session_state.plot_counter += 1
                             param_data = {
                                 "x": x,
@@ -461,6 +447,13 @@ with master_col2:
                                 st.session_state.plotted_parametric_functions.append(param_data)
                         except Exception as e:
                             st.error(f"Error plotting parametric function: {str(e)}")
+            
+            # Convert LaTeX before plot button
+            x_python = None
+            y_python = None
+            if x_latex.strip() and y_latex.strip():
+                x_python, _ = latex_to_python(x_latex, param_var='t')
+                y_python, _ = latex_to_python(y_latex, param_var='t')
 
     with tab4:
         st.subheader("Plot points", divider="gray")

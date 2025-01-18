@@ -435,8 +435,15 @@ with master_col2:
                             t = np.linspace(t_start, t_end, 1000)
                             
                             # Evaluate x(t) and y(t)
-                            x = eval_function(x_python, t, np, param_var='t')  # Specify 't' as the variable
-                            y = eval_function(y_python, t, np, param_var='t')  # Specify 't' as the variable
+                            x = eval_function(x_python, t, np, param_var='t')
+                            y = eval_function(y_python, t, np, param_var='t')
+                            
+                            # Debug info
+                            st.write(f"t range: {t_start} to {t_end}")
+                            st.write(f"x_python: {x_python}")
+                            st.write(f"y_python: {y_python}")
+                            st.write(f"x range: {min(x)} to {max(x)}")
+                            st.write(f"y range: {min(y)} to {max(y)}")
                             
                             st.session_state.plot_counter += 1
                             param_data = {
@@ -557,6 +564,16 @@ for implicit_data in st.session_state.plotted_implicit_functions:
                   linestyles=[implicit_data["line_style"]],
                   linewidths=axis_weight * 1.3,
                   zorder=implicit_data["zorder"])
+
+for param_data in st.session_state.plotted_parametric_functions:
+    if param_data:
+        ax.plot(
+            param_data["x"],
+            param_data["y"],
+            color=MY_COLORS[param_data["color"]],
+            linestyle=param_data["line_style"],
+            linewidth=axis_weight * 1.3,
+            zorder=param_data["zorder"])
 
 if not white_background:
     ax.set_facecolor('none')  # Transparent background

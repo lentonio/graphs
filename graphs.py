@@ -199,9 +199,8 @@ with master_col2:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
         
         with col1:
-            default_value = r"\frac{x}{2}-\sin(x)" if i == 0 else ""
             latex_input = st.text_input(f"Function 1", 
-                                      value=default_value,
+                                      value=r"\frac{x}{2}-\sin(x)",  # Fixed default value
                                       key=f"latex_function_1")
         
         with col2:
@@ -240,7 +239,8 @@ with master_col2:
                         "y": y,
                         "function": python_str,
                         "color": color_choice,
-                        "line_style": line_style
+                        "line_style": line_style,
+                        "zorder": 3  # Make sure function plots above axes
                     }
                     
                     if 0 < len(st.session_state.plotted_functions):
@@ -293,7 +293,8 @@ with master_col2:
                             "y": y,
                             "function": python_str_i,
                             "color": color_choice_i,
-                            "line_style": line_style_i
+                            "line_style": line_style_i,
+                            "zorder": 3  # Make sure function plots above axes
                         }
                         
                         if i-1 < len(st.session_state.plotted_functions):

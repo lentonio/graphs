@@ -164,6 +164,9 @@ if "selected_line_style" not in st.session_state:
 if "plotted_implicit_functions" not in st.session_state:
     st.session_state.plotted_implicit_functions = []
 
+if "plotted_parametric_functions" not in st.session_state:
+    st.session_state.plotted_parametric_functions = []
+
 if "plot_counter" not in st.session_state:
     st.session_state.plot_counter = 0
 
@@ -186,7 +189,7 @@ with master_col1:
         png_placeholder = st.empty()
 
 with master_col2:
-    tab1, tab2, tab3 = st.tabs(["Explicit functions", "Implicit functions", "Points"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Explicit functions", "Implicit functions", "Parametric functions", "Points"])
     
     with tab1:
         st.subheader("Plot explicit functions", divider="gray")
@@ -303,6 +306,8 @@ with master_col2:
                             st.session_state.plotted_functions[i-1] = func_data
                         else:
                             st.session_state.plotted_functions.append(func_data)
+                            
+        st.caption("Enter functions in latex.")
 
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")
@@ -359,9 +364,94 @@ with master_col2:
                         else:
                             st.session_state.plotted_implicit_functions.append(implicit_data)
 
-        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0.\n\nFor example, $x^2 + y^2 - 1$ plots the unit circle.")
+        st.caption("Entering $f(x,y)$ will plot the curve $f(x,y) = 0$.\n\nFor example, $x^2 + y^2 - 1$ plots the unit circle.")
 
     with tab3:
+        st.subheader("Plot parametric functions", divider="gray")
+        
+        # Create up to 5 parametric function input rows
+        for i in range(5):
+            # Two rows per function: inputs and controls
+            input_col1, input_col2 = st.columns([1, 1])
+            with input_col1:
+                default_x = r"\cos(t)" if i == 0 else ""
+                x_latex = st.text_input(f"x(t) for function {i+1}", 
+                                      value=default_x,
+                                      key=f"param_x_latex_{i}")
+            with input_col2:
+                default_y = r"\sin(t)" if i == 0 else ""
+                y_latex = st.text_input(f"y(t) for function {i+1}", 
+                                      value=default_y,
+                                      key=f"param_y_latex_{i}")
+            
+            control_col1, control_col2, control_col3, control_col4 = st.columns([1, 1, 1, 1])
+            with control_col1:
+                color_choice = st.selectbox("Color", 
+                                          options=list(MY_COLORS.keys()), 
+                                          key=f"param_color_{i}",
+                                          index=0,
+                                          label_visibility="collapsed")
+            
+            with control_col2:
+                line_styles = ("solid", "dashed", "dotted")
+                line_style_choice = st.selectbox("Line style", 
+                                               line_styles,
+                                               key=f"param_style_{i}",
+                                               index=0,
+                                               label_visibility="collapsed")
+                line_style = {
+                    "solid": "-",
+                    "dashed": "--",
+                    "dotted": ":"
+                }[line_style_choice]
+            
+            with control_col3:
+                t_range = st.text_input("t range", 
+                                      value="0:2π" if i == 0 else "",
+                                      key=f"param_range_{i}",
+                                      help="Format: start:end")
+            
+            # Convert LaTeX before plot button
+            x_python = None
+            y_python = None
+            if x_latex.strip() and y_latex.strip():
+                x_python, _ = latex_to_python(x_latex)
+                y_python, _ = latex_to_python(y_latex)
+            
+            with control_col4:
+                if st.button("Plot", key=f"plot_param_{i}"):
+                    if x_python and y_python and t_range:
+                        try:
+                            # Parse t range
+                            t_start, t_end = t_range.split(":")
+                            t_start = float(eval(t_start.replace("π", "np.pi")))
+                            t_end = float(eval(t_end.replace("π", "np.pi")))
+                            
+                            # Create t values
+                            t = np.linspace(t_start, t_end, 1000)
+                            
+                            # Evaluate x(t) and y(t)
+                            x = eval_function(x_python, t, np)
+                            y = eval_function(y_python, t, np)
+                            
+                            st.session_state.plot_counter += 1
+                            param_data = {
+                                "x": x,
+                                "y": y,
+                                "function": (x_python, y_python),
+                                "color": color_choice,
+                                "line_style": line_style,
+                                "zorder": 10 + st.session_state.plot_counter
+                            }
+                            
+                            if i < len(st.session_state.plotted_parametric_functions):
+                                st.session_state.plotted_parametric_functions[i] = param_data
+                            else:
+                                st.session_state.plotted_parametric_functions.append(param_data)
+                        except Exception as e:
+                            st.error(f"Error plotting parametric function: {str(e)}")
+
+    with tab4:
         st.subheader("Plot points", divider="gray")
         
         # Create up to 5 point input rows

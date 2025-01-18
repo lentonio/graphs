@@ -307,7 +307,7 @@ with master_col2:
                         else:
                             st.session_state.plotted_functions.append(func_data)
                             
-        st.caption("Enter functions in latex.")
+        st.caption("Enter functions of $x$ in latex.")
 
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")
@@ -388,8 +388,8 @@ with master_col2:
                                       key=f"param_y_latex_{i}",
                                       placeholder="Enter y(t)")
             with col3:
-                t_range = st.text_input("$t$ range", 
-                                      value="0:2π" if i == 0 else "",
+                t_range = st.text_input("t range", 
+                                      value=r"0:\frac{2\pi}{1}" if i == 0 else "",  # LaTeX format
                                       key=f"param_range_{i}",
                                       help="Format: start:end",
                                       placeholder="start:end")
@@ -461,6 +461,8 @@ with master_col2:
             
             # Add some space between functions
             st.write("")
+
+        st.caption("Enter a function $x(t)$ and a function $y(t)$ along with a domain.")
 
     with tab4:
         st.subheader("Plot points", divider="gray")

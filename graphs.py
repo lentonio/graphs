@@ -263,22 +263,22 @@ with master_col2:
     with tab2:
         st.subheader("Plot implicit functions", divider="gray")
         
-        # Create up to 3 implicit function input rows
-        for i in range(3):
+        # Create up to 5 implicit function input rows (increased from 3)
+        for i in range(5):
             col1, col2, col3, col4 = st.columns([3, 1, 1, 1], vertical_alignment="bottom")
             
             with col1:
                 default_value = "x**2 + y**2 - 1" if i == 0 else ""
-                user_input = st.text_input(f"F(x,y) = 0, enter F(x,y):", 
-                                         value=default_value,
-                                         key=f"implicit_{i}")
+                user_input = st.text_input(f"Function {i+1}", 
+                                     value=default_value,
+                                     key=f"implicit_{i}")
             
             with col2:
                 color_choice = st.selectbox("Color", 
-                                          options=list(MY_COLORS.keys()), 
-                                          key=f"implicit_color_{i}",
-                                          index=0,
-                                          label_visibility="collapsed")
+                                      options=list(MY_COLORS.keys()), 
+                                      key=f"implicit_color_{i}",
+                                      index=0,
+                                      label_visibility="collapsed")
             
             with col3:
                 line_styles = ("solid", "dashed", "dotted")
@@ -298,18 +298,18 @@ with master_col2:
             with col4:
                 if st.button("Plot", key=f"plot_implicit_{i}"):
                     if user_input.strip():
-                        # Store function data
                         implicit_data = {
                             "function": user_input,
                             "color": color_choice,
                             "line_style": line_style
                         }
                         
-                        # Update or add the function data in our list
                         if i < len(st.session_state.plotted_implicit_functions):
                             st.session_state.plotted_implicit_functions[i] = implicit_data
                         else:
                             st.session_state.plotted_implicit_functions.append(implicit_data)
+
+        st.caption("Entering f(x,y) will plot the curve f(x,y) = 0. For example, x**2 + y**2 - 1 plots the unit circle.")
 
     with tab3:
         st.subheader("Plot points", divider="gray")

@@ -248,7 +248,7 @@ with master_col2:
                     else:
                         st.session_state.plotted_functions.append(func_data)
 
-        # Preview area with border
+        # Preview area with border and proper alignment
         st.markdown("""
             <style>
             .preview-box {
@@ -257,13 +257,19 @@ with master_col2:
                 padding: 10px;
                 margin: 10px 0;
             }
+            .preview-box .katex-display {
+                text-align: left;
+                margin: 0;
+            }
             .preview-box .katex {
                 text-align: left;
+                padding: 0;
             }
             </style>
             """, unsafe_allow_html=True)
         
-        with st.container():
+        preview_container = st.container()
+        with preview_container:
             st.markdown('<div class="preview-box">', unsafe_allow_html=True)
             if latex_input.strip():
                 if python_str:

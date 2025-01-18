@@ -371,16 +371,18 @@ with master_col2:
         
         # Create up to 5 parametric function input rows
         for i in range(5):
+            st.write(f"Function {i+1}")  # Add subtitle for each function
+            
             # First row: x(t), y(t), and t range
-            input_col1, input_col2, input_col3 = st.columns([1, 1, 1])
+            input_col1, input_col2, input_col3 = st.columns([2, 2, 1])
             with input_col1:
                 default_x = r"\cos(t)" if i == 0 else ""
-                x_latex = st.text_input(f"x(t) for function {i+1}", 
+                x_latex = st.text_input("$x(t)$", 
                                       value=default_x,
                                       key=f"param_x_latex_{i}")
             with input_col2:
                 default_y = r"\sin(t)" if i == 0 else ""
-                y_latex = st.text_input(f"y(t) for function {i+1}", 
+                y_latex = st.text_input("$y(t)$", 
                                       value=default_y,
                                       key=f"param_y_latex_{i}")
             with input_col3:
@@ -454,6 +456,9 @@ with master_col2:
             if x_latex.strip() and y_latex.strip():
                 x_python, _ = latex_to_python(x_latex, param_var='t')
                 y_python, _ = latex_to_python(y_latex, param_var='t')
+            
+            # Add some space between functions
+            st.write("")
 
     with tab4:
         st.subheader("Plot points", divider="gray")

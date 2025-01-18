@@ -164,6 +164,9 @@ if "selected_line_style" not in st.session_state:
 if "plotted_implicit_functions" not in st.session_state:
     st.session_state.plotted_implicit_functions = []
 
+if "plot_counter" not in st.session_state:
+    st.session_state.plot_counter = 0
+
 for i in range(5):
     if f"point_color_{i}" not in st.session_state:
         st.session_state[f"point_color_{i}"] = "blue"
@@ -267,15 +270,15 @@ with master_col2:
             with col1:
                 default_value = "x**2 + y**2 - 1" if i == 0 else ""
                 user_input = st.text_input(f"F(x,y) = 0, enter F(x,y):", 
-                                     value=default_value,
-                                     key=f"implicit_{i}")
+                                         value=default_value,
+                                         key=f"implicit_{i}")
             
             with col2:
                 color_choice = st.selectbox("Color", 
-                                      options=list(MY_COLORS.keys()), 
-                                      key=f"implicit_color_{i}",
-                                      index=0,
-                                      label_visibility="collapsed")
+                                          options=list(MY_COLORS.keys()), 
+                                          key=f"implicit_color_{i}",
+                                          index=0,
+                                          label_visibility="collapsed")
             
             with col3:
                 line_styles = ("solid", "dashed", "dotted")
@@ -349,15 +352,23 @@ with master_col2:
                         st.session_state.plotted_points.append(point_data)
 
 for func_data in st.session_state.plotted_functions:
+    if "zorder" not in func_data:
+        st.session_state.plot_counter += 1
+        func_data["zorder"] = st.session_state.plot_counter
+    
     ax.plot(
         func_data["x"],
         func_data["y"],
         color=MY_COLORS[func_data["color"]],
         linestyle=func_data["line_style"],
         linewidth=axis_weight * 1.3,
-        zorder=3)
+        zorder=func_data["zorder"])
 
 for point_data in st.session_state.plotted_points:
+    if "zorder" not in point_data:
+        st.session_state.plot_counter += 1
+        point_data["zorder"] = st.session_state.plot_counter
+        
     if point_data["marker"] == "x":
         markersize = axis_weight * 6
         markeredgewidth = axis_weight
@@ -372,11 +383,15 @@ for point_data in st.session_state.plotted_points:
            markersize=markersize,
            markeredgewidth=markeredgewidth,
            linestyle='none',
-           zorder=3)
+           zorder=point_data["zorder"])
 
 # Plot all stored implicit functions
 for implicit_data in st.session_state.plotted_implicit_functions:
     if implicit_data and implicit_data["function"].strip():
+        if "zorder" not in implicit_data:
+            st.session_state.plot_counter += 1
+            implicit_data["zorder"] = st.session_state.plot_counter
+            
         x = np.linspace(xlower, xupper, 1000)
         y = np.linspace(ylower, yupper, 1000)
         X, Y = np.meshgrid(x, y)
@@ -397,7 +412,7 @@ for implicit_data in st.session_state.plotted_implicit_functions:
                   colors=[MY_COLORS[implicit_data["color"]]],
                   linestyles=[implicit_data["line_style"]],
                   linewidths=axis_weight * 1.3,
-                  zorder=3)
+                  zorder=implicit_data["zorder"])
 
 if not white_background:
     ax.set_facecolor('none')  # Transparent background

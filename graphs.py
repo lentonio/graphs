@@ -200,7 +200,7 @@ with master_col2:
         
         with col1:
             latex_input = st.text_input(f"Function 1", 
-                                      value=r"\frac{x}{2}-\sin(x)",  # Fixed default value
+                                      value=r"\frac{x}{2}-\sin(x)",
                                       key=f"latex_function_1")
         
         with col2:
@@ -230,17 +230,18 @@ with master_col2:
         
         with col4:
             if st.button("Plot", key=f"latex_plot_1"):
-                if latex_input.strip() and python_str:  # Only plot if we have valid input
+                if latex_input.strip() and python_str:
                     x = np.linspace(xlower, xupper, 100000)
                     y = eval_function(python_str, x, np, ylower, yupper)
                     
+                    st.session_state.plot_counter += 1
                     func_data = {
                         "x": x,
                         "y": y,
                         "function": python_str,
                         "color": color_choice,
                         "line_style": line_style,
-                        "zorder": 3  # Make sure function plots above axes
+                        "zorder": st.session_state.plot_counter
                     }
                     
                     if 0 < len(st.session_state.plotted_functions):
@@ -288,13 +289,14 @@ with master_col2:
                         x = np.linspace(xlower, xupper, 100000)
                         y = eval_function(python_str_i, x, np, ylower, yupper)
                         
+                        st.session_state.plot_counter += 1
                         func_data = {
                             "x": x,
                             "y": y,
                             "function": python_str_i,
                             "color": color_choice_i,
                             "line_style": line_style_i,
-                            "zorder": 3  # Make sure function plots above axes
+                            "zorder": st.session_state.plot_counter
                         }
                         
                         if i-1 < len(st.session_state.plotted_functions):
@@ -344,11 +346,12 @@ with master_col2:
             with col4:
                 if st.button("Plot", key=f"plot_implicit_{i}"):
                     if latex_input.strip() and python_str:
+                        st.session_state.plot_counter += 1
                         implicit_data = {
                             "function": python_str,
                             "color": color_choice,
                             "line_style": line_style,
-                            "zorder": 3  # Make sure plots above axes
+                            "zorder": st.session_state.plot_counter
                         }
                         
                         if i < len(st.session_state.plotted_implicit_functions):

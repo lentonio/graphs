@@ -638,7 +638,7 @@ with master_col2:
                                 st.write(f"Debug: Exception details: {type(e).__name__}")
                                 upper_y = np.zeros_like(x_fill)
                         
-                        # Get lower function data with similar debugging
+                        # Get lower function data
                         if lower_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
                             st.write("Debug: Lower function: x-axis (zeros)")
@@ -647,18 +647,76 @@ with master_col2:
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
                             st.write(f"Debug: Lower function type: Explicit")
                             st.write(f"Debug: Lower function values: min={np.min(lower_y):.2f}, max={np.max(lower_y):.2f}")
-                        elif lower_func_idx.startswith("Parametric"):
-                            idx = int(lower_func_idx.split()[1]) - 1
-                            param_data = st.session_state.plotted_parametric_functions[idx]
-                            # Sort x and y values to ensure proper interpolation
-                            sort_idx = np.argsort(param_data["x"])
-                            x_sorted = param_data["x"][sort_idx]
-                            y_sorted = param_data["y"][sort_idx]
-                            # Interpolate y values for our x_fill points
-                            lower_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
-                            lower_y = np.zeros_like(x_fill)  # Placeholder
+                            implicit_data = st.session_state.plotted_implicit_functions[idx]
+                            st.write(f"Debug: Lower function type: Implicit")
+                            
+                            try:
+                                # Create grid of points
+                                x = np.linspace(xlower, xupper, 1000)
+                                y = np.linspace(ylower, yupper, 1000)
+                                X, Y = np.meshgrid(x, y)
+                                
+                                # Evaluate the implicit function
+                                x_sym, y_sym = sp.symbols('x y')
+                                expr = eval(implicit_data["function"], {
+                                    "x": x_sym, 
+                                    "y": y_sym, 
+                                    "lib": sp
+                                })
+                                
+                                # Convert to numpy function and evaluate
+                                f = sp.lambdify((x_sym, y_sym), expr)
+                                Z = f(X, Y)
+                                
+                                # Create a temporary figure for the contour
+                                temp_fig, temp_ax = plt.subplots()
+                                cs = temp_ax.contour(X, Y, Z, levels=[0])
+                                
+                                # Get segments from the contour
+                                segs = cs.allsegs[0]
+                                st.write(f"Debug: Found {len(segs)} contour segments")
+                                
+                                if len(segs) > 0:
+                                    # For each x value, find all corresponding y values
+                                    x_points = []
+                                    y_points = []
+                                    for seg in segs:
+                                        x_points.extend(seg[:, 0])
+                                        y_points.extend(seg[:, 1])
+                                    
+                                    # Convert to numpy arrays
+                                    x_points = np.array(x_points)
+                                    y_points = np.array(y_points)
+                                    
+                                    # For each x in x_fill, find the minimum y value (for lower curve)
+                                    lower_y = []
+                                    for x in x_fill:
+                                        # Find all y values for this x (within some tolerance)
+                                        tolerance = 0.01
+                                        matching_y = y_points[np.abs(x_points - x) < tolerance]
+                                        if len(matching_y) > 0:
+                                            lower_y.append(np.min(matching_y))  # Take minimum for lower curve
+                                        else:
+                                            lower_y.append(np.nan)
+                                    
+                                    lower_y = np.array(lower_y)
+                                    
+                                    st.write(f"Debug: Total contour points: {len(x_points)}")
+                                    st.write(f"Debug: Contour x range: {min(x_points):.2f} to {max(x_points):.2f}")
+                                    st.write(f"Debug: Contour y range: {min(y_points):.2f} to {max(y_points):.2f}")
+                                else:
+                                    st.error("No contour segments found for implicit function")
+                                    lower_y = np.zeros_like(x_fill)
+                                
+                                # Clean up the temporary figure
+                                plt.close(temp_fig)
+                                
+                            except Exception as e:
+                                st.error(f"Error processing implicit function: {str(e)}")
+                                st.write(f"Debug: Exception details: {type(e).__name__}")
+                                lower_y = np.zeros_like(x_fill)
                         
                         # Check if we have valid data
                         if upper_y is not None and lower_y is not None:

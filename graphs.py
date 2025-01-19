@@ -502,15 +502,19 @@ with master_col2:
         st.subheader("Plot areas", divider="gray")
         
         # Get list of all plotted functions for selection
-        explicit_functions = [f"Explicit {i+1}: {func['function']}" 
+        explicit_functions = [f"Explicit {i+1}" 
                              for i, func in enumerate(st.session_state.plotted_functions)
                              if func is not None]
         
-        parametric_functions = [f"Parametric {i+1}: ({func['function'][0]}, {func['function'][1]})" 
-                              for i, func in enumerate(st.session_state.plotted_parametric_functions)
-                              if func is not None]
+        implicit_functions = [f"Implicit {i+1}"
+                             for i, func in enumerate(st.session_state.plotted_implicit_functions)
+                             if func is not None]
         
-        all_functions = explicit_functions + parametric_functions
+        parametric_functions = [f"Parametric {i+1}"
+                               for i, func in enumerate(st.session_state.plotted_parametric_functions)
+                               if func is not None]
+        
+        all_functions = explicit_functions + implicit_functions + parametric_functions
         
         col1, col2, col3, col4 = st.columns([4, 4, 2, 2])
         with col1:
@@ -533,10 +537,31 @@ with master_col2:
             opacity = st.slider("Opacity", 0.0, 1.0, 0.3)
         with plot_col:
             if st.button("Fill Area"):
-                # Get the selected functions
-                if upper_func_idx and lower_func_idx != "x-axis":
-                    # TODO: Get function data and plot area
-                    pass
+                if upper_func_idx:
+                    # Get x values for the fill
+                    x_fill = np.linspace(x_start, x_end, 1000)
+                    
+                    # Get upper function data
+                    if upper_func_idx.startswith("Explicit"):
+                        idx = int(upper_func_idx.split()[1]) - 1
+                        upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                    else:
+                        upper_y = np.zeros_like(x_fill)  # Placeholder for other function types
+                    
+                    # Get lower function data
+                    if lower_func_idx == "x-axis":
+                        lower_y = np.zeros_like(x_fill)
+                    elif lower_func_idx.startswith("Explicit"):
+                        idx = int(lower_func_idx.split()[1]) - 1
+                        lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                    else:
+                        lower_y = np.zeros_like(x_fill)  # Placeholder for other function types
+                    
+                    # Plot the filled area
+                    ax.fill_between(x_fill, lower_y, upper_y, 
+                                  color=MY_COLORS[fill_color],
+                                  alpha=opacity,
+                                  zorder=5)  # Above grid, below functions
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

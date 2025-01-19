@@ -595,6 +595,8 @@ with master_col2:
                         elif lower_func_idx.startswith("Parametric"):
                             try:
                                 idx = int(lower_func_idx.split()[1]) - 1
+                                st.write("Debug: Entering parametric section")
+                                st.write(f"Debug: Index = {idx}")
                                 param_data = st.session_state.plotted_parametric_functions[idx]
                                 st.write(f"Debug: param_data = {param_data}")
                                 
@@ -611,9 +613,11 @@ with master_col2:
                                     
                                     lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
                                 else:
+                                    st.write("Debug: Invalid param_data")
                                     lower_y = np.zeros_like(x_fill)
                             except Exception as e:
                                 st.write(f"Debug: Parametric error: {str(e)}")
+                                st.write(f"Debug: Error type: {type(e)}")
                                 lower_y = np.zeros_like(x_fill)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1

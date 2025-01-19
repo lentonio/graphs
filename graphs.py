@@ -609,7 +609,7 @@ with master_col2:
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
-                        if second_func_idx == "$x$-axis":
+                        if second_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
                         elif second_func_idx.startswith("Explicit"):
                             idx = int(second_func_idx.split()[1]) - 1

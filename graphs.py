@@ -538,64 +538,78 @@ with master_col2:
         with plot_col:
             if st.button("Fill Area"):
                 if upper_func_idx:
-                    # Get x values for the fill
-                    x_fill = np.linspace(x_start, x_end, 1000)
-                    
-                    # Get upper function data
-                    if upper_func_idx.startswith("Explicit"):
-                        idx = int(upper_func_idx.split()[1]) - 1
-                        upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        st.write(f"Debug: Explicit upper function evaluated")
-                    elif upper_func_idx.startswith("Parametric"):
-                        idx = int(upper_func_idx.split()[1]) - 1
-                        param_data = st.session_state.plotted_parametric_functions[idx]
-                        st.write(f"Debug: Parametric data keys: {param_data.keys()}")
-                        st.write(f"Debug: x shape: {param_data['x'].shape}, y shape: {param_data['y'].shape}")
+                    try:
+                        # Get x values for the fill
+                        x_fill = np.linspace(x_start, x_end, 1000)
                         
-                        # Sort x and y values to ensure proper interpolation
-                        sort_idx = np.argsort(param_data["x"])
-                        x_sorted = param_data["x"][sort_idx]
-                        y_sorted = param_data["y"][sort_idx]
-                        st.write(f"Debug: x_sorted range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
+                        # Initialize y arrays
+                        upper_y = None
+                        lower_y = None
                         
-                        # Interpolate y values for our x_fill points
-                        upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                        st.write(f"Debug: Interpolated y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
-                    
-                    # Get lower function data
-                    if lower_func_idx == "x-axis":
-                        lower_y = np.zeros_like(x_fill)
-                    elif lower_func_idx.startswith("Explicit"):
-                        idx = int(lower_func_idx.split()[1]) - 1
-                        lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                    elif lower_func_idx.startswith("Parametric"):
-                        idx = int(lower_func_idx.split()[1]) - 1
-                        param_data = st.session_state.plotted_parametric_functions[idx]
-                        # Sort x and y values to ensure proper interpolation
-                        sort_idx = np.argsort(param_data["x"])
-                        x_sorted = param_data["x"][sort_idx]
-                        y_sorted = param_data["y"][sort_idx]
-                        # Interpolate y values for our x_fill points
-                        lower_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                    elif lower_func_idx.startswith("Implicit"):
-                        idx = int(lower_func_idx.split()[1]) - 1
-                        # For implicit, we'll need the stored points from the contour
-                        implicit_data = st.session_state.plotted_implicit_functions[idx]
-                        # TODO: Get points from contour and interpolate
-                        lower_y = np.zeros_like(x_fill)  # Placeholder
-                    
-                    # Remove any NaN values before filling
-                    valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
-                    st.write(f"Debug: Valid points: {np.sum(valid_mask)} out of {len(valid_mask)}")
-                    
-                    if np.any(valid_mask):
-                        ax.fill_between(x_fill[valid_mask], 
-                                      lower_y[valid_mask], 
-                                      upper_y[valid_mask],
-                                      color=MY_COLORS[fill_color],
-                                      alpha=opacity,
-                                      zorder=5)
-                        st.write("Debug: Fill between called")
+                        # Get upper function data
+                        if upper_func_idx.startswith("Explicit"):
+                            idx = int(upper_func_idx.split()[1]) - 1
+                            upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                            st.write(f"Debug: Explicit upper function evaluated")
+                        elif upper_func_idx.startswith("Parametric"):
+                            idx = int(upper_func_idx.split()[1]) - 1
+                            param_data = st.session_state.plotted_parametric_functions[idx]
+                            st.write(f"Debug: Parametric data keys: {param_data.keys()}")
+                            st.write(f"Debug: x shape: {param_data['x'].shape}, y shape: {param_data['y'].shape}")
+                            
+                            # Sort x and y values to ensure proper interpolation
+                            sort_idx = np.argsort(param_data["x"])
+                            x_sorted = param_data["x"][sort_idx]
+                            y_sorted = param_data["y"][sort_idx]
+                            st.write(f"Debug: x_sorted range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
+                            
+                            # Interpolate y values for our x_fill points
+                            upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
+                            st.write(f"Debug: Interpolated y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
+                        elif upper_func_idx.startswith("Implicit"):
+                            idx = int(upper_func_idx.split()[1]) - 1
+                            upper_y = np.zeros_like(x_fill)  # Placeholder
+                        
+                        # Get lower function data
+                        if lower_func_idx == "x-axis":
+                            lower_y = np.zeros_like(x_fill)
+                        elif lower_func_idx.startswith("Explicit"):
+                            idx = int(lower_func_idx.split()[1]) - 1
+                            lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                        elif lower_func_idx.startswith("Parametric"):
+                            idx = int(lower_func_idx.split()[1]) - 1
+                            param_data = st.session_state.plotted_parametric_functions[idx]
+                            # Sort x and y values to ensure proper interpolation
+                            sort_idx = np.argsort(param_data["x"])
+                            x_sorted = param_data["x"][sort_idx]
+                            y_sorted = param_data["y"][sort_idx]
+                            # Interpolate y values for our x_fill points
+                            lower_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
+                        elif lower_func_idx.startswith("Implicit"):
+                            idx = int(lower_func_idx.split()[1]) - 1
+                            lower_y = np.zeros_like(x_fill)  # Placeholder
+                        
+                        # Check if we have valid data
+                        if upper_y is not None and lower_y is not None:
+                            # Remove any NaN values before filling
+                            valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
+                            st.write(f"Debug: Valid points: {np.sum(valid_mask)} out of {len(valid_mask)}")
+                            
+                            if np.any(valid_mask):
+                                ax.fill_between(x_fill[valid_mask], 
+                                              lower_y[valid_mask], 
+                                              upper_y[valid_mask],
+                                              color=MY_COLORS[fill_color],
+                                              alpha=opacity,
+                                              zorder=5)
+                                st.write("Debug: Fill between called")
+                            else:
+                                st.error("No valid points found for filling")
+                        else:
+                            st.error("Could not compute function values")
+                            
+                    except Exception as e:
+                        st.error(f"Error filling area: {str(e)}")
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

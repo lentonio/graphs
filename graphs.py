@@ -601,8 +601,11 @@ with master_col2:
                                               upper_y[valid_mask],
                                               color=MY_COLORS[fill_color],
                                               alpha=opacity,
-                                              zorder=5)
+                                              zorder=20)  # Increased zorder to be above most elements
                                 st.write("Debug: Fill between called")
+                                st.write(f"Debug: Fill color: {fill_color}, alpha: {opacity}")
+                                st.write(f"Debug: x range: {x_fill[valid_mask].min():.2f} to {x_fill[valid_mask].max():.2f}")
+                                st.write(f"Debug: y ranges: {lower_y[valid_mask].min():.2f} to {upper_y[valid_mask].max():.2f}")
                             else:
                                 st.error("No valid points found for filling")
                         else:

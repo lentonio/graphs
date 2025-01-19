@@ -572,46 +572,57 @@ with master_col2:
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
                             st.write(f"Debug: Upper function type: Implicit")
                             
-                            # Create grid of points
-                            x = np.linspace(xlower, xupper, 1000)
-                            y = np.linspace(ylower, yupper, 1000)
-                            X, Y = np.meshgrid(x, y)
-                            
-                            # Evaluate the implicit function
-                            x_sym, y_sym = sp.symbols('x y')
-                            expr = eval(implicit_data["function"], {
-                                "x": x_sym, 
-                                "y": y_sym, 
-                                "lib": sp
-                            })
-                            
-                            # Convert to numpy function and evaluate
-                            f = sp.lambdify((x_sym, y_sym), expr)
-                            Z = f(X, Y)
-                            
-                            # Find contour at level 0
-                            contours = plt.contour(X, Y, Z, levels=[0])
-                            plt.clf()  # Clear the temporary contour plot
-                            
-                            # Get the points from the contour
-                            contour_paths = contours.collections[0].get_paths()
-                            
-                            if len(contour_paths) > 0:
-                                # Get the first path (we might need to handle multiple paths later)
-                                path = contour_paths[0]
-                                vertices = path.vertices
+                            try:
+                                # Create grid of points
+                                x = np.linspace(xlower, xupper, 1000)
+                                y = np.linspace(ylower, yupper, 1000)
+                                X, Y = np.meshgrid(x, y)
                                 
-                                # Sort points by x coordinate for interpolation
-                                sort_idx = np.argsort(vertices[:, 0])
-                                x_sorted = vertices[sort_idx, 0]
-                                y_sorted = vertices[sort_idx, 1]
+                                # Evaluate the implicit function
+                                x_sym, y_sym = sp.symbols('x y')
+                                expr = eval(implicit_data["function"], {
+                                    "x": x_sym, 
+                                    "y": y_sym, 
+                                    "lib": sp
+                                })
                                 
-                                # Interpolate y values for our x_fill points
-                                upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                                st.write(f"Debug: Implicit contour found")
-                                st.write(f"Debug: Contour y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
-                            else:
-                                st.error("No contour found for implicit function")
+                                # Convert to numpy function and evaluate
+                                f = sp.lambdify((x_sym, y_sym), expr)
+                                Z = f(X, Y)
+                                
+                                # Find contour at level 0
+                                cs = plt.contour(X, Y, Z, levels=[0])
+                                
+                                # Get contour paths
+                                all_paths = []
+                                for collection in cs._contour_generator.lines:
+                                    if len(collection) > 0:  # Check if path has points
+                                        all_paths.append(collection)
+                                
+                                if all_paths:
+                                    # Combine all paths
+                                    all_points = np.vstack(all_paths)
+                                    
+                                    # Sort points by x coordinate for interpolation
+                                    sort_idx = np.argsort(all_points[:, 0])
+                                    x_sorted = all_points[sort_idx, 0]
+                                    y_sorted = all_points[sort_idx, 1]
+                                    
+                                    # Interpolate y values for our x_fill points
+                                    upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
+                                    st.write(f"Debug: Implicit contour found")
+                                    st.write(f"Debug: Number of contour paths: {len(all_paths)}")
+                                    st.write(f"Debug: Total contour points: {len(all_points)}")
+                                    st.write(f"Debug: Contour y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
+                                else:
+                                    st.error("No contour paths found for implicit function")
+                                    upper_y = np.zeros_like(x_fill)
+                                
+                                # Clean up the temporary plot
+                                plt.clf()
+                                
+                            except Exception as e:
+                                st.error(f"Error processing implicit function: {str(e)}")
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data with similar debugging

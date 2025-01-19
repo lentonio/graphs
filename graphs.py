@@ -7,7 +7,7 @@ from sympy import nsimplify, pi, latex
 import streamlit as st
 import io
 
-from graph_utils import create_graph, eval_function, latex_to_python
+from graph_utils import create_graph, eval_function, latex_to_python, get_y_values_for_curve
 
 sp.arcsin = sp.asin
 sp.arccos = sp.acos
@@ -550,75 +550,38 @@ with master_col2:
                         if upper_func_idx.startswith("Explicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        elif upper_func_idx.startswith("Parametric"):
-                            idx = int(upper_func_idx.split()[1]) - 1
-                            param_data = st.session_state.plotted_parametric_functions[idx]
-                            
-                            # Sort x and y values to ensure proper interpolation
-                            sort_idx = np.argsort(param_data["x"])
-                            x_sorted = param_data["x"][sort_idx]
-                            y_sorted = param_data["y"][sort_idx]
-                            
-                            # Interpolate y values for our x_fill points
-                            upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
                         elif upper_func_idx.startswith("Implicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
                             
                             try:
-                                # Create grid of points
+                                # Create grid and evaluate implicit function
                                 x = np.linspace(xlower, xupper, 1000)
                                 y = np.linspace(ylower, yupper, 1000)
                                 X, Y = np.meshgrid(x, y)
                                 
-                                # Evaluate the implicit function
                                 x_sym, y_sym = sp.symbols('x y')
-                                expr = eval(implicit_data["function"], {
-                                    "x": x_sym, 
-                                    "y": y_sym, 
-                                    "lib": sp
-                                })
-                                
-                                # Convert to numpy function and evaluate
+                                expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
                                 f = sp.lambdify((x_sym, y_sym), expr)
                                 Z = f(X, Y)
                                 
-                                # Create a temporary figure for the contour
+                                # Get contour points
                                 temp_fig, temp_ax = plt.subplots()
                                 cs = temp_ax.contour(X, Y, Z, levels=[0])
-                                
-                                # Get segments from the contour
                                 segs = cs.allsegs[0]
+                                plt.close(temp_fig)
                                 
                                 if len(segs) > 0:
-                                    # For each x value, find all corresponding y values
+                                    # Combine points from all segments
                                     x_points = []
                                     y_points = []
                                     for seg in segs:
                                         x_points.extend(seg[:, 0])
                                         y_points.extend(seg[:, 1])
                                     
-                                    # Convert to numpy arrays
-                                    x_points = np.array(x_points)
-                                    y_points = np.array(y_points)
-                                    
-                                    # For each x in x_fill, find the maximum y value (for upper curve)
-                                    upper_y = []
-                                    for x in x_fill:
-                                        # Find all y values for this x (within some tolerance)
-                                        tolerance = 0.01
-                                        matching_y = y_points[np.abs(x_points - x) < tolerance]
-                                        if len(matching_y) > 0:
-                                            upper_y.append(np.max(matching_y))
-                                        else:
-                                            upper_y.append(np.nan)
-                                    
-                                    upper_y = np.array(upper_y)
+                                    upper_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=True)
                                 else:
                                     upper_y = np.zeros_like(x_fill)
-                                
-                                # Clean up the temporary figure
-                                plt.close(temp_fig)
                                 
                             except Exception as e:
                                 upper_y = np.zeros_like(x_fill)
@@ -629,64 +592,42 @@ with master_col2:
                         elif lower_func_idx.startswith("Explicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                        elif lower_func_idx.startswith("Parametric"):
+                            idx = int(lower_func_idx.split()[1]) - 1
+                            param_data = st.session_state.plotted_parametric_functions[idx]
+                            lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=False)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
                             
                             try:
-                                # Create grid of points
+                                # Create grid and evaluate implicit function
                                 x = np.linspace(xlower, xupper, 1000)
                                 y = np.linspace(ylower, yupper, 1000)
                                 X, Y = np.meshgrid(x, y)
                                 
-                                # Evaluate the implicit function
                                 x_sym, y_sym = sp.symbols('x y')
-                                expr = eval(implicit_data["function"], {
-                                    "x": x_sym, 
-                                    "y": y_sym, 
-                                    "lib": sp
-                                })
-                                
-                                # Convert to numpy function and evaluate
+                                expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
                                 f = sp.lambdify((x_sym, y_sym), expr)
                                 Z = f(X, Y)
                                 
-                                # Create a temporary figure for the contour
+                                # Get contour points
                                 temp_fig, temp_ax = plt.subplots()
                                 cs = temp_ax.contour(X, Y, Z, levels=[0])
-                                
-                                # Get segments from the contour
                                 segs = cs.allsegs[0]
+                                plt.close(temp_fig)
                                 
                                 if len(segs) > 0:
-                                    # For each x value, find all corresponding y values
+                                    # Combine points from all segments
                                     x_points = []
                                     y_points = []
                                     for seg in segs:
                                         x_points.extend(seg[:, 0])
                                         y_points.extend(seg[:, 1])
                                     
-                                    # Convert to numpy arrays
-                                    x_points = np.array(x_points)
-                                    y_points = np.array(y_points)
-                                    
-                                    # For each x in x_fill, find the minimum y value (for lower curve)
-                                    lower_y = []
-                                    for x in x_fill:
-                                        # Find all y values for this x (within some tolerance)
-                                        tolerance = 0.01
-                                        matching_y = y_points[np.abs(x_points - x) < tolerance]
-                                        if len(matching_y) > 0:
-                                            lower_y.append(np.min(matching_y))
-                                        else:
-                                            lower_y.append(np.nan)
-                                    
-                                    lower_y = np.array(lower_y)
+                                    lower_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=False)
                                 else:
                                     lower_y = np.zeros_like(x_fill)
-                                
-                                # Clean up the temporary figure
-                                plt.close(temp_fig)
                                 
                             except Exception as e:
                                 lower_y = np.zeros_like(x_fill)

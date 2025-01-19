@@ -142,3 +142,35 @@ def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,
     ax.set_ylim(ylower, yupper)
 
     return fig, ax 
+
+def get_y_values_for_curve(x_fill, curve_points_x, curve_points_y, take_max=True):
+    """
+    Get y values for a curve that might have multiple y values per x.
+    
+    Args:
+        x_fill: x values to interpolate at
+        curve_points_x: x coordinates of the curve points
+        curve_points_y: y coordinates of the curve points
+        take_max: if True, take maximum y value for each x, otherwise take minimum
+    
+    Returns:
+        Array of y values corresponding to x_fill points
+    """
+    # Sort x and y values to ensure proper interpolation
+    sort_idx = np.argsort(curve_points_x)
+    x_sorted = curve_points_x[sort_idx]
+    y_sorted = curve_points_y[sort_idx]
+    
+    # For each x in x_fill, find the appropriate y value
+    y_values = []
+    tolerance = 0.01
+    
+    for x in x_fill:
+        # Find all y values for this x (within tolerance)
+        matching_y = y_sorted[np.abs(x_sorted - x) < tolerance]
+        if len(matching_y) > 0:
+            y_values.append(np.max(matching_y) if take_max else np.min(matching_y))
+        else:
+            y_values.append(np.nan)
+    
+    return np.array(y_values) 

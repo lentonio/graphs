@@ -516,7 +516,7 @@ with master_col2:
         
         all_functions = explicit_functions + implicit_functions + parametric_functions
         
-        col1, col2, col3, col4 = st.columns([4, 4, 2, 2])
+        col1, col2, col3, col4, col5, col6 = st.columns([2.5, 2.5, 1.5, 1.5, 1.5, 1.5])
         with col1:
             first_func_idx = st.selectbox("Outer", 
                                         options=all_functions,
@@ -529,156 +529,158 @@ with master_col2:
             x_start = st.number_input("From x =", value=xuserlower)
         with col4:
             x_end = st.number_input("To x =", value=xuserupper)
-        
-        color_col, alpha_col, plot_col = st.columns([2, 2, 1])
-        with color_col:
-            fill_color = st.selectbox("Fill color", options=list(MY_COLORS.keys()))
-        with alpha_col:
-            opacity = st.slider("Opacity", 0.0, 1.0, 0.3)
-        with plot_col:
-            if st.button("Fill Area"):
-                if first_func_idx:
-                    try:
-                        # Get x values for the fill
-                        x_fill = np.linspace(x_start, x_end, 1000)
-                        
-                        # Initialize y arrays
-                        upper_y = None
-                        lower_y = None
-                        
-                        # Get upper function data
-                        if first_func_idx.startswith("Explicit"):
-                            idx = int(first_func_idx.split()[1]) - 1
-                            upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        elif first_func_idx.startswith("Implicit"):
-                            idx = int(first_func_idx.split()[1]) - 1
-                            implicit_data = st.session_state.plotted_implicit_functions[idx]
-                            
-                            try:
-                                # Create grid and evaluate implicit function
-                                x = np.linspace(xlower, xupper, 1000)
-                                y = np.linspace(ylower, yupper, 1000)
-                                X, Y = np.meshgrid(x, y)
-                                
-                                x_sym, y_sym = sp.symbols('x y')
-                                expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
-                                f = sp.lambdify((x_sym, y_sym), expr)
-                                Z = f(X, Y)
-                                
-                                # Get contour points
-                                temp_fig, temp_ax = plt.subplots()
-                                cs = temp_ax.contour(X, Y, Z, levels=[0])
-                                segs = cs.allsegs[0]
-                                plt.close(temp_fig)
-                                
-                                if len(segs) > 0:
-                                    # Combine points from all segments
-                                    x_points = []
-                                    y_points = []
-                                    for seg in segs:
-                                        x_points.extend(seg[:, 0])
-                                        y_points.extend(seg[:, 1])
-                                    
-                                    upper_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=True)
-                                else:
-                                    upper_y = np.zeros_like(x_fill)
-                                
-                            except Exception as e:
-                                upper_y = np.zeros_like(x_fill)
-                        elif first_func_idx.startswith("Parametric"):
-                            try:
-                                idx = int(first_func_idx.split()[1]) - 1
-                                if idx < len(st.session_state.plotted_parametric_functions):
-                                    param_data = st.session_state.plotted_parametric_functions[idx]
-                                    if param_data is not None:
-                                        x = param_data["x"]
-                                        y = param_data["y"]
-                                        upper_y = get_y_values_for_curve(x_fill, x, y, take_max=True)
-                                    else:
-                                        upper_y = np.zeros_like(x_fill)
-                                else:
-                                    upper_y = np.zeros_like(x_fill)
-                            except Exception as e:
-                                upper_y = np.zeros_like(x_fill)
-                        
-                        # Get lower function data
-                        if second_func_idx == "x-axis":
-                            lower_y = np.zeros_like(x_fill)
-                        elif second_func_idx.startswith("Explicit"):
-                            idx = int(second_func_idx.split()[1]) - 1
-                            lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        elif second_func_idx.startswith("Parametric"):
-                            try:
-                                idx = int(second_func_idx.split()[1]) - 1
-                                if idx < len(st.session_state.plotted_parametric_functions):
-                                    param_data = st.session_state.plotted_parametric_functions[idx]
-                                    if param_data is not None:
-                                        x = param_data["x"]
-                                        y = param_data["y"]
-                                        lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
-                                    else:
-                                        lower_y = np.zeros_like(x_fill)
-                                else:
-                                    lower_y = np.zeros_like(x_fill)
-                            except Exception as e:
-                                lower_y = np.zeros_like(x_fill)
-                        elif second_func_idx.startswith("Implicit"):
-                            idx = int(second_func_idx.split()[1]) - 1
-                            implicit_data = st.session_state.plotted_implicit_functions[idx]
-                            
-                            try:
-                                # Create grid and evaluate implicit function
-                                x = np.linspace(xlower, xupper, 1000)
-                                y = np.linspace(ylower, yupper, 1000)
-                                X, Y = np.meshgrid(x, y)
-                                
-                                x_sym, y_sym = sp.symbols('x y')
-                                expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
-                                f = sp.lambdify((x_sym, y_sym), expr)
-                                Z = f(X, Y)
-                                
-                                # Get contour points
-                                temp_fig, temp_ax = plt.subplots()
-                                cs = temp_ax.contour(X, Y, Z, levels=[0])
-                                segs = cs.allsegs[0]
-                                plt.close(temp_fig)
-                                
-                                if len(segs) > 0:
-                                    # Combine points from all segments
-                                    x_points = []
-                                    y_points = []
-                                    for seg in segs:
-                                        x_points.extend(seg[:, 0])
-                                        y_points.extend(seg[:, 1])
-                                    
-                                    lower_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=False)
-                                else:
-                                    lower_y = np.zeros_like(x_fill)
-                                
-                            except Exception as e:
-                                lower_y = np.zeros_like(x_fill)
-                        
-                        # Check if we have valid data
-                        if upper_y is not None and lower_y is not None:
-                            # Remove any NaN values before filling
-                            valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
-                            
-                            if np.any(valid_mask):
-                                ax.fill_between(x_fill[valid_mask], 
-                                              lower_y[valid_mask], 
-                                              upper_y[valid_mask],
-                                              color=MY_COLORS[fill_color],
-                                              alpha=opacity,
-                                              zorder=5)  # Changed from 1 to 5 to appear above tick labels
-                            else:
-                                st.error("No valid points found for filling")
-                        else:
-                            st.error("Could not compute function values")
-                            
-                    except Exception as e:
-                        st.error(f"Error filling area: {str(e)}")
+        with col5:
+            fill_color = st.selectbox("Color", options=list(MY_COLORS.keys()))
+        with col6:
+            opacity = st.number_input("Opacity", min_value=0.0, max_value=1.0, value=0.3, step=0.1)
 
-        st.caption("If a curve has multiple $y$-values at an $x$-coordinate, the outer function uses the **maximum** $y$-value and the inner function uses the **minimum** $y$-value.")
+        if st.button("Fill Area"):
+            if first_func_idx:
+                try:
+                    # Get x values for the fill
+                    x_fill = np.linspace(x_start, x_end, 1000)
+                    
+                    # Initialize y arrays
+                    upper_y = None
+                    lower_y = None
+                    
+                    # Get upper function data
+                    if first_func_idx.startswith("Explicit"):
+                        idx = int(first_func_idx.split()[1]) - 1
+                        upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                    elif first_func_idx.startswith("Implicit"):
+                        idx = int(first_func_idx.split()[1]) - 1
+                        implicit_data = st.session_state.plotted_implicit_functions[idx]
+                        
+                        try:
+                            # Create grid and evaluate implicit function
+                            x = np.linspace(xlower, xupper, 1000)
+                            y = np.linspace(ylower, yupper, 1000)
+                            X, Y = np.meshgrid(x, y)
+                            
+                            x_sym, y_sym = sp.symbols('x y')
+                            expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
+                            f = sp.lambdify((x_sym, y_sym), expr)
+                            Z = f(X, Y)
+                            
+                            # Get contour points
+                            temp_fig, temp_ax = plt.subplots()
+                            cs = temp_ax.contour(X, Y, Z, levels=[0])
+                            segs = cs.allsegs[0]
+                            plt.close(temp_fig)
+                            
+                            if len(segs) > 0:
+                                # Combine points from all segments
+                                x_points = []
+                                y_points = []
+                                for seg in segs:
+                                    x_points.extend(seg[:, 0])
+                                    y_points.extend(seg[:, 1])
+                                
+                                upper_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=True)
+                            else:
+                                upper_y = np.zeros_like(x_fill)
+                            
+                        except Exception as e:
+                            upper_y = np.zeros_like(x_fill)
+                    elif first_func_idx.startswith("Parametric"):
+                        try:
+                            idx = int(first_func_idx.split()[1]) - 1
+                            if idx < len(st.session_state.plotted_parametric_functions):
+                                param_data = st.session_state.plotted_parametric_functions[idx]
+                                if param_data is not None:
+                                    x = param_data["x"]
+                                    y = param_data["y"]
+                                    upper_y = get_y_values_for_curve(x_fill, x, y, take_max=True)
+                                else:
+                                    upper_y = np.zeros_like(x_fill)
+                            else:
+                                upper_y = np.zeros_like(x_fill)
+                        except Exception as e:
+                            upper_y = np.zeros_like(x_fill)
+                    
+                    # Get lower function data
+                    if second_func_idx == "x-axis":
+                        lower_y = np.zeros_like(x_fill)
+                    elif second_func_idx.startswith("Explicit"):
+                        idx = int(second_func_idx.split()[1]) - 1
+                        lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                    elif second_func_idx.startswith("Parametric"):
+                        try:
+                            idx = int(second_func_idx.split()[1]) - 1
+                            if idx < len(st.session_state.plotted_parametric_functions):
+                                param_data = st.session_state.plotted_parametric_functions[idx]
+                                if param_data is not None:
+                                    x = param_data["x"]
+                                    y = param_data["y"]
+                                    lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
+                                else:
+                                    lower_y = np.zeros_like(x_fill)
+                            else:
+                                lower_y = np.zeros_like(x_fill)
+                        except Exception as e:
+                            lower_y = np.zeros_like(x_fill)
+                    elif second_func_idx.startswith("Implicit"):
+                        idx = int(second_func_idx.split()[1]) - 1
+                        implicit_data = st.session_state.plotted_implicit_functions[idx]
+                        
+                        try:
+                            # Create grid and evaluate implicit function
+                            x = np.linspace(xlower, xupper, 1000)
+                            y = np.linspace(ylower, yupper, 1000)
+                            X, Y = np.meshgrid(x, y)
+                            
+                            x_sym, y_sym = sp.symbols('x y')
+                            expr = eval(implicit_data["function"], {"x": x_sym, "y": y_sym, "lib": sp})
+                            f = sp.lambdify((x_sym, y_sym), expr)
+                            Z = f(X, Y)
+                            
+                            # Get contour points
+                            temp_fig, temp_ax = plt.subplots()
+                            cs = temp_ax.contour(X, Y, Z, levels=[0])
+                            segs = cs.allsegs[0]
+                            plt.close(temp_fig)
+                            
+                            if len(segs) > 0:
+                                # Combine points from all segments
+                                x_points = []
+                                y_points = []
+                                for seg in segs:
+                                    x_points.extend(seg[:, 0])
+                                    y_points.extend(seg[:, 1])
+                                
+                                lower_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=False)
+                            else:
+                                lower_y = np.zeros_like(x_fill)
+                            
+                        except Exception as e:
+                            lower_y = np.zeros_like(x_fill)
+                        
+                    # Check if we have valid data
+                    if upper_y is not None and lower_y is not None:
+                        # Remove any NaN values before filling
+                        valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
+                        
+                        if np.any(valid_mask):
+                            ax.fill_between(x_fill[valid_mask], 
+                                          lower_y[valid_mask], 
+                                          upper_y[valid_mask],
+                                          color=MY_COLORS[fill_color],
+                                          alpha=opacity,
+                                          zorder=5)  # Changed from 1 to 5 to appear above tick labels
+                        else:
+                            st.error("No valid points found for filling")
+                    else:
+                        st.error("Could not compute function values")
+                            
+                except Exception as e:
+                    st.error(f"Error filling area: {str(e)}")
+
+        st.caption("""
+        If a curve has multiple y-values at an x-coordinate:
+        • Outer function uses the **maximum** y-value
+        • Inner function uses the **minimum** y-value
+        """)
 
 
 for func_data in st.session_state.plotted_functions:

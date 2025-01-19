@@ -526,12 +526,13 @@ with master_col2:
                                         options=["$x$-axis"] + all_functions,
                                         index=0)
         with col3:
-            x_start = st.number_input("Lower $x$", value=xuserlower)
+            x_start = st.number_input("Lower $x$", value=xuserlower, key="area_x_start")
         with col4:
-            x_end = st.number_input("Upper $x$", value=xuserupper)
+            x_end = st.number_input("Upper $x$", value=xuserupper, key="area_x_end")
         with col5:
             fill_color = st.selectbox("Color", 
                                       options=list(MY_COLORS.keys()),
+                                      key="area_color",
                                       label_visibility="collapsed")
         with col6:
             opacity = st.number_input("Opacity", 
@@ -539,9 +540,10 @@ with master_col2:
                                       max_value=1.0, 
                                       value=0.3, 
                                       step=0.1,
+                                      key="area_opacity",
                                       label_visibility="collapsed")
         with col7:
-            if st.button("Fill"):
+            if st.button("Fill", key="area_fill"):
                 if first_func_idx:
                     try:
                         # Get x values for the fill

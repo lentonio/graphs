@@ -550,32 +550,37 @@ with master_col2:
                         if upper_func_idx.startswith("Explicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                            st.write(f"Debug: Explicit upper function evaluated")
+                            st.write(f"Debug: Upper function type: Explicit")
+                            st.write(f"Debug: Upper function values: min={np.min(upper_y):.2f}, max={np.max(upper_y):.2f}")
                         elif upper_func_idx.startswith("Parametric"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             param_data = st.session_state.plotted_parametric_functions[idx]
-                            st.write(f"Debug: Parametric data keys: {param_data.keys()}")
-                            st.write(f"Debug: x shape: {param_data['x'].shape}, y shape: {param_data['y'].shape}")
+                            st.write(f"Debug: Upper function type: Parametric")
+                            st.write(f"Debug: Parametric x range: {np.min(param_data['x']):.2f} to {np.max(param_data['x']):.2f}")
+                            st.write(f"Debug: Parametric y range: {np.min(param_data['y']):.2f} to {np.max(param_data['y']):.2f}")
                             
                             # Sort x and y values to ensure proper interpolation
                             sort_idx = np.argsort(param_data["x"])
                             x_sorted = param_data["x"][sort_idx]
                             y_sorted = param_data["y"][sort_idx]
-                            st.write(f"Debug: x_sorted range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
                             
                             # Interpolate y values for our x_fill points
                             upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                            st.write(f"Debug: Interpolated y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
+                            st.write(f"Debug: Interpolated upper y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
                         elif upper_func_idx.startswith("Implicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
+                            st.write(f"Debug: Upper function type: Implicit - currently returns zeros")
                             upper_y = np.zeros_like(x_fill)  # Placeholder
                         
-                        # Get lower function data
+                        # Get lower function data with similar debugging
                         if lower_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
+                            st.write("Debug: Lower function: x-axis (zeros)")
                         elif lower_func_idx.startswith("Explicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
+                            st.write(f"Debug: Lower function type: Explicit")
+                            st.write(f"Debug: Lower function values: min={np.min(lower_y):.2f}, max={np.max(lower_y):.2f}")
                         elif lower_func_idx.startswith("Parametric"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             param_data = st.session_state.plotted_parametric_functions[idx]

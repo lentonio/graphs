@@ -595,17 +595,21 @@ with master_col2:
                         elif lower_func_idx.startswith("Parametric"):
                             try:
                                 idx = int(lower_func_idx.split()[1]) - 1
-                                st.write(f"Debug: Parametric index: {idx}")
-                                
                                 param_data = st.session_state.plotted_parametric_functions[idx]
-                                st.write(f"Debug: Param data type: {type(param_data)}")
-                                st.write(f"Debug: Param data keys: {param_data.keys() if param_data else 'None'}")
                                 
-                                if param_data is not None and isinstance(param_data, dict) and "x" in param_data and "y" in param_data:
-                                    st.write(f"Debug: x shape: {param_data['x'].shape}, y shape: {param_data['y'].shape}")
-                                    lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=True)
+                                if param_data is not None and isinstance(param_data, dict):
+                                    # Get the original parametric functions
+                                    x_func, y_func = param_data["function"]
+                                    
+                                    # Create a dense set of t values
+                                    t = np.linspace(-2*np.pi, 2*np.pi, 1000)  # Wider range with more points
+                                    
+                                    # Evaluate the parametric functions
+                                    x = eval_function(x_func, t, np, param_var='t')
+                                    y = eval_function(y_func, t, np, param_var='t')
+                                    
+                                    lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
                                 else:
-                                    st.write("Debug: Invalid parametric data structure")
                                     lower_y = np.zeros_like(x_fill)
                             except Exception as e:
                                 st.write(f"Debug: Parametric error: {str(e)}")

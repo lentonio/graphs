@@ -593,15 +593,13 @@ with master_col2:
                                 # Find contour at level 0
                                 cs = plt.contour(X, Y, Z, levels=[0])
                                 
-                                # Get contour paths
-                                all_paths = []
-                                for collection in cs._contour_generator.lines:
-                                    if len(collection) > 0:  # Check if path has points
-                                        all_paths.append(collection)
+                                # Get paths from the contour
+                                paths = cs.collections[0].get_paths()
+                                st.write(f"Debug: Found {len(paths)} contour paths")
                                 
-                                if all_paths:
-                                    # Combine all paths
-                                    all_points = np.vstack(all_paths)
+                                if paths:
+                                    # Combine points from all paths
+                                    all_points = np.concatenate([path.vertices for path in paths])
                                     
                                     # Sort points by x coordinate for interpolation
                                     sort_idx = np.argsort(all_points[:, 0])
@@ -610,10 +608,9 @@ with master_col2:
                                     
                                     # Interpolate y values for our x_fill points
                                     upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                                    st.write(f"Debug: Implicit contour found")
-                                    st.write(f"Debug: Number of contour paths: {len(all_paths)}")
                                     st.write(f"Debug: Total contour points: {len(all_points)}")
-                                    st.write(f"Debug: Contour y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
+                                    st.write(f"Debug: Contour x range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
+                                    st.write(f"Debug: Contour y range: {y_sorted.min():.2f} to {y_sorted.max():.2f}")
                                 else:
                                     st.error("No contour paths found for implicit function")
                                     upper_y = np.zeros_like(x_fill)
@@ -623,6 +620,7 @@ with master_col2:
                                 
                             except Exception as e:
                                 st.error(f"Error processing implicit function: {str(e)}")
+                                st.write(f"Debug: Exception details: {type(e).__name__}")
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data with similar debugging

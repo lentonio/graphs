@@ -595,23 +595,37 @@ with master_col2:
                                 cs = temp_ax.contour(X, Y, Z, levels=[0])
                                 
                                 # Get segments from the contour
-                                segs = cs.allsegs[0]  # Get segments for the first level (0)
+                                segs = cs.allsegs[0]
                                 st.write(f"Debug: Found {len(segs)} contour segments")
                                 
                                 if len(segs) > 0:
-                                    # Combine points from all segments
-                                    all_points = np.vstack(segs)
+                                    # For each x value, find all corresponding y values
+                                    x_points = []
+                                    y_points = []
+                                    for seg in segs:
+                                        x_points.extend(seg[:, 0])
+                                        y_points.extend(seg[:, 1])
                                     
-                                    # Sort points by x coordinate for interpolation
-                                    sort_idx = np.argsort(all_points[:, 0])
-                                    x_sorted = all_points[sort_idx, 0]
-                                    y_sorted = all_points[sort_idx, 1]
+                                    # Convert to numpy arrays
+                                    x_points = np.array(x_points)
+                                    y_points = np.array(y_points)
                                     
-                                    # Interpolate y values for our x_fill points
-                                    upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                                    st.write(f"Debug: Total contour points: {len(all_points)}")
-                                    st.write(f"Debug: Contour x range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
-                                    st.write(f"Debug: Contour y range: {y_sorted.min():.2f} to {y_sorted.max():.2f}")
+                                    # For each x in x_fill, find the maximum y value (for upper curve)
+                                    upper_y = []
+                                    for x in x_fill:
+                                        # Find all y values for this x (within some tolerance)
+                                        tolerance = 0.01
+                                        matching_y = y_points[np.abs(x_points - x) < tolerance]
+                                        if len(matching_y) > 0:
+                                            upper_y.append(np.max(matching_y))  # Take maximum for upper curve
+                                        else:
+                                            upper_y.append(np.nan)
+                                    
+                                    upper_y = np.array(upper_y)
+                                    
+                                    st.write(f"Debug: Total contour points: {len(x_points)}")
+                                    st.write(f"Debug: Contour x range: {min(x_points):.2f} to {max(x_points):.2f}")
+                                    st.write(f"Debug: Contour y range: {min(y_points):.2f} to {max(y_points):.2f}")
                                 else:
                                     st.error("No contour segments found for implicit function")
                                     upper_y = np.zeros_like(x_fill)

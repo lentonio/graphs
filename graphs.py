@@ -501,20 +501,42 @@ with master_col2:
     with tab5:  # New "Areas" tab
         st.subheader("Plot areas", divider="gray")
         
-        # Get list of plotted explicit functions for selection
-        explicit_functions = [f"Function {i+1}: {func['function']}" 
+        # Get list of all plotted functions for selection
+        explicit_functions = [f"Explicit {i+1}: {func['function']}" 
                              for i, func in enumerate(st.session_state.plotted_functions)
                              if func is not None]
+        
+        parametric_functions = [f"Parametric {i+1}: ({func['function'][0]}, {func['function'][1]})" 
+                              for i, func in enumerate(st.session_state.plotted_parametric_functions)
+                              if func is not None]
+        
+        all_functions = explicit_functions + parametric_functions
         
         col1, col2, col3, col4 = st.columns([4, 4, 2, 2])
         with col1:
             upper_func_idx = st.selectbox("Upper function", 
-                                        options=explicit_functions,
-                                        index=0 if explicit_functions else None)
+                                        options=all_functions,
+                                        index=0 if all_functions else None)
         with col2:
             lower_func_idx = st.selectbox("Lower function", 
-                                        options=["x-axis"] + explicit_functions,
+                                        options=["x-axis"] + all_functions,
                                         index=0)
+        with col3:
+            x_start = st.number_input("From x =", value=xuserlower)
+        with col4:
+            x_end = st.number_input("To x =", value=xuserupper)
+        
+        color_col, alpha_col, plot_col = st.columns([2, 2, 1])
+        with color_col:
+            fill_color = st.selectbox("Fill color", options=list(MY_COLORS.keys()))
+        with alpha_col:
+            opacity = st.slider("Opacity", 0.0, 1.0, 0.3)
+        with plot_col:
+            if st.button("Fill Area"):
+                # Get the selected functions
+                if upper_func_idx and lower_func_idx != "x-axis":
+                    # TODO: Get function data and plot area
+                    pass
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

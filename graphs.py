@@ -595,30 +595,18 @@ with master_col2:
                         elif lower_func_idx.startswith("Parametric"):
                             try:
                                 idx = int(lower_func_idx.split()[1]) - 1
-                                st.write("Debug: Entering parametric section")
-                                st.write(f"Debug: Index = {idx}")
                                 param_data = st.session_state.plotted_parametric_functions[idx]
-                                st.write(f"Debug: param_data = {param_data}")
                                 
                                 if param_data is not None and isinstance(param_data, dict):
-                                    # Get the original parametric functions
-                                    x_func, y_func = param_data["function"]
-                                    
-                                    # Create a dense set of t values
-                                    t = np.linspace(-2*np.pi, 2*np.pi, 1000)  # Wider range with more points
-                                    
-                                    # Evaluate the parametric functions
-                                    x = eval_function(x_func, t, np, param_var='t')
-                                    y = eval_function(y_func, t, np, param_var='t')
-                                    
-                                    lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
+                                    # Use the stored x,y points directly
+                                    x = param_data["x"]
+                                    y = param_data["y"]
+                                    upper_y = get_y_values_for_curve(x_fill, x, y, take_max=True)
                                 else:
-                                    st.write("Debug: Invalid param_data")
-                                    lower_y = np.zeros_like(x_fill)
+                                    upper_y = np.zeros_like(x_fill)
                             except Exception as e:
                                 st.write(f"Debug: Parametric error: {str(e)}")
-                                st.write(f"Debug: Error type: {type(e)}")
-                                lower_y = np.zeros_like(x_fill)
+                                upper_y = np.zeros_like(x_fill)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
@@ -648,12 +636,12 @@ with master_col2:
                                         x_points.extend(seg[:, 0])
                                         y_points.extend(seg[:, 1])
                                     
-                                    lower_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=False)
+                                    upper_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=True)
                                 else:
-                                    lower_y = np.zeros_like(x_fill)
+                                    upper_y = np.zeros_like(x_fill)
                                 
                             except Exception as e:
-                                lower_y = np.zeros_like(x_fill)
+                                upper_y = np.zeros_like(x_fill)
                         
                         # Check if we have valid data
                         if upper_y is not None and lower_y is not None:

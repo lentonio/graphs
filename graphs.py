@@ -545,8 +545,21 @@ with master_col2:
                     if upper_func_idx.startswith("Explicit"):
                         idx = int(upper_func_idx.split()[1]) - 1
                         upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                    else:
-                        upper_y = np.zeros_like(x_fill)  # Placeholder for other function types
+                    elif upper_func_idx.startswith("Parametric"):
+                        idx = int(upper_func_idx.split()[1]) - 1
+                        param_data = st.session_state.plotted_parametric_functions[idx]
+                        # Sort x and y values to ensure proper interpolation
+                        sort_idx = np.argsort(param_data["x"])
+                        x_sorted = param_data["x"][sort_idx]
+                        y_sorted = param_data["y"][sort_idx]
+                        # Interpolate y values for our x_fill points
+                        upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
+                    elif upper_func_idx.startswith("Implicit"):
+                        idx = int(upper_func_idx.split()[1]) - 1
+                        # For implicit, we'll need the stored points from the contour
+                        implicit_data = st.session_state.plotted_implicit_functions[idx]
+                        # TODO: Get points from contour and interpolate
+                        upper_y = np.zeros_like(x_fill)  # Placeholder
                     
                     # Get lower function data
                     if lower_func_idx == "x-axis":
@@ -554,14 +567,31 @@ with master_col2:
                     elif lower_func_idx.startswith("Explicit"):
                         idx = int(lower_func_idx.split()[1]) - 1
                         lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                    else:
-                        lower_y = np.zeros_like(x_fill)  # Placeholder for other function types
+                    elif lower_func_idx.startswith("Parametric"):
+                        idx = int(lower_func_idx.split()[1]) - 1
+                        param_data = st.session_state.plotted_parametric_functions[idx]
+                        # Sort x and y values to ensure proper interpolation
+                        sort_idx = np.argsort(param_data["x"])
+                        x_sorted = param_data["x"][sort_idx]
+                        y_sorted = param_data["y"][sort_idx]
+                        # Interpolate y values for our x_fill points
+                        lower_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
+                    elif lower_func_idx.startswith("Implicit"):
+                        idx = int(lower_func_idx.split()[1]) - 1
+                        # For implicit, we'll need the stored points from the contour
+                        implicit_data = st.session_state.plotted_implicit_functions[idx]
+                        # TODO: Get points from contour and interpolate
+                        lower_y = np.zeros_like(x_fill)  # Placeholder
                     
-                    # Plot the filled area
-                    ax.fill_between(x_fill, lower_y, upper_y, 
-                                  color=MY_COLORS[fill_color],
-                                  alpha=opacity,
-                                  zorder=5)  # Above grid, below functions
+                    # Remove any NaN values before filling
+                    valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
+                    if np.any(valid_mask):
+                        ax.fill_between(x_fill[valid_mask], 
+                                      lower_y[valid_mask], 
+                                      upper_y[valid_mask],
+                                      color=MY_COLORS[fill_color],
+                                      alpha=opacity,
+                                      zorder=5)
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

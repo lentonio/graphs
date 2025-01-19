@@ -608,38 +608,20 @@ with master_col2:
                             idx = int(lower_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
                         elif lower_func_idx.startswith("Parametric"):
-                            st.write("Starting parametric function handling")  # Debug 1
                             try:
                                 idx = int(lower_func_idx.split()[1]) - 1
-                                st.write(f"Looking for parametric function {idx}")  # Debug 2
-                                
                                 if idx < len(st.session_state.plotted_parametric_functions):
-                                    st.write("Index is within range")  # Debug 3
                                     param_data = st.session_state.plotted_parametric_functions[idx]
-                                    st.write(f"Retrieved param_data: {type(param_data)}")  # Debug 4
-                                    
                                     if param_data is not None:
-                                        st.write(f"Keys in param_data: {param_data.keys()}")  # Debug 5
                                         x = param_data["x"]
                                         y = param_data["y"]
-                                        st.write(f"Got x and y arrays: {len(x)} points")  # Debug 6
-                                        
-                                        st.write(f"x_fill shape: {x_fill.shape}")  # Debug 7
-                                        st.write(f"x shape: {x.shape}")  # Debug 8
-                                        st.write(f"y shape: {y.shape}")  # Debug 9
-                                        
-                                        upper_y = get_y_values_for_curve(x_fill, x, y, take_max=True)
-                                        st.write("Successfully got upper_y values")  # Debug 10
+                                        lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
                                     else:
-                                        st.write("param_data is None")  # Debug 11
-                                        upper_y = np.zeros_like(x_fill)
+                                        lower_y = np.zeros_like(x_fill)
                                 else:
-                                    st.write(f"Index {idx} out of range for {len(st.session_state.plotted_parametric_functions)} functions")  # Debug 12
-                                    upper_y = np.zeros_like(x_fill)
+                                    lower_y = np.zeros_like(x_fill)
                             except Exception as e:
-                                st.write(f"Exception in parametric handling: {type(e).__name__}: {str(e)}")  # Debug 13
-                                st.write(f"Current state: {st.session_state.keys()}")  # Debug 14
-                                upper_y = np.zeros_like(x_fill)
+                                lower_y = np.zeros_like(x_fill)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
@@ -669,12 +651,12 @@ with master_col2:
                                         x_points.extend(seg[:, 0])
                                         y_points.extend(seg[:, 1])
                                     
-                                    upper_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=True)
+                                    lower_y = get_y_values_for_curve(x_fill, np.array(x_points), np.array(y_points), take_max=False)
                                 else:
-                                    upper_y = np.zeros_like(x_fill)
+                                    lower_y = np.zeros_like(x_fill)
                                 
                             except Exception as e:
-                                upper_y = np.zeros_like(x_fill)
+                                lower_y = np.zeros_like(x_fill)
                         
                         # Check if we have valid data
                         if upper_y is not None and lower_y is not None:

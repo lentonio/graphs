@@ -33,10 +33,11 @@ def latex_to_python(latex_str, param_var='x'):
             'csc': 'reciprocal(sin)',  # cosecant
             'sec': 'reciprocal(cos)',  # secant
             'cot': 'reciprocal(tan)',  # cotangent
+            'E': 'lib.e',  # Euler's number
         }
         
         for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, f'lib.{py_func}')
+            python_str = python_str.replace(latex_func, f'{py_func}')  # Removed 'lib.' prefix since we include it in the replacement where needed
         
         return python_str, expr
     except Exception as e:

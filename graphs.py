@@ -590,8 +590,9 @@ with master_col2:
                                 f = sp.lambdify((x_sym, y_sym), expr)
                                 Z = f(X, Y)
                                 
-                                # Find contour at level 0
-                                cs = plt.contour(X, Y, Z, levels=[0])
+                                # Create a temporary figure for the contour
+                                temp_fig, temp_ax = plt.subplots()
+                                cs = temp_ax.contour(X, Y, Z, levels=[0])
                                 
                                 # Get segments from the contour
                                 segs = cs.allsegs[0]  # Get segments for the first level (0)
@@ -615,8 +616,8 @@ with master_col2:
                                     st.error("No contour segments found for implicit function")
                                     upper_y = np.zeros_like(x_fill)
                                 
-                                # Clean up the temporary plot
-                                plt.clf()
+                                # Clean up the temporary figure
+                                plt.close(temp_fig)
                                 
                             except Exception as e:
                                 st.error(f"Error processing implicit function: {str(e)}")

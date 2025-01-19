@@ -593,13 +593,13 @@ with master_col2:
                                 # Find contour at level 0
                                 cs = plt.contour(X, Y, Z, levels=[0])
                                 
-                                # Get paths from the contour
-                                paths = cs.collections[0].get_paths()
-                                st.write(f"Debug: Found {len(paths)} contour paths")
+                                # Get segments from the contour
+                                segs = cs.allsegs[0]  # Get segments for the first level (0)
+                                st.write(f"Debug: Found {len(segs)} contour segments")
                                 
-                                if paths:
-                                    # Combine points from all paths
-                                    all_points = np.concatenate([path.vertices for path in paths])
+                                if len(segs) > 0:
+                                    # Combine points from all segments
+                                    all_points = np.vstack(segs)
                                     
                                     # Sort points by x coordinate for interpolation
                                     sort_idx = np.argsort(all_points[:, 0])
@@ -612,7 +612,7 @@ with master_col2:
                                     st.write(f"Debug: Contour x range: {x_sorted.min():.2f} to {x_sorted.max():.2f}")
                                     st.write(f"Debug: Contour y range: {y_sorted.min():.2f} to {y_sorted.max():.2f}")
                                 else:
-                                    st.error("No contour paths found for implicit function")
+                                    st.error("No contour segments found for implicit function")
                                     upper_y = np.zeros_like(x_fill)
                                 
                                 # Clean up the temporary plot

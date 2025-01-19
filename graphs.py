@@ -596,6 +596,7 @@ with master_col2:
                             try:
                                 idx = int(lower_func_idx.split()[1]) - 1
                                 param_data = st.session_state.plotted_parametric_functions[idx]
+                                st.write(f"Debug: param_data = {param_data}")
                                 
                                 if param_data is not None and isinstance(param_data, dict):
                                     # Get the original parametric functions

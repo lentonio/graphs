@@ -518,11 +518,11 @@ with master_col2:
         
         col1, col2, col3, col4 = st.columns([4, 4, 2, 2])
         with col1:
-            upper_func_idx = st.selectbox("Upper function", 
+            first_func_idx = st.selectbox("Outer", 
                                         options=all_functions,
                                         index=0 if all_functions else None)
         with col2:
-            lower_func_idx = st.selectbox("Lower function", 
+            second_func_idx = st.selectbox("Inner", 
                                         options=["x-axis"] + all_functions,
                                         index=0)
         with col3:
@@ -537,7 +537,7 @@ with master_col2:
             opacity = st.slider("Opacity", 0.0, 1.0, 0.3)
         with plot_col:
             if st.button("Fill Area"):
-                if upper_func_idx:
+                if first_func_idx:
                     try:
                         # Get x values for the fill
                         x_fill = np.linspace(x_start, x_end, 1000)
@@ -547,11 +547,11 @@ with master_col2:
                         lower_y = None
                         
                         # Get upper function data
-                        if upper_func_idx.startswith("Explicit"):
-                            idx = int(upper_func_idx.split()[1]) - 1
+                        if first_func_idx.startswith("Explicit"):
+                            idx = int(first_func_idx.split()[1]) - 1
                             upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        elif upper_func_idx.startswith("Implicit"):
-                            idx = int(upper_func_idx.split()[1]) - 1
+                        elif first_func_idx.startswith("Implicit"):
+                            idx = int(first_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
                             
                             try:
@@ -585,9 +585,9 @@ with master_col2:
                                 
                             except Exception as e:
                                 upper_y = np.zeros_like(x_fill)
-                        elif upper_func_idx.startswith("Parametric"):
+                        elif first_func_idx.startswith("Parametric"):
                             try:
-                                idx = int(upper_func_idx.split()[1]) - 1
+                                idx = int(first_func_idx.split()[1]) - 1
                                 if idx < len(st.session_state.plotted_parametric_functions):
                                     param_data = st.session_state.plotted_parametric_functions[idx]
                                     if param_data is not None:
@@ -602,14 +602,14 @@ with master_col2:
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
-                        if lower_func_idx == "x-axis":
+                        if second_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
-                        elif lower_func_idx.startswith("Explicit"):
-                            idx = int(lower_func_idx.split()[1]) - 1
+                        elif second_func_idx.startswith("Explicit"):
+                            idx = int(second_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                        elif lower_func_idx.startswith("Parametric"):
+                        elif second_func_idx.startswith("Parametric"):
                             try:
-                                idx = int(lower_func_idx.split()[1]) - 1
+                                idx = int(second_func_idx.split()[1]) - 1
                                 if idx < len(st.session_state.plotted_parametric_functions):
                                     param_data = st.session_state.plotted_parametric_functions[idx]
                                     if param_data is not None:
@@ -622,8 +622,8 @@ with master_col2:
                                     lower_y = np.zeros_like(x_fill)
                             except Exception as e:
                                 lower_y = np.zeros_like(x_fill)
-                        elif lower_func_idx.startswith("Implicit"):
-                            idx = int(lower_func_idx.split()[1]) - 1
+                        elif second_func_idx.startswith("Implicit"):
+                            idx = int(second_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
                             
                             try:
@@ -677,6 +677,9 @@ with master_col2:
                             
                     except Exception as e:
                         st.error(f"Error filling area: {str(e)}")
+
+        st.caption("If a curve has multiple $y$-values at an $x$-coordinate, the outer function uses the **maximum** $y$-value and the inner function uses the **minimum** $y$-value.")
+
 
 for func_data in st.session_state.plotted_functions:
     if "zorder" not in func_data:

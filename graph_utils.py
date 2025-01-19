@@ -18,9 +18,25 @@ def latex_to_python(latex_str, param_var='x'):
         
         # Convert to string and replace function names with lib. prefix
         python_str = str(expr)
-        for func in ['sin', 'cos', 'tan', 'csc', 'sec', 'cot', 
-                    'asin', 'acos', 'atan', 'log', 'sqrt', 'exp']:
+        
+        # Direct replacements (where latex command = python function name)
+        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:
             python_str = python_str.replace(func, f'lib.{func}')
+        
+        # Special cases where latex command ≠ python function name
+        replacements = {
+            'ln': 'log',  # natural logarithm
+            'log': 'log10',  # logarithm base 10
+            'arcsin': 'asin',  # inverse sine
+            'arccos': 'acos',  # inverse cosine
+            'arctan': 'atan',  # inverse tangent
+            'csc': 'reciprocal(sin)',  # cosecant
+            'sec': 'reciprocal(cos)',  # secant
+            'cot': 'reciprocal(tan)',  # cotangent
+        }
+        
+        for latex_func, py_func in replacements.items():
+            python_str = python_str.replace(latex_func, f'lib.{py_func}')
         
         return python_str, expr
     except Exception as e:

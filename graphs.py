@@ -40,9 +40,9 @@ with st.sidebar:
     """# Axes and gridlines"""
     xlowercol, xuppercol, xunitcol = st.columns(3)
     with xlowercol:
-        xuserlowerinput = st.number_input("Lower x:", value=-2.0)
+        xuserlowerinput = st.number_input("Lower $x$", value=-2.0)
     with xuppercol:
-        xuserupperinput = st.number_input("Upper x:", value=8.0)
+        xuserupperinput = st.number_input("Upper $x$", value=8.0)
     with xunitcol:
         x_is_pi = st.segmented_control("x unit:", options = ["1", "π"], default = '1', key="unit_control_1")
     xuserlower = xuserlowerinput * (PI if x_is_pi == "π" else 1)
@@ -50,11 +50,11 @@ with st.sidebar:
     
     ylowercol, yuppercol, yunitcol = st.columns(3)
     with ylowercol:
-        yuserlowerinput = st.number_input("Lower y:", value=-2.0)
+        yuserlowerinput = st.number_input("Lower $y$", value=-2.0)
     with yuppercol:
-        yuserupperinput = st.number_input("Upper y:", value=8.0)
+        yuserupperinput = st.number_input("Upper $y$", value=8.0)
     with yunitcol:
-        y_is_pi = st.segmented_control("y unit:", options = ["1", "π"], default = '1', key="unit_control_2")
+        y_is_pi = st.segmented_control("$y$ unit:", options = ["1", "π"], default = '1', key="unit_control_2")
     yuserlower = yuserlowerinput * (PI if y_is_pi == "π" else 1)
     yuserupper = yuserupperinput * (PI if y_is_pi == "π" else 1)
     
@@ -70,10 +70,10 @@ with st.sidebar:
     if showvalues:
         xstepcol, ystepcol = st.columns(2)
         with xstepcol:
-            x_base_step = st.number_input("x-axis step:", value=2)
+            x_base_step = st.number_input("$x$-axis step:", value=2)
             xstep = x_base_step * (PI if x_is_pi == "π" else 1)
         with ystepcol:
-            y_base_step = st.number_input("y-axis step:", value=2)
+            y_base_step = st.number_input("$y$-axis step:", value=2)
             ystep = y_base_step * (PI if y_is_pi == "π" else 1)
         label_size = st.slider("Label size", min_value=12, max_value=26, value=20, step=1)
     else:
@@ -86,9 +86,9 @@ with st.sidebar:
     if gridstyle == 'Minor':
         xdivcol, ydivcol = st.columns(2)
         with xdivcol:
-            xminordivisor = st.number_input("Minor divisor for x:", value=4)
+            xminordivisor = st.number_input("Minor divisor for $x$:", value=4)
         with ydivcol:
-            yminordivisor = st.number_input("Minor divisor for y:", value=4)
+            yminordivisor = st.number_input("Minor divisor for $y$:", value=4)
     else:
         xminordivisor = 1
         yminordivisor = 1
@@ -466,10 +466,10 @@ with master_col2:
             col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
             
             with col1:
-                x_coord = st.number_input(f"x{i+1}", key=f"point_x_{i}")
+                x_coord = st.number_input(f"$x_{i+1}$", key=f"point_x_{i}")
             
             with col2:
-                y_coord = st.number_input(f"y{i+1}", key=f"point_y_{i}")
+                y_coord = st.number_input(f"$y_{i+1}$", key=f"point_y_{i}")
                 
             with col3:
                 point_color = st.selectbox("Color", 
@@ -516,23 +516,30 @@ with master_col2:
         
         all_functions = explicit_functions + implicit_functions + parametric_functions
         
-        col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 2, 1.5, 1.5, 1.5, 1.5, 1])
+        col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 2, 1.5, 1.5, 1.5, 1.5, 1], vertical_alignment="bottom")
         with col1:
             first_func_idx = st.selectbox("Outer", 
                                         options=all_functions,
                                         index=0 if all_functions else None)
         with col2:
             second_func_idx = st.selectbox("Inner", 
-                                        options=["x-axis"] + all_functions,
+                                        options=["$x$-axis"] + all_functions,
                                         index=0)
         with col3:
-            x_start = st.number_input("From x =", value=xuserlower)
+            x_start = st.number_input("Lower $x$", value=xuserlower)
         with col4:
-            x_end = st.number_input("To x =", value=xuserupper)
+            x_end = st.number_input("Upper $x$", value=xuserupper)
         with col5:
-            fill_color = st.selectbox("Color", options=list(MY_COLORS.keys()))
+            fill_color = st.selectbox("Color", 
+                                      options=list(MY_COLORS.keys()),
+                                      label_visibility="collapsed")
         with col6:
-            opacity = st.number_input("Opacity", min_value=0.0, max_value=1.0, value=0.3, step=0.1)
+            opacity = st.number_input("Opacity", 
+                                      min_value=0.0, 
+                                      max_value=1.0, 
+                                      value=0.3, 
+                                      step=0.1,
+                                      label_visibility="collapsed")
         with col7:
             if st.button("Fill"):
                 if first_func_idx:

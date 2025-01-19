@@ -550,14 +550,9 @@ with master_col2:
                         if upper_func_idx.startswith("Explicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                            st.write(f"Debug: Upper function type: Explicit")
-                            st.write(f"Debug: Upper function values: min={np.min(upper_y):.2f}, max={np.max(upper_y):.2f}")
                         elif upper_func_idx.startswith("Parametric"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             param_data = st.session_state.plotted_parametric_functions[idx]
-                            st.write(f"Debug: Upper function type: Parametric")
-                            st.write(f"Debug: Parametric x range: {np.min(param_data['x']):.2f} to {np.max(param_data['x']):.2f}")
-                            st.write(f"Debug: Parametric y range: {np.min(param_data['y']):.2f} to {np.max(param_data['y']):.2f}")
                             
                             # Sort x and y values to ensure proper interpolation
                             sort_idx = np.argsort(param_data["x"])
@@ -566,11 +561,9 @@ with master_col2:
                             
                             # Interpolate y values for our x_fill points
                             upper_y = np.interp(x_fill, x_sorted, y_sorted, left=np.nan, right=np.nan)
-                            st.write(f"Debug: Interpolated upper y range: {np.nanmin(upper_y):.2f} to {np.nanmax(upper_y):.2f}")
                         elif upper_func_idx.startswith("Implicit"):
                             idx = int(upper_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
-                            st.write(f"Debug: Upper function type: Implicit")
                             
                             try:
                                 # Create grid of points
@@ -596,7 +589,6 @@ with master_col2:
                                 
                                 # Get segments from the contour
                                 segs = cs.allsegs[0]
-                                st.write(f"Debug: Found {len(segs)} contour segments")
                                 
                                 if len(segs) > 0:
                                     # For each x value, find all corresponding y values
@@ -617,40 +609,29 @@ with master_col2:
                                         tolerance = 0.01
                                         matching_y = y_points[np.abs(x_points - x) < tolerance]
                                         if len(matching_y) > 0:
-                                            upper_y.append(np.max(matching_y))  # Take maximum for upper curve
+                                            upper_y.append(np.max(matching_y))
                                         else:
                                             upper_y.append(np.nan)
                                     
                                     upper_y = np.array(upper_y)
-                                    
-                                    st.write(f"Debug: Total contour points: {len(x_points)}")
-                                    st.write(f"Debug: Contour x range: {min(x_points):.2f} to {max(x_points):.2f}")
-                                    st.write(f"Debug: Contour y range: {min(y_points):.2f} to {max(y_points):.2f}")
                                 else:
-                                    st.error("No contour segments found for implicit function")
                                     upper_y = np.zeros_like(x_fill)
                                 
                                 # Clean up the temporary figure
                                 plt.close(temp_fig)
                                 
                             except Exception as e:
-                                st.error(f"Error processing implicit function: {str(e)}")
-                                st.write(f"Debug: Exception details: {type(e).__name__}")
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
                         if lower_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
-                            st.write("Debug: Lower function: x-axis (zeros)")
                         elif lower_func_idx.startswith("Explicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
-                            st.write(f"Debug: Lower function type: Explicit")
-                            st.write(f"Debug: Lower function values: min={np.min(lower_y):.2f}, max={np.max(lower_y):.2f}")
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]
-                            st.write(f"Debug: Lower function type: Implicit")
                             
                             try:
                                 # Create grid of points
@@ -676,7 +657,6 @@ with master_col2:
                                 
                                 # Get segments from the contour
                                 segs = cs.allsegs[0]
-                                st.write(f"Debug: Found {len(segs)} contour segments")
                                 
                                 if len(segs) > 0:
                                     # For each x value, find all corresponding y values
@@ -697,32 +677,24 @@ with master_col2:
                                         tolerance = 0.01
                                         matching_y = y_points[np.abs(x_points - x) < tolerance]
                                         if len(matching_y) > 0:
-                                            lower_y.append(np.min(matching_y))  # Take minimum for lower curve
+                                            lower_y.append(np.min(matching_y))
                                         else:
                                             lower_y.append(np.nan)
                                     
                                     lower_y = np.array(lower_y)
-                                    
-                                    st.write(f"Debug: Total contour points: {len(x_points)}")
-                                    st.write(f"Debug: Contour x range: {min(x_points):.2f} to {max(x_points):.2f}")
-                                    st.write(f"Debug: Contour y range: {min(y_points):.2f} to {max(y_points):.2f}")
                                 else:
-                                    st.error("No contour segments found for implicit function")
                                     lower_y = np.zeros_like(x_fill)
                                 
                                 # Clean up the temporary figure
                                 plt.close(temp_fig)
                                 
                             except Exception as e:
-                                st.error(f"Error processing implicit function: {str(e)}")
-                                st.write(f"Debug: Exception details: {type(e).__name__}")
                                 lower_y = np.zeros_like(x_fill)
                         
                         # Check if we have valid data
                         if upper_y is not None and lower_y is not None:
                             # Remove any NaN values before filling
                             valid_mask = ~(np.isnan(upper_y) | np.isnan(lower_y))
-                            st.write(f"Debug: Valid points: {np.sum(valid_mask)} out of {len(valid_mask)}")
                             
                             if np.any(valid_mask):
                                 ax.fill_between(x_fill[valid_mask], 
@@ -730,11 +702,7 @@ with master_col2:
                                               upper_y[valid_mask],
                                               color=MY_COLORS[fill_color],
                                               alpha=opacity,
-                                              zorder=20)  # Increased zorder to be above most elements
-                                st.write("Debug: Fill between called")
-                                st.write(f"Debug: Fill color: {fill_color}, alpha: {opacity}")
-                                st.write(f"Debug: x range: {x_fill[valid_mask].min():.2f} to {x_fill[valid_mask].max():.2f}")
-                                st.write(f"Debug: y ranges: {lower_y[valid_mask].min():.2f} to {upper_y[valid_mask].max():.2f}")
+                                              zorder=1)  # Lower zorder to put behind curves
                             else:
                                 st.error("No valid points found for filling")
                         else:

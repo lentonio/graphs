@@ -595,7 +595,12 @@ with master_col2:
                         elif lower_func_idx.startswith("Parametric"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             param_data = st.session_state.plotted_parametric_functions[idx]
-                            lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=False)
+                            
+                            # Check if we have valid data
+                            if param_data is not None and "x" in param_data and "y" in param_data:
+                                lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=False)
+                            else:
+                                lower_y = np.zeros_like(x_fill)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1
                             implicit_data = st.session_state.plotted_implicit_functions[idx]

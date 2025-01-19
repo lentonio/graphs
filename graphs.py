@@ -586,37 +586,19 @@ with master_col2:
                             except Exception as e:
                                 upper_y = np.zeros_like(x_fill)
                         elif upper_func_idx.startswith("Parametric"):
-                            st.write("Starting parametric function handling for upper function")  # Debug 1
                             try:
                                 idx = int(upper_func_idx.split()[1]) - 1
-                                st.write(f"Looking for upper parametric function {idx}")  # Debug 2
-                                
                                 if idx < len(st.session_state.plotted_parametric_functions):
-                                    st.write("Index is within range for upper function")  # Debug 3
                                     param_data = st.session_state.plotted_parametric_functions[idx]
-                                    st.write(f"Retrieved upper param_data: {type(param_data)}")  # Debug 4
-                                    
                                     if param_data is not None:
-                                        st.write(f"Keys in upper param_data: {param_data.keys()}")  # Debug 5
                                         x = param_data["x"]
                                         y = param_data["y"]
-                                        st.write(f"Got x and y arrays for upper function: {len(x)} points")  # Debug 6
-                                        
-                                        st.write(f"x_fill shape for upper: {x_fill.shape}")  # Debug 7
-                                        st.write(f"x shape for upper: {x.shape}")  # Debug 8
-                                        st.write(f"y shape for upper: {y.shape}")  # Debug 9
-                                        
                                         upper_y = get_y_values_for_curve(x_fill, x, y, take_max=True)
-                                        st.write("Successfully got upper_y values")  # Debug 10
                                     else:
-                                        st.write("upper param_data is None")  # Debug 11
                                         upper_y = np.zeros_like(x_fill)
                                 else:
-                                    st.write(f"Index {idx} out of range for {len(st.session_state.plotted_parametric_functions)} upper functions")  # Debug 12
                                     upper_y = np.zeros_like(x_fill)
                             except Exception as e:
-                                st.write(f"Exception in upper parametric handling: {type(e).__name__}: {str(e)}")  # Debug 13
-                                st.write(f"Current state for upper: {st.session_state.keys()}")  # Debug 14
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
@@ -705,7 +687,7 @@ with master_col2:
                                               upper_y[valid_mask],
                                               color=MY_COLORS[fill_color],
                                               alpha=opacity,
-                                              zorder=1)  # Lower zorder to put behind curves
+                                              zorder=5)  # Changed from 1 to 5 to appear above tick labels
                             else:
                                 st.error("No valid points found for filling")
                         else:

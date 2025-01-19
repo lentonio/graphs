@@ -593,13 +593,22 @@ with master_col2:
                             idx = int(lower_func_idx.split()[1]) - 1
                             lower_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
                         elif lower_func_idx.startswith("Parametric"):
-                            idx = int(lower_func_idx.split()[1]) - 1
-                            param_data = st.session_state.plotted_parametric_functions[idx]
-                            
-                            # Check if we have valid data
-                            if param_data is not None and "x" in param_data and "y" in param_data:
-                                lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=False)
-                            else:
+                            try:
+                                idx = int(lower_func_idx.split()[1]) - 1
+                                st.write(f"Debug: Parametric index: {idx}")
+                                
+                                param_data = st.session_state.plotted_parametric_functions[idx]
+                                st.write(f"Debug: Param data type: {type(param_data)}")
+                                st.write(f"Debug: Param data keys: {param_data.keys() if param_data else 'None'}")
+                                
+                                if param_data is not None and isinstance(param_data, dict) and "x" in param_data and "y" in param_data:
+                                    st.write(f"Debug: x shape: {param_data['x'].shape}, y shape: {param_data['y'].shape}")
+                                    lower_y = get_y_values_for_curve(x_fill, param_data["x"], param_data["y"], take_max=True)
+                                else:
+                                    st.write("Debug: Invalid parametric data structure")
+                                    lower_y = np.zeros_like(x_fill)
+                            except Exception as e:
+                                st.write(f"Debug: Parametric error: {str(e)}")
                                 lower_y = np.zeros_like(x_fill)
                         elif lower_func_idx.startswith("Implicit"):
                             idx = int(lower_func_idx.split()[1]) - 1

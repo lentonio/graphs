@@ -40,9 +40,9 @@ with st.sidebar:
     """# Axes and gridlines"""
     xlowercol, xuppercol, xunitcol = st.columns(3)
     with xlowercol:
-        xuserlowerinput = st.number_input("Lower $x$", value=-2.0)
+        xuserlowerinput = st.number_input("Lower $x$", value=-2.0, key="sidebar_xlower")
     with xuppercol:
-        xuserupperinput = st.number_input("Upper $x$", value=8.0)
+        xuserupperinput = st.number_input("Upper $x$", value=8.0, key="sidebar_xupper")
     with xunitcol:
         x_is_pi = st.segmented_control("x unit:", options = ["1", "π"], default = '1', key="unit_control_1")
     xuserlower = xuserlowerinput * (PI if x_is_pi == "π" else 1)
@@ -50,9 +50,9 @@ with st.sidebar:
     
     ylowercol, yuppercol, yunitcol = st.columns(3)
     with ylowercol:
-        yuserlowerinput = st.number_input("Lower $y$", value=-2.0)
+        yuserlowerinput = st.number_input("Lower $y$", value=-2.0, key="sidebar_ylower")
     with yuppercol:
-        yuserupperinput = st.number_input("Upper $y$", value=8.0)
+        yuserupperinput = st.number_input("Upper $y$", value=8.0, key="sidebar_yupper")
     with yunitcol:
         y_is_pi = st.segmented_control("$y$ unit:", options = ["1", "π"], default = '1', key="unit_control_2")
     yuserlower = yuserlowerinput * (PI if y_is_pi == "π" else 1)

@@ -523,7 +523,7 @@ with master_col2:
                                         index=0 if all_functions else None)
         with col2:
             second_func_idx = st.selectbox("Inner", 
-                                        options=["$x$-axis"] + all_functions,
+                                        options=["x-axis"] + all_functions,
                                         index=0)
         with col3:
             x_start = st.number_input("Lower $x$", value=xuserlower, key="area_x_start")
@@ -609,7 +609,7 @@ with master_col2:
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
-                        if second_func_idx == "x-axis":
+                        if second_func_idx == "$x$-axis":
                             lower_y = np.zeros_like(x_fill)
                         elif second_func_idx.startswith("Explicit"):
                             idx = int(second_func_idx.split()[1]) - 1

@@ -519,11 +519,11 @@ with master_col2:
         col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 2, 1.5, 1.5, 1.5, 1.5, 1], vertical_alignment="bottom")
         with col1:
             first_func_idx = st.selectbox("Outer", 
-                                        options=all_functions,
+                                        options=["Top"] + all_functions,
                                         index=0 if all_functions else None)
         with col2:
             second_func_idx = st.selectbox("Inner", 
-                                        options=["x-axis"] + all_functions,
+                                        options=["Bottom", "x-axis"] + all_functions,
                                         index=0)
         with col3:
             x_start = st.number_input("Lower $x$", value=xuserlower, key="area_x_start")
@@ -554,7 +554,10 @@ with master_col2:
                         lower_y = None
                         
                         # Get upper function data
-                        if first_func_idx.startswith("Explicit"):
+                        if first_func_idx == "Top":
+                            # Use the upper y value plus a small buffer
+                            upper_y = np.full_like(x_fill, yupper + 0.025 * ydifference)
+                        elif first_func_idx.startswith("Explicit"):
                             idx = int(first_func_idx.split()[1]) - 1
                             upper_y = eval_function(st.session_state.plotted_functions[idx]["function"], x_fill, np, ylower, yupper)
                         elif first_func_idx.startswith("Implicit"):
@@ -609,7 +612,10 @@ with master_col2:
                                 upper_y = np.zeros_like(x_fill)
                         
                         # Get lower function data
-                        if second_func_idx == "x-axis":
+                        if second_func_idx == "Bottom":
+                            # Use the lower y value minus a small buffer
+                            lower_y = np.full_like(x_fill, ylower - 0.025 * ydifference)
+                        elif second_func_idx == "x-axis":
                             lower_y = np.zeros_like(x_fill)
                         elif second_func_idx.startswith("Explicit"):
                             idx = int(second_func_idx.split()[1]) - 1

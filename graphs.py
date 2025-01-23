@@ -520,7 +520,7 @@ with master_col2:
         with col1:
             first_func_idx = st.selectbox("Outer", 
                                         options=["Top"] + all_functions,
-                                        index=0 if all_functions else None)
+                                        index=0)
         with col2:
             second_func_idx = st.selectbox("Inner", 
                                         options=["Bottom", "x-axis"] + all_functions,

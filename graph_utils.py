@@ -16,6 +16,10 @@ def latex_to_python(latex_str, param_var='x'):
     Returns (python_str, preview_expr) on success or (None, error_msg) on failure.
     param_var: the variable to use in the expression (default 'x' for regular functions, 't' for parametric)"""
     try:
+        # Handle \log(x) before parsing - replace with \log_{10}(x)
+        if r'\log(' in latex_str and not r'\log_' in latex_str:
+            latex_str = latex_str.replace(r'\log(', r'\log_{10}(')
+            
         # Parse LaTeX to SymPy expression
         expr = parse_latex(latex_str)
         
@@ -26,6 +30,8 @@ def latex_to_python(latex_str, param_var='x'):
         # Handle the special case of ln(x) first
         if 'log' in python_str and ', E)' in python_str:
             python_str = python_str.replace(f'log({param_var}, E)', f'lib.log({param_var})')
+        elif 'log' in python_str and ', 10)' in python_str:
+            python_str = python_str.replace(f'log({param_var}, 10)', f'lib.log10({param_var})')
         else:
             # Direct replacements (where latex command = python function name)
             for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:

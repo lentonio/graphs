@@ -3,7 +3,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import sympy as sp
-from sympy import nsimplify, pi, e, latex
+from sympy import nsimplify, pi, E, latex
 import streamlit as st
 import io
 from numpy import log, log10 

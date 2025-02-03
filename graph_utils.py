@@ -57,7 +57,13 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
     if isinstance(x, tuple):  # Handle implicit function case
         return eval(user_func, {"x": x[0], "y": x[1], "lib": lib})
     else:  # Handle explicit and parametric function cases
-        eval_dict = {param_var: x, "lib": lib, "E": E}
+        eval_dict = {
+            param_var: x, 
+            "lib": lib,
+            "log": lib.log,      # Add the actual log function
+            "log10": lib.log10,  # Add the actual log10 function
+            "E": E
+        }
         y = eval(user_func, eval_dict)
         if isinstance(x, np.ndarray) and ylower is not None and yupper is not None:
             threshold_change = 10000

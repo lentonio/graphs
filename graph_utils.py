@@ -37,7 +37,7 @@ def latex_to_python(latex_str, param_var='x'):
         }
         
         for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, f'{py_func}')  # Removed 'lib.' prefix since we include it in the replacement where needed
+            python_str = python_str.replace(latex_func, f'lib.{py_func}')  # Add 'lib.' prefix here
         
         return python_str, expr
     except Exception as e:

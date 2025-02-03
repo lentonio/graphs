@@ -8,6 +8,9 @@ from sympy.parsing.latex import parse_latex
 import streamlit as st
 import io
 
+# Add this constant at the top with the other imports
+E = 2.7182818284590452  # Euler's number
+
 def latex_to_python(latex_str, param_var='x'):
     """Converts LaTeX math expression to Python code.
     Returns (python_str, preview_expr) on success or (None, error_msg) on failure.
@@ -33,11 +36,11 @@ def latex_to_python(latex_str, param_var='x'):
             'csc': 'reciprocal(sin)',  # cosecant
             'sec': 'reciprocal(cos)',  # secant
             'cot': 'reciprocal(tan)',  # cotangent
-            'E': 'lib.e',  # Euler's number
+            'E': str(E),  # Replace E with the actual value
         }
         
         for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, f'lib.{py_func}')  # Add 'lib.' prefix here
+            python_str = python_str.replace(latex_func, py_func)  # No lib. prefix for E
         
         return python_str, expr
     except Exception as e:

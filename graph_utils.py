@@ -51,6 +51,7 @@ def latex_to_python(latex_str, param_var='x'):
                 'csc': 'reciprocal(sin)',  # cosecant
                 'sec': 'reciprocal(cos)',  # secant
                 'cot': 'reciprocal(tan)',  # cotangent
+                'e': 'lib.e',  # Euler's number
             }
             
             for latex_func, py_func in replacements.items():

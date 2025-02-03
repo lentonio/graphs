@@ -32,6 +32,10 @@ def latex_to_python(latex_str, param_var='x'):
             python_str = python_str.replace(f'log({param_var}, E)', f'lib.log({param_var})')
         elif 'log' in python_str and ', 10)' in python_str:
             python_str = python_str.replace(f'log({param_var}, 10)', f'lib.log10({param_var})')
+        elif 'log' in python_str and ',' in python_str:
+            # Handle arbitrary base: log(x, base) -> log(x)/log(base)
+            base = python_str.split(',')[1].strip().rstrip(')')
+            python_str = f'lib.log({param_var})/lib.log({base})'
         else:
             # Direct replacements (where latex command = python function name)
             for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:

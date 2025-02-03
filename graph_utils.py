@@ -21,6 +21,7 @@ def latex_to_python(latex_str, param_var='x'):
         
         # Convert to string and replace function names with lib. prefix
         python_str = str(expr)
+        st.write(f"Debug - Initial SymPy string: {python_str}")  # NEW DEBUG LINE
         
         # Handle the special case of ln(x) first
         if 'log' in python_str and str(E) in python_str:

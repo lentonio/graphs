@@ -3,10 +3,10 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import sympy as sp
-from sympy import nsimplify, pi, latex
+from sympy import nsimplify, pi, e, latex
 import streamlit as st
 import io
-from numpy import log, log10  # Add these NumPy functions explicitly
+from numpy import log, log10 
 
 from graph_utils import create_graph, eval_function, latex_to_python, get_y_values_for_curve
 

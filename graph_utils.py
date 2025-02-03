@@ -23,13 +23,13 @@ def latex_to_python(latex_str, param_var='x'):
         python_str = str(expr)
         
         # Direct replacements (where latex command = python function name)
-        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:
+        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:  # Removed log functions from here
             python_str = python_str.replace(func, f'lib.{func}')
         
         # Special cases where latex command ≠ python function name
         replacements = {
             'ln': 'lib.log',  # natural logarithm
-            'log': 'lib.log10',  # logarithm base 10
+            'log': 'lib.log10',  # base-10 logarithm (this is the standard in LaTeX)
             'arcsin': 'lib.asin',  # inverse sine
             'arccos': 'lib.acos',  # inverse cosine
             'arctan': 'lib.atan',  # inverse tangent
@@ -40,7 +40,7 @@ def latex_to_python(latex_str, param_var='x'):
         }
         
         for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, py_func)  # No need for additional lib. prefix
+            python_str = python_str.replace(latex_func, py_func)
         
         return python_str, expr
     except Exception as e:

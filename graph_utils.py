@@ -23,7 +23,7 @@ def latex_to_python(latex_str, param_var='x'):
         python_str = str(expr)
         
         # Direct replacements (where latex command = python function name)
-        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:  # Removed log functions from here
+        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:
             python_str = python_str.replace(func, f'lib.{func}')
         
         # Special cases where latex command ≠ python function name
@@ -42,6 +42,7 @@ def latex_to_python(latex_str, param_var='x'):
         for latex_func, py_func in replacements.items():
             python_str = python_str.replace(latex_func, py_func)
         
+        print(f"Debug - python_str: {python_str}")  # Debug print
         return python_str, expr
     except Exception as e:
         return None, f"Invalid LaTeX: {str(e)}"

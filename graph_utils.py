@@ -42,7 +42,7 @@ def latex_to_python(latex_str, param_var='x'):
         for latex_func, py_func in replacements.items():
             python_str = python_str.replace(latex_func, py_func)
         
-        print(f"Debug - python_str: {python_str}")  # Debug print
+        st.write(f"Debug - python_str: {python_str}")  # Debug print using Streamlit
         return python_str, expr
     except Exception as e:
         return None, f"Invalid LaTeX: {str(e)}"

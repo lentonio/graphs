@@ -24,7 +24,7 @@ def latex_to_python(latex_str, param_var='x'):
         
         # Handle the special case of ln(x) first
         if 'log' in python_str and str(E) in python_str:
-            python_str = python_str.replace(f'log({param_var}, {E})', f'log({param_var})')
+            python_str = python_str.replace(f'log({param_var}, {E})', f'lib.log({param_var})')
         
         # Direct replacements (where latex command = python function name)
         for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:

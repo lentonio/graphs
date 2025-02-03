@@ -28,11 +28,11 @@ def latex_to_python(latex_str, param_var='x'):
         
         # Special cases where latex command ≠ python function name
         replacements = {
-            'ln': 'log',  # natural logarithm
-            'log': 'log10',  # logarithm base 10
-            'arcsin': 'asin',  # inverse sine
-            'arccos': 'acos',  # inverse cosine
-            'arctan': 'atan',  # inverse tangent
+            'ln': 'lib.log',  # natural logarithm
+            'log': 'lib.log10',  # logarithm base 10
+            'arcsin': 'lib.asin',  # inverse sine
+            'arccos': 'lib.acos',  # inverse cosine
+            'arctan': 'lib.atan',  # inverse tangent
             'csc': 'reciprocal(sin)',  # cosecant
             'sec': 'reciprocal(cos)',  # secant
             'cot': 'reciprocal(tan)',  # cotangent
@@ -40,7 +40,7 @@ def latex_to_python(latex_str, param_var='x'):
         }
         
         for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, py_func)  # No lib. prefix for E
+            python_str = python_str.replace(latex_func, py_func)  # No need for additional lib. prefix
         
         return python_str, expr
     except Exception as e:

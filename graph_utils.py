@@ -24,27 +24,27 @@ def latex_to_python(latex_str, param_var='x'):
         st.write(f"Debug - Initial SymPy string: {python_str}")  # NEW DEBUG LINE
         
         # Handle the special case of ln(x) first
-        if 'log' in python_str and str(E) in python_str:
-            python_str = python_str.replace(f'log({param_var}, {E})', f'lib.log({param_var})')
-        
-        # Direct replacements (where latex command = python function name)
-        for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:
-            python_str = python_str.replace(func, f'lib.{func}')
-        
-        # Special cases where latex command ≠ python function name
-        replacements = {
-            'ln': 'lib.log',  # natural logarithm
-            'log': 'lib.log10',  # base-10 logarithm (this is the standard in LaTeX)
-            'arcsin': 'lib.asin',  # inverse sine
-            'arccos': 'lib.acos',  # inverse cosine
-            'arctan': 'lib.atan',  # inverse tangent
-            'csc': 'reciprocal(sin)',  # cosecant
-            'sec': 'reciprocal(cos)',  # secant
-            'cot': 'reciprocal(tan)',  # cotangent
-        }
-        
-        for latex_func, py_func in replacements.items():
-            python_str = python_str.replace(latex_func, py_func)
+        if 'log' in python_str and ', E)' in python_str:
+            python_str = python_str.replace(f'log({param_var}, E)', f'lib.log({param_var})')
+        else:
+            # Direct replacements (where latex command = python function name)
+            for func in ['sin', 'cos', 'tan', 'exp', 'sqrt']:
+                python_str = python_str.replace(func, f'lib.{func}')
+            
+            # Special cases where latex command ≠ python function name
+            replacements = {
+                'ln': 'lib.log',  # natural logarithm
+                'log': 'lib.log10',  # base-10 logarithm (this is the standard in LaTeX)
+                'arcsin': 'lib.asin',  # inverse sine
+                'arccos': 'lib.acos',  # inverse cosine
+                'arctan': 'lib.atan',  # inverse tangent
+                'csc': 'reciprocal(sin)',  # cosecant
+                'sec': 'reciprocal(cos)',  # secant
+                'cot': 'reciprocal(tan)',  # cotangent
+            }
+            
+            for latex_func, py_func in replacements.items():
+                python_str = python_str.replace(latex_func, py_func)
         
         st.write(f"Debug - python_str: {python_str}")  # Debug print using Streamlit
         return python_str, expr

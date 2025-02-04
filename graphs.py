@@ -770,9 +770,11 @@ for implicit_data in st.session_state.plotted_implicit_functions:
 
 for param_data in st.session_state.plotted_parametric_functions:
     if param_data:
+        # Filter out NaN values before plotting
+        valid_mask = ~(np.isnan(param_data["x"]) | np.isnan(param_data["y"]))
         ax.plot(
-            param_data["x"],
-            param_data["y"],
+            param_data["x"][valid_mask],
+            param_data["y"][valid_mask],
             color=MY_COLORS[param_data["color"]],
             linestyle=param_data["line_style"],
             linewidth=axis_weight * 1.3,

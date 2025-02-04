@@ -171,7 +171,7 @@ if "plotted_parametric_functions" not in st.session_state:
 if "plot_counter" not in st.session_state:
     st.session_state.plot_counter = 0
 
-for i in range(5):
+for i in range(8):  # Changed from range(5)
     if f"point_color_{i}" not in st.session_state:
         st.session_state[f"point_color_{i}"] = "blue"
     if f"point_style_{i}" not in st.session_state:
@@ -462,8 +462,8 @@ with master_col2:
     with tab4:
         st.subheader("Plot points", divider="gray")
         
-        # Create up to 5 point input rows
-        for i in range(5):
+        # Create up to 8 point input rows (changed from 5)
+        for i in range(8):  # Changed from range(5)
             col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1, 1], vertical_alignment="bottom")
             
             with col1:

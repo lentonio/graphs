@@ -77,15 +77,16 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
         y = eval(user_func, eval_dict)
         
         if isinstance(x, np.ndarray):
-            # For both explicit and parametric functions, detect rapid changes
-            threshold_change = 10000
-            dy = lib.abs(lib.diff(y))
-            y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
-            y[:-1][dy > threshold_change] = lib.nan
-            
-            # Only apply y-range filtering for explicit functions
-            if param_var == 'x' and ylower is not None and yupper is not None:
-                y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+            if param_var == 'x':  # Only apply asymptote detection for explicit functions
+                # For explicit functions, detect rapid changes
+                threshold_change = 10000
+                dy = lib.abs(lib.diff(y))
+                y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
+                y[:-1][dy > threshold_change] = lib.nan
+                
+                # Only apply y-range filtering for explicit functions
+                if ylower is not None and yupper is not None:
+                    y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
             
         return y
 

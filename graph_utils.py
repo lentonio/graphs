@@ -60,7 +60,7 @@ def latex_to_python(latex_str, param_var='x'):
     except Exception as e:
         return None, f"Invalid LaTeX: {str(e)}"
 
-def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
+def eval_function(user_func, x, lib, ylower=None, yupper=None, xlower=None, xupper=None, param_var='x'):
     """Evaluates the user-defined function with the given library (np or sp).
     For implicit functions, x should be a tuple of (x_sym, y_sym).
     For parametric functions, param_var should be 't'."""
@@ -83,10 +83,14 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
                 dy = lib.abs(lib.diff(y))
                 y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
                 y[:-1][dy > threshold_change] = lib.nan
-            
-            # Apply y-range filtering for both explicit and parametric functions
-            if ylower is not None and yupper is not None:
-                y[(y < ylower) | (y > yupper)] = np.nan
+                
+                # Apply y-range filtering
+                if ylower is not None and yupper is not None:
+                    y[(y < ylower) | (y > yupper)] = np.nan
+            else:  # For parametric functions
+                # Need to filter both x and y coordinates outside plot boundaries
+                if ylower is not None and yupper is not None and xlower is not None and xupper is not None:
+                    y[(y < ylower) | (y > yupper) | (x < xlower) | (x > xupper)] = np.nan
             
         return y
 

@@ -434,8 +434,8 @@ with master_col2:
                             t = np.linspace(t_start, t_end, 1000)
                             
                             # Evaluate x(t) and y(t)
-                            x = eval_function(x_python, t, np, param_var='t')
-                            y = eval_function(y_python, t, np, param_var='t')
+                            x = eval_function(x_python, t, np, xlower, xupper, xlower, xupper, param_var='t')
+                            y = eval_function(y_python, t, np, ylower, yupper, xlower, xupper, param_var='t')
                             
                             st.session_state.plot_counter += 1
                             param_data = {

@@ -627,9 +627,15 @@ with master_col2:
                                 if idx < len(st.session_state.plotted_parametric_functions):
                                     param_data = st.session_state.plotted_parametric_functions[idx]
                                     if param_data is not None:
-                                        x = param_data["x"]
-                                        y = param_data["y"]
-                                        lower_y = get_y_values_for_curve(x_fill, x, y, take_max=False)
+                                        # Unpack the tuple returned by eval_function
+                                        x_coords, y_coords = param_data["x"], param_data["y"]
+                                        # Only plot where neither x nor y is NaN
+                                        valid_mask = ~(np.isnan(x_coords) | np.isnan(y_coords))
+                                        ax.plot(x_coords[valid_mask], y_coords[valid_mask],
+                                               color=MY_COLORS[param_data["color"]],
+                                               linestyle=param_data["line_style"],
+                                               linewidth=axis_weight * 1.3,
+                                               zorder=param_data["zorder"])
                                     else:
                                         lower_y = np.zeros_like(x_fill)
                                 else:

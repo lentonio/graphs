@@ -84,8 +84,12 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
             if param_var == 't':  # For parametric equations, also check x changes
                 dx = lib.abs(lib.diff(x))
                 discontinuities = (dx > threshold_change) | (dy > threshold_change)
+                x_result = x.copy()  # Create a copy of x to modify
+                x_result[1:][discontinuities] = lib.nan
+                x_result[:-1][discontinuities] = lib.nan
                 y[1:][discontinuities] = lib.nan
                 y[:-1][discontinuities] = lib.nan
+                return x_result, y  # Return both modified x and y for parametric
             else:  # For explicit functions
                 y[1:][dy > threshold_change] = lib.nan
                 y[:-1][dy > threshold_change] = lib.nan

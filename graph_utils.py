@@ -65,7 +65,12 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, xlower=None, xupp
     For implicit functions, x should be a tuple of (x_sym, y_sym).
     For parametric functions, param_var should be 't'."""
     if isinstance(x, tuple):  # Handle implicit function case
-        return eval(user_func, {"x": x[0], "y": x[1], "lib": lib})
+        x_vals, y_vals = x[0], x[1]
+        result = eval(user_func, {"x": x_vals, "y": y_vals, "lib": lib})
+        # Filter points outside plot boundaries for implicit functions
+        if ylower is not None and yupper is not None and xlower is not None and xupper is not None:
+            result[(y_vals < ylower) | (y_vals > yupper) | (x_vals < xlower) | (x_vals > xupper)] = np.nan
+        return result
     else:  # Handle explicit and parametric function cases
         eval_dict = {
             param_var: x, 

@@ -721,7 +721,7 @@ for func_data in st.session_state.plotted_functions:
 for point_data in st.session_state.plotted_points:
     if "zorder" not in point_data:
         st.session_state.plot_counter += 1
-        point_data["zorder"] = st.session_state.plot_counter
+        point_data["zorder"] = 1000 + st.session_state.plot_counter  # Much higher base zorder for points
         
     if point_data["marker"] == "x":
         markersize = axis_weight * 6

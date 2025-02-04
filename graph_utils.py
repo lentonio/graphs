@@ -70,17 +70,23 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, param_var='x'):
         eval_dict = {
             param_var: x, 
             "lib": lib,
-            "log": lib.log,      # Add the actual log function
-            "log10": lib.log10,  # Add the actual log10 function
+            "log": lib.log,
+            "log10": lib.log10,
             "E": E
         }
         y = eval(user_func, eval_dict)
-        if isinstance(x, np.ndarray) and ylower is not None and yupper is not None:
+        
+        if isinstance(x, np.ndarray):
+            # For both explicit and parametric functions, detect rapid changes
             threshold_change = 10000
             dy = lib.abs(lib.diff(y))
             y[1:][dy > threshold_change] = lib.nan    # Handles asymptotes
             y[:-1][dy > threshold_change] = lib.nan
-            y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+            
+            # Only apply y-range filtering for explicit functions
+            if param_var == 'x' and ylower is not None and yupper is not None:
+                y[(y < ylower) | (y > yupper)] = np.nan  # Filter y values outside range
+            
         return y
 
 def create_graph(xlower, xupper, ylower, yupper, xstep, ystep, gridstyle,

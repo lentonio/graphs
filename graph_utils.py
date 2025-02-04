@@ -88,9 +88,16 @@ def eval_function(user_func, x, lib, ylower=None, yupper=None, xlower=None, xupp
                 if ylower is not None and yupper is not None:
                     y[(y < ylower) | (y > yupper)] = np.nan
             else:  # For parametric functions
-                # Need to filter both x and y coordinates outside plot boundaries
+                # Detect rapid changes in both x and y for parametric curves
+                threshold_change = 10000
+                if isinstance(y, np.ndarray):  # y coordinate
+                    dy = lib.abs(lib.diff(y))
+                    y[1:][dy > threshold_change] = lib.nan
+                    y[:-1][dy > threshold_change] = lib.nan
+                    
+                # Filter points outside plot boundaries
                 if ylower is not None and yupper is not None and xlower is not None and xupper is not None:
-                    y[(y < ylower) | (y > yupper) | (x < xlower) | (x > xupper)] = np.nan
+                    y[(y < ylower) | (y > yupper) | (x < xlower) | (x > xupper)] = lib.nan
             
         return y
 
